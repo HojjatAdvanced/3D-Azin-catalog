@@ -175,7 +175,7 @@
 
   footer{
     text-align:center; padding:26px; font-size:11px; color:var(--muted);
-    border-top:1px solid var(--border); background:#fff;
+    border-top:1px solid var(--border); background:#fff; line-height:2;
   }
 </style>
 </head>
@@ -184,12 +184,11 @@
 <header>
   <div class="logo-wrap">
     <img class="logo" src="assets/logo.jpg" alt="MEDAZINCO">
-    <div class="brand">مدازینکو<small>کاتالوگ دیجیتال قطعات ارتوپدی</small></div>
+    <div class="brand">MEDAZINCO<small>AzinTeb Salamat Razi</small></div>
   </div>
   <div class="header-spacer"></div>
   <div class="visitor">
-    <span>خوش آمدید، <b id="visitorName">مهمان</b></span>
-    <button id="signOutBtn">خروج</button>
+    <button id="homeBtn">&rsaquo; صفحه‌ی اصلی</button>
   </div>
   <div class="search-bar">
     <input id="searchInput" type="text" placeholder="جستجوی نام قطعه… (مثلاً: Femur، Screw، Ring)">
@@ -203,7 +202,7 @@
   <div id="resultsWrap"></div>
 </main>
 
-<footer>© ۲۰۲۵ آذین طب سلامت رازی — MEDAZINCO · تولید فیکساتور و ایمپلنت ارتوپدی</footer>
+<footer>کلیه حقوق این وب‌سایت متعلق به شرکت دانش‌بنیان فن‌آور آذین طب سلامت رازی می‌باشد.<br>مدیریت: مهندس رضا عبداللهی</footer>
 
 <div class="lightbox" id="lightbox">
   <div class="lb-inner">
@@ -235,16 +234,9 @@
   ];
   const CAT_LABEL = Object.fromEntries(CATEGORIES.map(c=>[c.key,c.label]));
 
-  /* ---------- visitor ---------- */
+  /* ---------- visitor / nav ---------- */
   (function(){
-    let name = null;
-    try{ name = localStorage.getItem('medazinco_visitor_name'); }catch(e){}
-    document.getElementById('visitorName').textContent = name || 'مهمان';
-    document.getElementById('signOutBtn').addEventListener('click', ()=>{
-      try{
-        localStorage.removeItem('medazinco_visitor_name');
-        localStorage.removeItem('medazinco_visitor_org');
-      }catch(e){}
+    document.getElementById('homeBtn').addEventListener('click', ()=>{
       window.location.href = 'index.html';
     });
   })();
