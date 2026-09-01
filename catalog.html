@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>مدازینکو | کاتالوگ محصولات</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap');
+
+  :root{
+    --navy:  #0e1a4d;
+    --navy-2:#182a72;
+    --green: #0fa968;
+    --green-2:#12c47a;
+    --ink:   #1c2440;
+    --muted: #6b7488;
+    --bg:    #f4f6fa;
+    --card:  #ffffff;
+    --border:#e7eaf2;
+  }
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; background:var(--bg); font-family:'Vazirmatn',Tahoma,sans-serif; color:var(--ink); }
+
+  /* ---------- header ---------- */
+  header{
+    position:sticky; top:0; z-index:40;
+    background:linear-gradient(135deg, var(--navy), var(--navy-2));
+    color:#fff; padding:14px 26px;
+    display:flex; align-items:center; gap:18px; flex-wrap:wrap;
+    box-shadow:0 4px 18px rgba(14,26,77,0.18);
+  }
+  header .logo-wrap{ display:flex; align-items:center; gap:10px; }
+  header img.logo{ width:36px; height:36px; border-radius:8px; background:#fff; padding:3px; }
+  header .brand{ font-weight:800; font-size:16px; letter-spacing:.2px; }
+  header .brand small{ display:block; font-weight:400; font-size:10.5px; color:#b9c2e6; margin-top:1px; }
+
+  .header-spacer{ flex:1; }
+
+  .visitor{
+    font-size:12px; color:#cfd6f0; display:flex; align-items:center; gap:8px;
+  }
+  .visitor b{ color:#fff; }
+  .visitor button{
+    background:rgba(255,255,255,0.12); border:1px solid rgba(255,255,255,0.25);
+    color:#fff; font-family:inherit; font-size:11px; padding:5px 10px; border-radius:8px;
+    cursor:pointer;
+  }
+  .visitor button:hover{ background:rgba(255,255,255,0.22); }
+
+  .search-bar{
+    width:100%; margin-top:12px; position:relative;
+  }
+  .search-bar input{
+    width:100%; padding:11px 44px 11px 16px; border-radius:12px; border:none;
+    background:rgba(255,255,255,0.12); color:#fff; font-family:inherit; font-size:13.5px;
+  }
+  .search-bar input::placeholder{ color:#c3cbe8; }
+  .search-bar input:focus{ outline:2px solid var(--green); background:rgba(255,255,255,0.18); }
+  .search-bar svg{ position:absolute; left:14px; top:50%; transform:translateY(-50%); opacity:.7; }
+
+  /* ---------- category pills ---------- */
+  .cats{
+    display:flex; gap:8px; overflow-x:auto; padding:14px 26px;
+    background:#fff; border-bottom:1px solid var(--border);
+    position:sticky; top:96px; z-index:35;
+  }
+  @media (min-width:720px){ .cats{ top:64px; } }
+  .cats::-webkit-scrollbar{ height:5px; }
+  .cats::-webkit-scrollbar-thumb{ background:#dde1ec; border-radius:3px; }
+
+  .pill{
+    flex:0 0 auto; padding:8px 16px; border-radius:999px; border:1.5px solid var(--border);
+    background:#fff; color:var(--navy); font-family:inherit; font-size:12.5px; font-weight:600;
+    cursor:pointer; white-space:nowrap; transition:all .15s;
+  }
+  .pill .cnt{ color:var(--muted); font-weight:400; margin-right:4px; }
+  .pill:hover{ border-color:var(--green); }
+  .pill.active{
+    background:linear-gradient(135deg, var(--green), var(--green-2));
+    border-color:transparent; color:#fff;
+  }
+  .pill.active .cnt{ color:rgba(255,255,255,0.85); }
+
+  /* ---------- grid ---------- */
+  main{ max-width:1280px; margin:0 auto; padding:24px 26px 60px; }
+
+  .section-title{
+    font-size:15px; font-weight:800; color:var(--navy); margin:26px 2px 14px;
+    display:flex; align-items:center; gap:10px;
+  }
+  .section-title .bar{ width:4px; height:16px; background:var(--green); border-radius:3px; }
+  .section-title .cnt{ font-weight:400; color:var(--muted); font-size:12px; }
+
+  .grid{
+    display:grid; grid-template-columns:repeat(auto-fill, minmax(230px,1fr));
+    gap:16px;
+  }
+
+  .prod-card{
+    background:var(--card); border:1px solid var(--border); border-radius:16px;
+    overflow:hidden; cursor:pointer; transition:transform .15s, box-shadow .15s, border-color .15s;
+    display:flex; flex-direction:column;
+  }
+  .prod-card:hover{
+    transform:translateY(-3px); box-shadow:0 14px 30px rgba(14,26,77,0.12); border-color:#d7ddf0;
+  }
+  .prod-card .thumb{
+    width:100%; aspect-ratio:4/3; background:#fff; display:flex; align-items:center; justify-content:center;
+    overflow:hidden; border-bottom:1px solid var(--border); cursor:pointer;
+  }
+  .prod-card .title{ cursor:pointer; }
+  .prod-card .thumb img{ width:100%; height:100%; object-fit:contain; }
+  .prod-card .info{ padding:12px 14px 14px; text-align:right; }
+  .prod-card .title{
+    font-size:12.5px; font-weight:700; color:var(--ink); line-height:1.6;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
+    min-height:2.6em;
+  }
+  .prod-card .material{
+    margin-top:7px; font-size:11px; color:var(--green); font-weight:600;
+    display:flex; align-items:center; gap:5px; justify-content:flex-end;
+  }
+  .prod-card .pageno{
+    margin-top:5px; font-size:10px; color:var(--muted);
+  }
+  .prod-card .btn3d{
+    margin-top:10px; width:100%; padding:8px 0; border-radius:9px;
+    background:linear-gradient(135deg, var(--navy), var(--navy-2)); border:none;
+    color:#fff; font-family:inherit; font-size:11px; font-weight:700; cursor:pointer;
+    letter-spacing:.2px; display:flex; align-items:center; justify-content:center; gap:6px;
+  }
+  .prod-card .btn3d:hover{ filter:brightness(1.12); }
+
+  .empty{
+    text-align:center; padding:70px 20px; color:var(--muted); font-size:13.5px;
+  }
+
+  /* ---------- lightbox ---------- */
+  .lightbox{
+    position:fixed; inset:0; background:rgba(10,14,35,0.82); z-index:100;
+    display:none; align-items:center; justify-content:center; padding:20px;
+    backdrop-filter:blur(3px);
+  }
+  .lightbox.open{ display:flex; }
+  .lb-inner{
+    background:#fff; border-radius:18px; max-width:900px; width:100%;
+    max-height:92vh; overflow:auto; position:relative;
+    box-shadow:0 30px 80px rgba(0,0,0,0.4);
+  }
+  .lb-close{
+    position:absolute; top:12px; left:12px; width:34px; height:34px; border-radius:50%;
+    background:rgba(14,26,77,0.85); color:#fff; border:none; font-size:18px; cursor:pointer;
+    display:flex; align-items:center; justify-content:center; z-index:5;
+  }
+  .lb-close:hover{ background:var(--navy); }
+  .lb-nav{
+    position:absolute; top:50%; transform:translateY(-50%); width:38px; height:38px; border-radius:50%;
+    background:rgba(14,26,77,0.85); color:#fff; border:none; font-size:18px; cursor:pointer; z-index:5;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .lb-nav:hover{ background:var(--navy); }
+  .lb-prev{ right:12px; }
+  .lb-next{ left:12px; }
+  .lb-inner img{ width:100%; display:block; }
+  .lb-caption{ padding:16px 22px 20px; text-align:right; }
+  .lb-caption .t{ font-size:15px; font-weight:800; color:var(--navy); }
+  .lb-caption .m{ font-size:12.5px; color:var(--green); font-weight:700; margin-top:6px; }
+  .lb-caption .p{ font-size:11px; color:var(--muted); margin-top:4px; }
+  .lb-caption .lb-btn3d{
+    margin-top:14px; padding:10px 18px; border-radius:10px; border:none;
+    background:linear-gradient(135deg, var(--navy), var(--navy-2)); color:#fff;
+    font-family:inherit; font-size:12.5px; font-weight:700; cursor:pointer;
+  }
+  .lb-caption .lb-btn3d:hover{ filter:brightness(1.12); }
+
+  footer{
+    text-align:center; padding:26px; font-size:11px; color:var(--muted);
+    border-top:1px solid var(--border); background:#fff;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-wrap">
+    <img class="logo" src="assets/logo.jpg" alt="MEDAZINCO">
+    <div class="brand">مدازینکو<small>کاتالوگ دیجیتال قطعات ارتوپدی</small></div>
+  </div>
+  <div class="header-spacer"></div>
+  <div class="visitor">
+    <span>خوش آمدید، <b id="visitorName">مهمان</b></span>
+    <button id="signOutBtn">خروج</button>
+  </div>
+  <div class="search-bar">
+    <input id="searchInput" type="text" placeholder="جستجوی نام قطعه… (مثلاً: Femur، Screw، Ring)">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+  </div>
+</header>
+
+<div class="cats" id="catBar"></div>
+
+<main>
+  <div id="resultsWrap"></div>
+</main>
+
+<footer>© ۲۰۲۵ آذین طب سلامت رازی — MEDAZINCO · تولید فیکساتور و ایمپلنت ارتوپدی</footer>
+
+<div class="lightbox" id="lightbox">
+  <div class="lb-inner">
+    <button class="lb-close" id="lbClose">&times;</button>
+    <button class="lb-nav lb-prev" id="lbPrev">&rsaquo;</button>
+    <button class="lb-nav lb-next" id="lbNext">&lsaquo;</button>
+    <img id="lbImg" src="" alt="">
+    <div class="lb-caption">
+      <div class="t" id="lbTitle"></div>
+      <div class="m" id="lbMaterial"></div>
+      <div class="p" id="lbPage"></div>
+      <button class="lb-btn3d" id="lbBtn3d">&#9723; نمایش سه‌بعدی این قطعه</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const PRODUCTS = [{"page": 1, "cat": "nailing", "title": "Gamma Nail", "material": "Titanium", "img": "assets/thumbs/p001.jpg"}, {"page": 2, "cat": "nailing", "title": "Gamma Nail End Cap / Gamma Nail Blade", "material": "Titanium", "img": "assets/thumbs/p002.jpg"}, {"page": 3, "cat": "nailing", "title": "Femoral Interlocking Nail", "material": "Titanium / Stainless Steel", "img": "assets/thumbs/p003.jpg"}, {"page": 4, "cat": "nailing", "title": "Tibia Interlocking Nail", "material": "Titanium / Stainless Steel", "img": "assets/thumbs/p004.jpg"}, {"page": 5, "cat": "nailing", "title": "Expert Tibia Nail", "material": "Titanium", "img": "assets/thumbs/p005.jpg"}, {"page": 6, "cat": "nailing", "title": "Ankle Arthrodesis Nail (Ankle Fusion)", "material": "Titanium", "img": "assets/thumbs/p006.jpg"}, {"page": 7, "cat": "nailing", "title": "Humerus Nail", "material": "Titanium", "img": "assets/thumbs/p007.jpg"}, {"page": 8, "cat": "nailing", "title": "TEN Nail (Titanium Elastic Nail)", "material": "Titanium / Stainless Steel", "img": "assets/thumbs/p008.jpg"}, {"page": 10, "cat": "plates_general", "title": "4.5mm DCP Plate, Narrow", "material": "Titanium", "img": "assets/thumbs/p010.jpg"}, {"page": 11, "cat": "plates_general", "title": "4.5mm DCP Plate, Broad", "material": "Titanium", "img": "assets/thumbs/p011.jpg"}, {"page": 12, "cat": "plates_general", "title": "3.5mm DCP Plate", "material": "Titanium", "img": "assets/thumbs/p012.jpg"}, {"page": 13, "cat": "plates_general", "title": "3.5mm Reconstruction Plate, Straight", "material": "Titanium", "img": "assets/thumbs/p013.jpg"}, {"page": 14, "cat": "plates_general", "title": "3.5mm LCP Reconstruction Plate, Straight", "material": "Titanium", "img": "assets/thumbs/p014.jpg"}, {"page": 15, "cat": "plates_general", "title": "3.5mm 1/3 Tubular Plate", "material": "Titanium", "img": "assets/thumbs/p015.jpg"}, {"page": 16, "cat": "plates_general", "title": "3.5mm 1/3 Tubular Locking Plate", "material": "Titanium", "img": "assets/thumbs/p016.jpg"}, {"page": 17, "cat": "plates_general", "title": "3.5mm LCP Plate", "material": "Titanium", "img": "assets/thumbs/p017.jpg"}, {"page": 18, "cat": "plates_general", "title": "4.5mm LCP Narrow Plate", "material": "Titanium", "img": "assets/thumbs/p018.jpg"}, {"page": 19, "cat": "plates_general", "title": "4.5mm LCP Broad Plate", "material": "Titanium", "img": "assets/thumbs/p019.jpg"}, {"page": 20, "cat": "plates_general", "title": "4.5mm Locking T Plate", "material": "Titanium", "img": "assets/thumbs/p020.jpg"}, {"page": 21, "cat": "plates_general", "title": "3mm LCP Mini Straight Plate", "material": "Titanium", "img": "assets/thumbs/p021.jpg"}, {"page": 22, "cat": "plates_general", "title": "3mm Locking mini L Plate (Right/Left)", "material": "Titanium", "img": "assets/thumbs/p022.jpg"}, {"page": 24, "cat": "plates_anatomical", "title": "4.5mm LCP Distal Femur Plate", "material": "Titanium / Stainless Steel", "img": "assets/thumbs/p024.jpg"}, {"page": 25, "cat": "plates_anatomical", "title": "3.5mm LCP Medial Distal Tibia Plate", "material": "Titanium / Stainless Steel", "img": "assets/thumbs/p025.jpg"}, {"page": 26, "cat": "plates_anatomical", "title": "3.5mm LCP Superior Anterior Clavicle Plate (Right/Left)", "material": "Titanium", "img": "assets/thumbs/p026.jpg"}, {"page": 27, "cat": "plates_anatomical", "title": "4.5mm Locking Distal Femour Osteotomy Medial Plate (Right/Left)", "material": "Titanium", "img": "assets/thumbs/p027.jpg"}, {"page": 28, "cat": "plates_anatomical", "title": "3.5mm LCP Distal Fibula Plate", "material": "Titanium", "img": "assets/thumbs/p028.jpg"}, {"page": 29, "cat": "plates_anatomical", "title": "4.5mm Locking Distal Femour Osteotomy Lateral Plate (Right/Left)", "material": "Titanium", "img": "assets/thumbs/p029.jpg"}, {"page": 30, "cat": "plates_anatomical", "title": "DCP Medial High Tibia Osteotomy Plate (MHT)", "material": "Titanium", "img": "assets/thumbs/p030.jpg"}, {"page": 31, "cat": "plates_anatomical", "title": "3.5mm LCP Calcaneal Plate", "material": "Titanium", "img": "assets/thumbs/p031.jpg"}, {"page": 32, "cat": "plates_anatomical", "title": "3.5mm Calcaneal Plate", "material": "Titanium", "img": "assets/thumbs/p032.jpg"}, {"page": 33, "cat": "plates_anatomical", "title": "4.5mm Locking High Tibial Osteotomy Plate, 3H in Head", "material": "Titanium", "img": "assets/thumbs/p033.jpg"}, {"page": 34, "cat": "plates_anatomical", "title": "HTO Plate", "material": "Titanium", "img": "assets/thumbs/p034.jpg"}, {"page": 35, "cat": "plates_anatomical", "title": "3mm LCP Distal Radius Plate, 4H in Head (Right/Left)", "material": "Titanium", "img": "assets/thumbs/p035.jpg"}, {"page": 36, "cat": "plates_anatomical", "title": "3mm LCP Distal Radius Plate, 7H in Head (Right/Left)", "material": "Titanium", "img": "assets/thumbs/p036.jpg"}, {"page": 37, "cat": "plates_anatomical", "title": "4.5mm Locking MTP Plate (Right/Left)", "material": "Titanium", "img": "assets/thumbs/p037.jpg"}, {"page": 38, "cat": "plates_anatomical", "title": "19mm Locking U Universal Midfoot Plate", "material": "Titanium", "img": "assets/thumbs/p038.jpg"}, {"page": 39, "cat": "plates_anatomical", "title": "DCP / LCP Dynamic Hip Screw (DHS) System", "material": "Stainless Steel", "img": "assets/thumbs/p039.jpg"}, {"page": 41, "cat": "screws", "title": "4.9mm Interlocking Screw", "material": "Titanium / Stainless Steel", "img": "assets/thumbs/p041.jpg"}, {"page": 42, "cat": "screws", "title": "3.9mm Interlocking Screw", "material": "Titanium / Stainless Steel", "img": "assets/thumbs/p042.jpg"}, {"page": 43, "cat": "screws", "title": "4.5mm Cortex Screw, Self Tapping", "material": "Titanium / Stainless Steel", "img": "assets/thumbs/p043.jpg"}, {"page": 44, "cat": "screws", "title": "3.5mm Cortex Screw, Self Tapping", "material": "Titanium / Stainless Steel", "img": "assets/thumbs/p044.jpg"}, {"page": 45, "cat": "screws", "title": "5.0mm Locking Screw", "material": "Titanium / Stainless Steel", "img": "assets/thumbs/p045.jpg"}, {"page": 46, "cat": "screws", "title": "3.5mm Locking Screw", "material": "Titanium / Stainless Steel", "img": "assets/thumbs/p046.jpg"}, {"page": 47, "cat": "screws", "title": "4.0mm Cancellous Screw, Partial Threaded", "material": "Titanium", "img": "assets/thumbs/p047.jpg"}, {"page": 48, "cat": "screws", "title": "4.0mm Cancellous Screw, Threaded 1/3mm", "material": "Titanium", "img": "assets/thumbs/p048.jpg"}, {"page": 49, "cat": "screws", "title": "4.0mm Cancellous Screw, Fully Threaded", "material": "Titanium", "img": "assets/thumbs/p049.jpg"}, {"page": 50, "cat": "screws", "title": "6.5mm Cancellous Screw, Threaded 16mm", "material": "Titanium", "img": "assets/thumbs/p050.jpg"}, {"page": 51, "cat": "screws", "title": "6.5mm Cancellous Screw, Threaded 32mm", "material": "Titanium", "img": "assets/thumbs/p051.jpg"}, {"page": 52, "cat": "screws", "title": "6.5mm Cancellous Screw, Fully Threaded", "material": "Titanium", "img": "assets/thumbs/p052.jpg"}, {"page": 53, "cat": "screws", "title": "4.0mm Cannulated Screw, Partial Threaded", "material": "Titanium", "img": "assets/thumbs/p053.jpg"}, {"page": 54, "cat": "screws", "title": "4.0mm Cannulated Screw, Threaded 1/3mm", "material": "Titanium", "img": "assets/thumbs/p054.jpg"}, {"page": 55, "cat": "screws", "title": "4.0mm Cannulated Screw, Full Threaded", "material": "Titanium", "img": "assets/thumbs/p055.jpg"}, {"page": 56, "cat": "screws", "title": "6.5mm Cannulated Screw, Threaded 16mm", "material": "Titanium", "img": "assets/thumbs/p056.jpg"}, {"page": 57, "cat": "screws", "title": "6.5mm Cannulated Screw, Threaded 32mm", "material": "Titanium", "img": "assets/thumbs/p057.jpg"}, {"page": 58, "cat": "screws", "title": "6.5mm Cannulated Screw, Fully Threaded", "material": "Titanium", "img": "assets/thumbs/p058.jpg"}, {"page": 61, "cat": "fixators", "title": "Mini Fragment", "material": "Aluminium / Stainless Steel", "img": "assets/thumbs/p061.jpg"}, {"page": 62, "cat": "fixators", "title": "Wrist Fixation", "material": "Aluminium / Stainless Steel", "img": "assets/thumbs/p062.jpg"}, {"page": 63, "cat": "fixators", "title": "Sliding (LRS)", "material": "Aluminium", "img": "assets/thumbs/p063.jpg"}, {"page": 64, "cat": "fixators", "title": "Tubular (LRS)", "material": "Aluminium", "img": "assets/thumbs/p064.jpg"}, {"page": 65, "cat": "fixators", "title": "Monotube", "material": "Aluminium", "img": "assets/thumbs/p065.jpg"}, {"page": 66, "cat": "fixators", "title": "CDU", "material": "Stainless Steel", "img": "assets/thumbs/p066.jpg"}, {"page": 67, "cat": "fixators", "title": "Elbow Hinge Fixator", "material": "Aluminium", "img": "assets/thumbs/p067.jpg"}, {"page": 68, "cat": "fixators", "title": "Clamp (Square / Universal / Mini / Single)", "material": "Aluminium / Stainless Steel", "img": "assets/thumbs/p068.jpg"}, {"page": 69, "cat": "rods", "title": "Tubular Rod", "material": "Stainless Steel", "img": "assets/thumbs/p069.jpg"}, {"page": 70, "cat": "rods", "title": "Mini Rod", "material": "Stainless Steel", "img": "assets/thumbs/p070.jpg"}, {"page": 73, "cat": "ilizarov", "title": "Full Ring", "material": "Aluminium / Stainless Steel", "img": "assets/thumbs/p073.jpg"}, {"page": 74, "cat": "ilizarov", "title": "Half Ring", "material": "Aluminium / Stainless Steel", "img": "assets/thumbs/p074.jpg"}, {"page": 75, "cat": "ilizarov", "title": "5/8 Ring", "material": "Aluminium / Stainless Steel", "img": "assets/thumbs/p075.jpg"}, {"page": 76, "cat": "ilizarov", "title": "Arch Ring", "material": "Aluminium / Stainless Steel", "img": "assets/thumbs/p076.jpg"}, {"page": 77, "cat": "ilizarov", "title": "Foot Ring", "material": "Aluminium / Stainless Steel", "img": "assets/thumbs/p077.jpg"}, {"page": 78, "cat": "ilizarov", "title": "Male Post", "material": "Stainless Steel", "img": "assets/thumbs/p078.jpg"}, {"page": 79, "cat": "ilizarov", "title": "Female Post", "material": "Stainless Steel", "img": "assets/thumbs/p079.jpg"}, {"page": 80, "cat": "ilizarov", "title": "Male Hinge / Female Hinge", "material": "Stainless Steel", "img": "assets/thumbs/p080.jpg"}, {"page": 81, "cat": "ilizarov", "title": "Connection Plate", "material": "Stainless Steel", "img": "assets/thumbs/p081.jpg"}, {"page": 82, "cat": "ilizarov", "title": "Twisted Plate", "material": "Stainless Steel", "img": "assets/thumbs/p082.jpg"}, {"page": 83, "cat": "ilizarov", "title": "Oblique Connection", "material": "Stainless Steel", "img": "assets/thumbs/p083.jpg"}, {"page": 84, "cat": "ilizarov", "title": "Square Socket", "material": "Stainless Steel", "img": "assets/thumbs/p084.jpg"}, {"page": 85, "cat": "ilizarov", "title": "Coupling", "material": "Stainless Steel", "img": "assets/thumbs/p085.jpg"}, {"page": 86, "cat": "ilizarov", "title": "Bushing", "material": "Stainless Steel", "img": "assets/thumbs/p086.jpg"}, {"page": 87, "cat": "ilizarov", "title": "Schanz Holder / Foundation Clamp", "material": "Stainless Steel", "img": "assets/thumbs/p087.jpg"}, {"page": 88, "cat": "ilizarov", "title": "Bolt Slotted", "material": "Stainless Steel", "img": "assets/thumbs/p088.jpg"}, {"page": 89, "cat": "ilizarov", "title": "Threaded Rod", "material": "Stainless Steel", "img": "assets/thumbs/p089.jpg"}, {"page": 90, "cat": "ilizarov", "title": "Schanz Screw", "material": "Stainless Steel", "img": "assets/thumbs/p090.jpg"}, {"page": 91, "cat": "ilizarov", "title": "Ilizarov Wire / Olive Wire / Kirschner Wire", "material": "Stainless Steel", "img": "assets/thumbs/p091.jpg"}, {"page": 92, "cat": "ilizarov", "title": "Washer / Slotted Washer / Spherical Washer / Oval Washer", "material": "Stainless Steel", "img": "assets/thumbs/p092.jpg"}, {"page": 93, "cat": "ilizarov", "title": "Simple Screw, Nut", "material": "Stainless Steel", "img": "assets/thumbs/p093.jpg"}, {"page": 94, "cat": "ilizarov", "title": "Tension Wrench", "material": "Stainless Steel", "img": "assets/thumbs/p094.jpg"}];
+
+  const CATEGORIES = [
+    { key:"all",              label:"همه‌ی قطعات" },
+    { key:"nailing",          label:"سیستم‌های میخ داخل استخوانی" },
+    { key:"plates_general",   label:"پلیت‌های عمومی" },
+    { key:"plates_anatomical",label:"پلیت‌های آناتومیک" },
+    { key:"screws",           label:"پیچ‌ها" },
+    { key:"fixators",         label:"فیکساتور خارجی" },
+    { key:"rods",             label:"راد" },
+    { key:"ilizarov",         label:"ایلیزاروف" },
+  ];
+  const CAT_LABEL = Object.fromEntries(CATEGORIES.map(c=>[c.key,c.label]));
+
+  /* ---------- visitor ---------- */
+  (function(){
+    let name = null;
+    try{ name = localStorage.getItem('medazinco_visitor_name'); }catch(e){}
+    document.getElementById('visitorName').textContent = name || 'مهمان';
+    document.getElementById('signOutBtn').addEventListener('click', ()=>{
+      try{
+        localStorage.removeItem('medazinco_visitor_name');
+        localStorage.removeItem('medazinco_visitor_org');
+      }catch(e){}
+      window.location.href = 'index.html';
+    });
+  })();
+
+  /* ---------- category bar ---------- */
+  let activeCat = 'all';
+  let searchTerm = '';
+
+  function countFor(key){
+    if(key==='all') return PRODUCTS.length;
+    return PRODUCTS.filter(p=>p.cat===key).length;
+  }
+
+  function renderCatBar(){
+    const bar = document.getElementById('catBar');
+    bar.innerHTML = '';
+    CATEGORIES.forEach(c=>{
+      const btn = document.createElement('button');
+      btn.className = 'pill' + (c.key===activeCat ? ' active' : '');
+      btn.innerHTML = `${c.label} <span class="cnt">${countFor(c.key)}</span>`;
+      btn.addEventListener('click', ()=>{ activeCat = c.key; render(); });
+      bar.appendChild(btn);
+    });
+  }
+
+  /* ---------- grid render ---------- */
+  let currentList = [];
+
+  function matches(p){
+    const okCat = activeCat==='all' || p.cat===activeCat;
+    const okSearch = !searchTerm || p.title.toLowerCase().includes(searchTerm) || p.material.toLowerCase().includes(searchTerm);
+    return okCat && okSearch;
+  }
+
+  function render(){
+    renderCatBar();
+    const wrap = document.getElementById('resultsWrap');
+    wrap.innerHTML = '';
+
+    const filtered = PRODUCTS.filter(matches);
+    currentList = filtered;
+
+    if(filtered.length===0){
+      wrap.innerHTML = '<div class="empty">قطعه‌ای با این مشخصات پیدا نشد.</div>';
+      return;
+    }
+
+    if(activeCat !== 'all' || searchTerm){
+      wrap.appendChild(buildGrid(filtered));
+      return;
+    }
+
+    // grouped by category, in defined order
+    CATEGORIES.slice(1).forEach(c=>{
+      const items = PRODUCTS.filter(p=>p.cat===c.key);
+      if(items.length===0) return;
+      const title = document.createElement('div');
+      title.className = 'section-title';
+      title.innerHTML = `<span class="bar"></span>${c.label} <span class="cnt">(${items.length} قطعه)</span>`;
+      wrap.appendChild(title);
+      wrap.appendChild(buildGrid(items));
+    });
+  }
+
+  function buildGrid(items){
+    const grid = document.createElement('div');
+    grid.className = 'grid';
+    items.forEach(p=>{
+      const card = document.createElement('div');
+      card.className = 'prod-card';
+      card.innerHTML = `
+        <div class="thumb"><img src="${p.img}" alt="${p.title}" loading="lazy"></div>
+        <div class="info">
+          <div class="title">${p.title}</div>
+          <div class="material">جنس: ${p.material}</div>
+          <div class="pageno">صفحه ${p.page} کاتالوگ</div>
+          <button class="btn3d" data-page="${p.page}">&#9723; نمایش سه‌بعدی</button>
+        </div>`;
+      card.querySelector('.thumb').addEventListener('click', ()=> openLightbox(p));
+      card.querySelector('.title').addEventListener('click', ()=> openLightbox(p));
+      card.querySelector('.btn3d').addEventListener('click', (e)=>{
+        e.stopPropagation();
+        window.location.href = 'viewer.html?id=' + p.page;
+      });
+      grid.appendChild(card);
+    });
+    return grid;
+  }
+
+  /* ---------- search ---------- */
+  document.getElementById('searchInput').addEventListener('input', (e)=>{
+    searchTerm = e.target.value.trim().toLowerCase();
+    render();
+  });
+
+  /* ---------- lightbox ---------- */
+  const lightbox = document.getElementById('lbImgWrap') || document.getElementById('lightbox');
+  const lbImg = document.getElementById('lbImg');
+  const lbTitle = document.getElementById('lbTitle');
+  const lbMaterial = document.getElementById('lbMaterial');
+  const lbPage = document.getElementById('lbPage');
+  let lbIndex = -1;
+
+  function fullImgFor(p){
+    return p.img.replace('/thumbs/', '/full/');
+  }
+
+  let lbCurrentProduct = null;
+  function openLightbox(p){
+    lbIndex = currentList.indexOf(p);
+    paintLightbox(p);
+    document.getElementById('lightbox').classList.add('open');
+  }
+  function paintLightbox(p){
+    lbCurrentProduct = p;
+    lbImg.src = fullImgFor(p);
+    lbImg.alt = p.title;
+    lbTitle.textContent = p.title;
+    lbMaterial.textContent = 'جنس: ' + p.material;
+    lbPage.textContent = 'صفحه ' + p.page + ' کاتالوگ';
+  }
+  document.getElementById('lbBtn3d').addEventListener('click', ()=>{
+    if(lbCurrentProduct) window.location.href = 'viewer.html?id=' + lbCurrentProduct.page;
+  });
+  function closeLightbox(){
+    document.getElementById('lightbox').classList.remove('open');
+  }
+  document.getElementById('lbClose').addEventListener('click', closeLightbox);
+  document.getElementById('lightbox').addEventListener('click', (e)=>{
+    if(e.target.id==='lightbox') closeLightbox();
+  });
+  document.getElementById('lbPrev').addEventListener('click', ()=>{
+    if(currentList.length===0) return;
+    lbIndex = (lbIndex+1) % currentList.length;
+    paintLightbox(currentList[lbIndex]);
+  });
+  document.getElementById('lbNext').addEventListener('click', ()=>{
+    if(currentList.length===0) return;
+    lbIndex = (lbIndex-1+currentList.length) % currentList.length;
+    paintLightbox(currentList[lbIndex]);
+  });
+  window.addEventListener('keydown', (e)=>{
+    if(!document.getElementById('lightbox').classList.contains('open')) return;
+    if(e.key==='Escape') closeLightbox();
+    if(e.key==='ArrowLeft') document.getElementById('lbNext').click();
+    if(e.key==='ArrowRight') document.getElementById('lbPrev').click();
+  });
+
+  render();
+</script>
+</body>
+</html>

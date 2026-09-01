@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>مدازینکو | نمایش سه‌بعدی قطعه</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap');
+
+  :root{
+    --navy:  #0e1a4d;
+    --navy-2:#182a72;
+    --green: #0fa968;
+    --green-2:#12c47a;
+    --ink:   #1c2440;
+    --muted: #90a0c8;
+    --bg:    #050914;
+  }
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  html,body{
+    width:100%; height:100%; overflow:hidden; background:var(--bg);
+    font-family:'Vazirmatn',Tahoma,sans-serif; color:#fff;
+  }
+
+  #stage{ position:fixed; inset:0; cursor:grab; }
+  #stage.dragging{ cursor:grabbing; }
+  #stage canvas{ display:block; }
+
+  .hud{ position:fixed; inset:0; pointer-events:none; z-index:10; }
+
+  .bracket{ position:absolute; width:40px; height:40px; border:1.5px solid var(--green); opacity:.5; }
+  .bracket.tl{ top:16px; right:16px; border-left:none; border-bottom:none; }
+  .bracket.tr{ top:16px; left:16px; border-right:none; border-bottom:none; }
+  .bracket.bl{ bottom:16px; right:16px; border-left:none; border-top:none; }
+  .bracket.br{ bottom:16px; left:16px; border-right:none; border-top:none; }
+
+  .topbar{
+    position:absolute; top:0; right:0; left:0;
+    display:flex; justify-content:space-between; align-items:flex-start;
+    padding:22px 66px; pointer-events:auto;
+  }
+  .brand{ display:flex; align-items:center; gap:10px; }
+  .brand img{ width:38px; height:38px; border-radius:9px; background:#fff; padding:3px; }
+  .brand .txt b{ display:block; font-size:14px; letter-spacing:.3px; }
+  .brand .txt small{ display:block; font-size:10px; color:var(--muted); margin-top:1px; }
+
+  .backBtn{
+    background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.18);
+    color:#fff; font-family:inherit; font-size:11.5px; padding:9px 16px; border-radius:10px;
+    cursor:pointer; letter-spacing:.2px;
+  }
+  .backBtn:hover{ background:rgba(255,255,255,0.14); border-color:var(--green); }
+
+  .info-block{
+    position:absolute; top:96px; right:66px; max-width:420px; text-align:right;
+  }
+  .info-block .cat{
+    font-size:10.5px; letter-spacing:1.5px; color:var(--green); font-weight:700; margin-bottom:6px;
+  }
+  .info-block h1{ font-size:20px; font-weight:800; line-height:1.5; color:#fff; }
+  .info-block .material{ margin-top:8px; font-size:12.5px; color:var(--muted); }
+  .info-block .material b{ color:#e8ecf8; }
+
+  .hint{
+    position:absolute; bottom:26px; left:50%; transform:translateX(-50%);
+    font-size:10.5px; letter-spacing:1.5px; color:var(--muted);
+  }
+
+  #gesturePanel{
+    position:absolute; right:66px; bottom:26px; width:190px; pointer-events:auto;
+    border:1px solid rgba(255,255,255,0.14); background:rgba(10,14,30,0.75);
+    padding:10px; border-radius:12px; backdrop-filter:blur(4px);
+  }
+  #gesturePanel .gp-head{
+    display:flex; justify-content:space-between; align-items:center;
+    font-size:9.5px; letter-spacing:1.5px; color:var(--muted); margin-bottom:8px;
+  }
+  #gesturePanel .gp-head b{ color:var(--green); }
+  #gestureCanvas{
+    width:100%; height:112px; display:block; border-radius:8px;
+    background:#03060d; border:1px solid rgba(255,255,255,0.12);
+    transform:scaleX(-1);
+  }
+  #gestureStatus{ margin-top:7px; font-size:10px; letter-spacing:.5px; color:#dfe6fa; min-height:14px; }
+  #gestureToggle{
+    margin-top:8px; width:100%; padding:8px 0; border-radius:8px;
+    background:none; border:1px solid rgba(255,255,255,0.18); color:#fff;
+    font-family:inherit; font-size:9.5px; letter-spacing:1px; cursor:pointer;
+  }
+  #gestureToggle:hover{ background:rgba(255,255,255,0.08); border-color:var(--green); }
+  #gestureToggle.active{ color:var(--green); border-color:var(--green); }
+  #gestureNote{ margin-top:6px; font-size:8.5px; color:var(--muted); line-height:1.5; display:none; }
+  #gestureNote.show{ display:block; }
+
+  @media (max-width:760px){
+    .topbar{ padding:16px 20px; }
+    .info-block{ right:20px; top:78px; max-width:260px; }
+    .info-block h1{ font-size:16px; }
+    #gesturePanel{ display:none; }
+  }
+</style>
+</head>
+<body>
+
+<div id="stage"></div>
+
+<div class="hud">
+  <div class="bracket tl"></div>
+  <div class="bracket tr"></div>
+  <div class="bracket bl"></div>
+  <div class="bracket br"></div>
+
+  <div class="topbar">
+    <div class="brand">
+      <img src="assets/logo.jpg" alt="MEDAZINCO">
+      <div class="txt"><b>مدازینکو</b><small>نمایش سه‌بعدی تعاملی</small></div>
+    </div>
+    <button class="backBtn" id="backBtn">&rsaquo; بازگشت به کاتالوگ</button>
+  </div>
+
+  <div class="info-block">
+    <div class="cat" id="catLabel">—</div>
+    <h1 id="prodTitle">در حال بارگذاری…</h1>
+    <div class="material" id="prodMaterial"></div>
+  </div>
+
+  <div class="hint">درگ برای چرخش · اسکرول برای زوم — یا کف دست باز برای چرخش · مشت‌کردن برای زوم</div>
+
+  <div id="gesturePanel">
+    <div class="gp-head"><span>سنسور دست</span><b id="gpHandState">خاموش</b></div>
+    <canvas id="gestureCanvas" width="200" height="120"></canvas>
+    <div id="gestureStatus">آماده به کار</div>
+    <button id="gestureToggle">فعال‌سازی کنترل با دست</button>
+    <div id="gestureNote">دوربین در دسترس نیست. این فایل را مستقیم در مرورگر (نه با دبل‌کلیک ساده) باز کنید.</div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+<script>
+(function(){
+
+  /* ============================================================
+     PRODUCT DATA + ARCHETYPE ASSIGNMENT
+  ============================================================ */
+  const PRODUCTS = [{"page": 1, "cat": "nailing", "title": "Gamma Nail", "material": "Titanium", "img": "assets/thumbs/p001.jpg"}, {"page": 2, "cat": "nailing", "title": "Gamma Nail End Cap / Gamma Nail Blade", "material": "Titanium", "img": "assets/thumbs/p002.jpg"}, {"page": 3, "cat": "nailing", "title": "Femoral Interlocking Nail", "material": "Titanium / Stainless Steel", "img": "assets/thumbs/p003.jpg"}, {"page": 4, "cat": "nailing", "title": "Tibia Interlocking Nail", "material": "Titanium / Stainless Steel", "img": "assets/thumbs/p004.jpg"}, {"page": 5, "cat": "nailing", "title": "Expert Tibia Nail", "material": "Titanium", "img": "assets/thumbs/p005.jpg"}, {"page": 6, "cat": "nailing", "title": "Ankle Arthrodesis Nail (Ankle Fusion)", "material": "Titanium", "img": "assets/thumbs/p006.jpg"}, {"page": 7, "cat": "nailing", "title": "Humerus Nail", "material": "Titanium", "img": "assets/thumbs/p007.jpg"}, {"page": 8, "cat": "nailing", "title": "TEN Nail (Titanium Elastic Nail)", "material": "Titanium / Stainless Steel", "img": "assets/thumbs/p008.jpg"}, {"page": 10, "cat": "plates_general", "title": "4.5mm DCP Plate, Narrow", "material": "Titanium", "img": "assets/thumbs/p010.jpg"}, {"page": 11, "cat": "plates_general", "title": "4.5mm DCP Plate, Broad", "material": "Titanium", "img": "assets/thumbs/p011.jpg"}, {"page": 12, "cat": "plates_general", "title": "3.5mm DCP Plate", "material": "Titanium", "img": "assets/thumbs/p012.jpg"}, {"page": 13, "cat": "plates_general", "title": "3.5mm Reconstruction Plate, Straight", "material": "Titanium", "img": "assets/thumbs/p013.jpg"}, {"page": 14, "cat": "plates_general", "title": "3.5mm LCP Reconstruction Plate, Straight", "material": "Titanium", "img": "assets/thumbs/p014.jpg"}, {"page": 15, "cat": "plates_general", "title": "3.5mm 1/3 Tubular Plate", "material": "Titanium", "img": "assets/thumbs/p015.jpg"}, {"page": 16, "cat": "plates_general", "title": "3.5mm 1/3 Tubular Locking Plate", "material": "Titanium", "img": "assets/thumbs/p016.jpg"}, {"page": 17, "cat": "plates_general", "title": "3.5mm LCP Plate", "material": "Titanium", "img": "assets/thumbs/p017.jpg"}, {"page": 18, "cat": "plates_general", "title": "4.5mm LCP Narrow Plate", "material": "Titanium", "img": "assets/thumbs/p018.jpg"}, {"page": 19, "cat": "plates_general", "title": "4.5mm LCP Broad Plate", "material": "Titanium", "img": "assets/thumbs/p019.jpg"}, {"page": 20, "cat": "plates_general", "title": "4.5mm Locking T Plate", "material": "Titanium", "img": "assets/thumbs/p020.jpg"}, {"page": 21, "cat": "plates_general", "title": "3mm LCP Mini Straight Plate", "material": "Titanium", "img": "assets/thumbs/p021.jpg"}, {"page": 22, "cat": "plates_general", "title": "3mm Locking mini L Plate (Right/Left)", "material": "Titanium", "img": "assets/thumbs/p022.jpg"}, {"page": 24, "cat": "plates_anatomical", "title": "4.5mm LCP Distal Femur Plate", "material": "Titanium / Stainless Steel", "img": "assets/thumbs/p024.jpg"}, {"page": 25, "cat": "plates_anatomical", "title": "3.5mm LCP Medial Distal Tibia Plate", "material": "Titanium / Stainless Steel", "img": "assets/thumbs/p025.jpg"}, {"page": 26, "cat": "plates_anatomical", "title": "3.5mm LCP Superior Anterior Clavicle Plate (Right/Left)", "material": "Titanium", "img": "assets/thumbs/p026.jpg"}, {"page": 27, "cat": "plates_anatomical", "title": "4.5mm Locking Distal Femour Osteotomy Medial Plate (Right/Left)", "material": "Titanium", "img": "assets/thumbs/p027.jpg"}, {"page": 28, "cat": "plates_anatomical", "title": "3.5mm LCP Distal Fibula Plate", "material": "Titanium", "img": "assets/thumbs/p028.jpg"}, {"page": 29, "cat": "plates_anatomical", "title": "4.5mm Locking Distal Femour Osteotomy Lateral Plate (Right/Left)", "material": "Titanium", "img": "assets/thumbs/p029.jpg"}, {"page": 30, "cat": "plates_anatomical", "title": "DCP Medial High Tibia Osteotomy Plate (MHT)", "material": "Titanium", "img": "assets/thumbs/p030.jpg"}, {"page": 31, "cat": "plates_anatomical", "title": "3.5mm LCP Calcaneal Plate", "material": "Titanium", "img": "assets/thumbs/p031.jpg"}, {"page": 32, "cat": "plates_anatomical", "title": "3.5mm Calcaneal Plate", "material": "Titanium", "img": "assets/thumbs/p032.jpg"}, {"page": 33, "cat": "plates_anatomical", "title": "4.5mm Locking High Tibial Osteotomy Plate, 3H in Head", "material": "Titanium", "img": "assets/thumbs/p033.jpg"}, {"page": 34, "cat": "plates_anatomical", "title": "HTO Plate", "material": "Titanium", "img": "assets/thumbs/p034.jpg"}, {"page": 35, "cat": "plates_anatomical", "title": "3mm LCP Distal Radius Plate, 4H in Head (Right/Left)", "material": "Titanium", "img": "assets/thumbs/p035.jpg"}, {"page": 36, "cat": "plates_anatomical", "title": "3mm LCP Distal Radius Plate, 7H in Head (Right/Left)", "material": "Titanium", "img": "assets/thumbs/p036.jpg"}, {"page": 37, "cat": "plates_anatomical", "title": "4.5mm Locking MTP Plate (Right/Left)", "material": "Titanium", "img": "assets/thumbs/p037.jpg"}, {"page": 38, "cat": "plates_anatomical", "title": "19mm Locking U Universal Midfoot Plate", "material": "Titanium", "img": "assets/thumbs/p038.jpg"}, {"page": 39, "cat": "plates_anatomical", "title": "DCP / LCP Dynamic Hip Screw (DHS) System", "material": "Stainless Steel", "img": "assets/thumbs/p039.jpg"}, {"page": 41, "cat": "screws", "title": "4.9mm Interlocking Screw", "material": "Titanium / Stainless Steel", "img": "assets/thumbs/p041.jpg"}, {"page": 42, "cat": "screws", "title": "3.9mm Interlocking Screw", "material": "Titanium / Stainless Steel", "img": "assets/thumbs/p042.jpg"}, {"page": 43, "cat": "screws", "title": "4.5mm Cortex Screw, Self Tapping", "material": "Titanium / Stainless Steel", "img": "assets/thumbs/p043.jpg"}, {"page": 44, "cat": "screws", "title": "3.5mm Cortex Screw, Self Tapping", "material": "Titanium / Stainless Steel", "img": "assets/thumbs/p044.jpg"}, {"page": 45, "cat": "screws", "title": "5.0mm Locking Screw", "material": "Titanium / Stainless Steel", "img": "assets/thumbs/p045.jpg"}, {"page": 46, "cat": "screws", "title": "3.5mm Locking Screw", "material": "Titanium / Stainless Steel", "img": "assets/thumbs/p046.jpg"}, {"page": 47, "cat": "screws", "title": "4.0mm Cancellous Screw, Partial Threaded", "material": "Titanium", "img": "assets/thumbs/p047.jpg"}, {"page": 48, "cat": "screws", "title": "4.0mm Cancellous Screw, Threaded 1/3mm", "material": "Titanium", "img": "assets/thumbs/p048.jpg"}, {"page": 49, "cat": "screws", "title": "4.0mm Cancellous Screw, Fully Threaded", "material": "Titanium", "img": "assets/thumbs/p049.jpg"}, {"page": 50, "cat": "screws", "title": "6.5mm Cancellous Screw, Threaded 16mm", "material": "Titanium", "img": "assets/thumbs/p050.jpg"}, {"page": 51, "cat": "screws", "title": "6.5mm Cancellous Screw, Threaded 32mm", "material": "Titanium", "img": "assets/thumbs/p051.jpg"}, {"page": 52, "cat": "screws", "title": "6.5mm Cancellous Screw, Fully Threaded", "material": "Titanium", "img": "assets/thumbs/p052.jpg"}, {"page": 53, "cat": "screws", "title": "4.0mm Cannulated Screw, Partial Threaded", "material": "Titanium", "img": "assets/thumbs/p053.jpg"}, {"page": 54, "cat": "screws", "title": "4.0mm Cannulated Screw, Threaded 1/3mm", "material": "Titanium", "img": "assets/thumbs/p054.jpg"}, {"page": 55, "cat": "screws", "title": "4.0mm Cannulated Screw, Full Threaded", "material": "Titanium", "img": "assets/thumbs/p055.jpg"}, {"page": 56, "cat": "screws", "title": "6.5mm Cannulated Screw, Threaded 16mm", "material": "Titanium", "img": "assets/thumbs/p056.jpg"}, {"page": 57, "cat": "screws", "title": "6.5mm Cannulated Screw, Threaded 32mm", "material": "Titanium", "img": "assets/thumbs/p057.jpg"}, {"page": 58, "cat": "screws", "title": "6.5mm Cannulated Screw, Fully Threaded", "material": "Titanium", "img": "assets/thumbs/p058.jpg"}, {"page": 61, "cat": "fixators", "title": "Mini Fragment", "material": "Aluminium / Stainless Steel", "img": "assets/thumbs/p061.jpg"}, {"page": 62, "cat": "fixators", "title": "Wrist Fixation", "material": "Aluminium / Stainless Steel", "img": "assets/thumbs/p062.jpg"}, {"page": 63, "cat": "fixators", "title": "Sliding (LRS)", "material": "Aluminium", "img": "assets/thumbs/p063.jpg"}, {"page": 64, "cat": "fixators", "title": "Tubular (LRS)", "material": "Aluminium", "img": "assets/thumbs/p064.jpg"}, {"page": 65, "cat": "fixators", "title": "Monotube", "material": "Aluminium", "img": "assets/thumbs/p065.jpg"}, {"page": 66, "cat": "fixators", "title": "CDU", "material": "Stainless Steel", "img": "assets/thumbs/p066.jpg"}, {"page": 67, "cat": "fixators", "title": "Elbow Hinge Fixator", "material": "Aluminium", "img": "assets/thumbs/p067.jpg"}, {"page": 68, "cat": "fixators", "title": "Clamp (Square / Universal / Mini / Single)", "material": "Aluminium / Stainless Steel", "img": "assets/thumbs/p068.jpg"}, {"page": 69, "cat": "rods", "title": "Tubular Rod", "material": "Stainless Steel", "img": "assets/thumbs/p069.jpg"}, {"page": 70, "cat": "rods", "title": "Mini Rod", "material": "Stainless Steel", "img": "assets/thumbs/p070.jpg"}, {"page": 73, "cat": "ilizarov", "title": "Full Ring", "material": "Aluminium / Stainless Steel", "img": "assets/thumbs/p073.jpg"}, {"page": 74, "cat": "ilizarov", "title": "Half Ring", "material": "Aluminium / Stainless Steel", "img": "assets/thumbs/p074.jpg"}, {"page": 75, "cat": "ilizarov", "title": "5/8 Ring", "material": "Aluminium / Stainless Steel", "img": "assets/thumbs/p075.jpg"}, {"page": 76, "cat": "ilizarov", "title": "Arch Ring", "material": "Aluminium / Stainless Steel", "img": "assets/thumbs/p076.jpg"}, {"page": 77, "cat": "ilizarov", "title": "Foot Ring", "material": "Aluminium / Stainless Steel", "img": "assets/thumbs/p077.jpg"}, {"page": 78, "cat": "ilizarov", "title": "Male Post", "material": "Stainless Steel", "img": "assets/thumbs/p078.jpg"}, {"page": 79, "cat": "ilizarov", "title": "Female Post", "material": "Stainless Steel", "img": "assets/thumbs/p079.jpg"}, {"page": 80, "cat": "ilizarov", "title": "Male Hinge / Female Hinge", "material": "Stainless Steel", "img": "assets/thumbs/p080.jpg"}, {"page": 81, "cat": "ilizarov", "title": "Connection Plate", "material": "Stainless Steel", "img": "assets/thumbs/p081.jpg"}, {"page": 82, "cat": "ilizarov", "title": "Twisted Plate", "material": "Stainless Steel", "img": "assets/thumbs/p082.jpg"}, {"page": 83, "cat": "ilizarov", "title": "Oblique Connection", "material": "Stainless Steel", "img": "assets/thumbs/p083.jpg"}, {"page": 84, "cat": "ilizarov", "title": "Square Socket", "material": "Stainless Steel", "img": "assets/thumbs/p084.jpg"}, {"page": 85, "cat": "ilizarov", "title": "Coupling", "material": "Stainless Steel", "img": "assets/thumbs/p085.jpg"}, {"page": 86, "cat": "ilizarov", "title": "Bushing", "material": "Stainless Steel", "img": "assets/thumbs/p086.jpg"}, {"page": 87, "cat": "ilizarov", "title": "Schanz Holder / Foundation Clamp", "material": "Stainless Steel", "img": "assets/thumbs/p087.jpg"}, {"page": 88, "cat": "ilizarov", "title": "Bolt Slotted", "material": "Stainless Steel", "img": "assets/thumbs/p088.jpg"}, {"page": 89, "cat": "ilizarov", "title": "Threaded Rod", "material": "Stainless Steel", "img": "assets/thumbs/p089.jpg"}, {"page": 90, "cat": "ilizarov", "title": "Schanz Screw", "material": "Stainless Steel", "img": "assets/thumbs/p090.jpg"}, {"page": 91, "cat": "ilizarov", "title": "Ilizarov Wire / Olive Wire / Kirschner Wire", "material": "Stainless Steel", "img": "assets/thumbs/p091.jpg"}, {"page": 92, "cat": "ilizarov", "title": "Washer / Slotted Washer / Spherical Washer / Oval Washer", "material": "Stainless Steel", "img": "assets/thumbs/p092.jpg"}, {"page": 93, "cat": "ilizarov", "title": "Simple Screw, Nut", "material": "Stainless Steel", "img": "assets/thumbs/p093.jpg"}, {"page": 94, "cat": "ilizarov", "title": "Tension Wrench", "material": "Stainless Steel", "img": "assets/thumbs/p094.jpg"}];
+
+  const CAT_LABEL = {
+    nailing:"سیستم‌های میخ داخل استخوانی",
+    plates_general:"پلیت‌های عمومی",
+    plates_anatomical:"پلیت‌های آناتومیک",
+    screws:"پیچ‌ها",
+    fixators:"فیکساتور خارجی",
+    rods:"راد",
+    ilizarov:"ایلیزاروف"
+  };
+
+  function getArchetype(p){
+    const t = p.title.toLowerCase();
+    if(p.cat==='plates_general' || p.cat==='plates_anatomical') return 'plate';
+    if(p.cat==='nailing') return 'nail';
+    if(p.cat==='screws') return 'screw';
+    if(p.cat==='rods') return t.includes('tubular') ? 'tube' : 'rod';
+    if(p.cat==='fixators'){
+      if(t.includes('clamp')) return 'block';
+      if(t.includes('hinge')) return 'block';
+      if(t.includes('tubular')) return 'tube';
+      if(t.includes('rod')||t.includes('sliding')||t.includes('monotube')||t.includes('cdu')) return 'rod';
+      return 'block';
+    }
+    if(p.cat==='ilizarov'){
+      if(t.includes('ring')) return 'ring';
+      if(t.includes('wrench')) return 'wrench';
+      if(t.includes('wire')) return 'wire';
+      if(t.includes('washer')) return 'washer';
+      if(t.includes('nut')) return 'washer';
+      if(t.includes('screw')||t.includes('bolt')) return 'screw';
+      if(t.includes('post')) return 'rod';
+      if(t.includes('rod')) return 'rod';
+      if(t.includes('plate')) return 'plate';
+      return 'block';
+    }
+    return 'block';
+  }
+
+  function colorFor(material){
+    const m = material.toLowerCase();
+    if(m.includes('titanium'))  return 0x8b96ac;
+    if(m.includes('aluminium')) return 0xd8cf9c;
+    if(m.includes('stainless')) return 0xd7dce3;
+    return 0xaab0c0;
+  }
+
+  const params = new URLSearchParams(window.location.search);
+  const pageId = parseInt(params.get('id'), 10);
+  let product = PRODUCTS.find(p => p.page === pageId) || PRODUCTS[0];
+  const archetype = getArchetype(product);
+  const seed = product.page;
+
+  document.getElementById('catLabel').textContent = CAT_LABEL[product.cat] || '';
+  document.getElementById('prodTitle').textContent = product.title;
+  document.getElementById('prodMaterial').innerHTML = 'جنس: <b>' + product.material + '</b>';
+  document.getElementById('backBtn').addEventListener('click', ()=>{ window.location.href = 'catalog.html'; });
+
+  /* deterministic pseudo-random per product, for visual variety across items in the same archetype */
+  function rnd(seedVal){
+    let x = Math.sin(seedVal*999)*10000;
+    return x - Math.floor(x);
+  }
+
+  /* ============================================================
+     THREE.JS SCENE
+  ============================================================ */
+  const stage = document.getElementById("stage");
+  const scene = new THREE.Scene();
+
+  const camera = new THREE.PerspectiveCamera(42, window.innerWidth/window.innerHeight, 0.1, 4000);
+  camera.position.set(0,0,380);
+
+  const renderer = new THREE.WebGLRenderer({ antialias:true, alpha:true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.15;
+  stage.appendChild(renderer.domElement);
+
+  scene.add(new THREE.AmbientLight(0x304060, 1.15));
+  const keyLight = new THREE.DirectionalLight(0xffffff, 1.5);
+  keyLight.position.set(240, 300, 280); scene.add(keyLight);
+  const rimLight = new THREE.DirectionalLight(0x0fa968, 0.55);
+  rimLight.position.set(-260, -100, -220); scene.add(rimLight);
+  const fillLight = new THREE.PointLight(0x1a2f7a, 0.7, 1000);
+  fillLight.position.set(-150, 80, 220); scene.add(fillLight);
+
+  /* faint starfield-like particle backdrop, navy/green tint */
+  {
+    const starGeo = new THREE.BufferGeometry();
+    const n = 700;
+    const positions = new Float32Array(n*3);
+    for(let i=0;i<n;i++){
+      const r = 800 + Math.random()*650;
+      const theta = Math.random()*Math.PI*2;
+      const phi = Math.acos(2*Math.random()-1);
+      positions[i*3]   = r*Math.sin(phi)*Math.cos(theta);
+      positions[i*3+1] = r*Math.sin(phi)*Math.sin(theta);
+      positions[i*3+2] = r*Math.cos(phi);
+    }
+    starGeo.setAttribute('position', new THREE.BufferAttribute(positions,3));
+    const starMat = new THREE.PointsMaterial({ color:0x6fb8ff, size:1.1, transparent:true, opacity:0.28 });
+    scene.add(new THREE.Points(starGeo, starMat));
+  }
+
+  const core = new THREE.Group();
+  scene.add(core);
+
+  /* ============================================================
+     GEOMETRY GENERATORS
+  ============================================================ */
+  const baseColor = colorFor(product.material);
+  const mat = new THREE.MeshStandardMaterial({
+    color: baseColor, metalness: 0.85, roughness: 0.28,
+    emissive: 0x050a18, emissiveIntensity: 0.15
+  });
+  const darkMat = new THREE.MeshStandardMaterial({ color:0x0a0d16, metalness:0.5, roughness:0.6 });
+
+  function circlePath(cx,cy,r){ const p = new THREE.Path(); p.absarc(cx,cy,r,0,Math.PI*2,false); return p; }
+
+  function buildPlate(){
+    const len = 200 + rnd(seed)*90;
+    const halfLen = len/2;
+    const width = 26 + rnd(seed+1)*14;
+    const holeCount = 4 + Math.floor(rnd(seed+2)*4);
+
+    const shape = new THREE.Shape();
+    const kf = [
+      [-halfLen, 3], [-halfLen*0.9, width*0.42], [-halfLen*0.7, width*0.5],
+      [0, width*0.46], [halfLen*0.7, width*0.5], [halfLen*0.9, width*0.42], [halfLen, 3]
+    ];
+    function hw(x){
+      for(let i=0;i<kf.length-1;i++){
+        const a=kf[i], b=kf[i+1];
+        if(x>=a[0] && x<=b[0]){
+          let t=(x-a[0])/(b[0]-a[0]); t=t*t*(3-2*t);
+          return a[1]+(b[1]-a[1])*t;
+        }
+      }
+      return kf[kf.length-1][1];
+    }
+    const steps=60;
+    for(let i=0;i<=steps;i++){ const x=-halfLen+len*i/steps, y=hw(x); i===0?shape.moveTo(x,y):shape.lineTo(x,y); }
+    for(let i=steps;i>=0;i--){ const x=-halfLen+len*i/steps, y=-hw(x); shape.lineTo(x,y); }
+    shape.closePath();
+
+    for(let i=0;i<holeCount;i++){
+      const t = (i+0.5)/holeCount;
+      const x = -halfLen*0.82 + len*0.72*t;
+      shape.holes.push(circlePath(x,0,width*0.14));
+    }
+
+    const geo = new THREE.ExtrudeGeometry(shape, { depth:8, bevelEnabled:true, bevelThickness:1.3, bevelSize:1.3, bevelSegments:3, curveSegments:20 });
+    geo.translate(0,0,-4);
+    const pos = geo.attributes.position;
+    for(let i=0;i<pos.count;i++){
+      const x=pos.getX(i), z=pos.getZ(i);
+      const t=(x+halfLen)/len;
+      pos.setZ(i, z + Math.sin(t*Math.PI)*14);
+    }
+    geo.computeVertexNormals();
+    return new THREE.Mesh(geo, mat);
+  }
+
+  function buildNail(){
+    const length = 220 + rnd(seed)*90;
+    const dia = 10 + rnd(seed+1)*6;
+    const g = new THREE.Group();
+    const shaft = new THREE.Mesh(new THREE.CylinderGeometry(dia/2, dia/2, length*0.82, 28), mat);
+    shaft.rotation.z = Math.PI/2;
+    g.add(shaft);
+    const tip = new THREE.Mesh(new THREE.ConeGeometry(dia/2, length*0.18, 28), mat);
+    tip.rotation.z = -Math.PI/2;
+    tip.position.x = -(length*0.82)/2 - (length*0.18)/2;
+    g.add(tip);
+    const holeCount = 2 + Math.floor(rnd(seed+2)*2);
+    for(let i=0;i<holeCount;i++){
+      const hx = (length*0.82)*0.5 - (i+1)*(length*0.82)/(holeCount+1.4);
+      const hole = new THREE.Mesh(new THREE.CylinderGeometry(dia*0.14, dia*0.14, dia*1.05, 14), darkMat);
+      hole.rotation.x = Math.PI/2;
+      hole.position.x = hx;
+      g.add(hole);
+    }
+    return g;
+  }
+
+  function buildScrew(){
+    const length = 55 + rnd(seed)*45;
+    const dia = 7 + rnd(seed+1)*5;
+    const g = new THREE.Group();
+    const shaft = new THREE.Mesh(new THREE.CylinderGeometry(dia/2, dia/2*0.9, length*0.78, 24), mat);
+    shaft.rotation.z = Math.PI/2;
+    g.add(shaft);
+    // thread ridges
+    const threadCount = Math.floor(length*0.78/6);
+    for(let i=0;i<threadCount;i++){
+      const ring = new THREE.Mesh(new THREE.TorusGeometry(dia/2*1.05, dia*0.05, 6, 16), mat);
+      ring.rotation.y = Math.PI/2;
+      ring.position.x = -length*0.39 + i*6;
+      g.add(ring);
+    }
+    const head = new THREE.Mesh(new THREE.CylinderGeometry(dia*0.85, dia*0.85, dia*0.7, 6), mat);
+    head.rotation.z = Math.PI/2;
+    head.position.x = length*0.39 + dia*0.35;
+    g.add(head);
+    const tip = new THREE.Mesh(new THREE.ConeGeometry(dia/2*0.9, dia*1.1, 24), mat);
+    tip.rotation.z = -Math.PI/2;
+    tip.position.x = -length*0.39 - dia*0.55;
+    g.add(tip);
+    return g;
+  }
+
+  function buildRod(){
+    const length = 180 + rnd(seed)*100;
+    const dia = 8 + rnd(seed+1)*6;
+    const rod = new THREE.Mesh(new THREE.CylinderGeometry(dia/2, dia/2, length, 26), mat);
+    rod.rotation.z = Math.PI/2;
+    return rod;
+  }
+
+  function buildTube(){
+    const length = 180 + rnd(seed)*100;
+    const outerDia = 14 + rnd(seed+1)*8;
+    const g = new THREE.Group();
+    const outer = new THREE.Mesh(new THREE.CylinderGeometry(outerDia/2, outerDia/2, length, 28, 1, true), mat);
+    outer.rotation.z = Math.PI/2;
+    g.add(outer);
+    const inner = new THREE.Mesh(new THREE.CylinderGeometry(outerDia/2*0.78, outerDia/2*0.78, length*1.002, 28, 1, true), darkMat);
+    inner.rotation.z = Math.PI/2;
+    g.add(inner);
+    return g;
+  }
+
+  function buildRing(){
+    const t = product.title.toLowerCase();
+    let sweepFrac = 1.0;
+    if(t.includes('5/8')) sweepFrac = 0.625;
+    else if(t.includes('half')) sweepFrac = 0.5;
+    else if(t.includes('arch')) sweepFrac = 0.72;
+    else if(t.includes('foot')) sweepFrac = 0.55;
+    else if(t.includes('full')) sweepFrac = 1.0;
+
+    const outerR = 95 + rnd(seed)*20;
+    const innerR = outerR - (16 + rnd(seed+1)*6);
+    const gapCenter = Math.PI/2;
+    const gapHalf = (1-sweepFrac)*Math.PI;
+    const startA = gapCenter + gapHalf;
+    const endA   = gapCenter - gapHalf + Math.PI*2;
+
+    const shape = new THREE.Shape();
+    const segs = 96;
+    if(sweepFrac >= 0.999){
+      shape.absarc(0,0,outerR,0,Math.PI*2,false);
+      shape.holes.push(circlePath(0,0,innerR));
+    } else {
+      for(let i=0;i<=segs;i++){ const a=startA+(endA-startA)*i/segs; const x=Math.cos(a)*outerR,y=Math.sin(a)*outerR; i===0?shape.moveTo(x,y):shape.lineTo(x,y); }
+      for(let i=segs;i>=0;i--){ const a=startA+(endA-startA)*i/segs; const x=Math.cos(a)*innerR,y=Math.sin(a)*innerR; shape.lineTo(x,y); }
+      shape.closePath();
+    }
+
+    const midR = (outerR+innerR)/2;
+    const holeR = 4.4;
+    const nHoles = 14 + Math.floor(rnd(seed+2)*6);
+    const marginFrac = sweepFrac>=0.999 ? 0 : 0.08;
+    for(let i=0;i<nHoles;i++){
+      const t2 = sweepFrac>=0.999 ? i/nHoles : marginFrac + (1-2*marginFrac)*i/(nHoles-1);
+      const a = sweepFrac>=0.999 ? t2*Math.PI*2 : startA+(endA-startA)*t2;
+      shape.holes.push(circlePath(Math.cos(a)*midR, Math.sin(a)*midR, holeR));
+    }
+
+    const geo = new THREE.ExtrudeGeometry(shape, { depth:9, bevelEnabled:true, bevelThickness:1.3, bevelSize:1.3, bevelSegments:3, curveSegments:40 });
+    geo.translate(0,0,-4.5);
+    return new THREE.Mesh(geo, mat);
+  }
+
+  function buildWasher(){
+    const outerR = 14 + rnd(seed)*8;
+    const innerR = outerR*0.5;
+    const shape = new THREE.Shape();
+    shape.absarc(0,0,outerR,0,Math.PI*2,false);
+    shape.holes.push(circlePath(0,0,innerR));
+    const geo = new THREE.ExtrudeGeometry(shape, { depth:3.4, bevelEnabled:true, bevelThickness:0.5, bevelSize:0.5, bevelSegments:2, curveSegments:32 });
+    geo.translate(0,0,-1.7);
+    return new THREE.Mesh(geo, mat);
+  }
+
+  function buildWire(){
+    const length = 200 + rnd(seed)*80;
+    const dia = 1.6 + rnd(seed+1)*1;
+    const wire = new THREE.Mesh(new THREE.CylinderGeometry(dia/2, dia/2, length, 14), mat);
+    wire.rotation.z = Math.PI/2;
+    return wire;
+  }
+
+  function buildWrench(){
+    const g = new THREE.Group();
+    const shaftLen = 120 + rnd(seed)*40;
+    const shaft = new THREE.Mesh(new THREE.CylinderGeometry(6,6,shaftLen*0.62,20), mat);
+    g.add(shaft);
+    const hub = new THREE.Mesh(new THREE.CylinderGeometry(15,15,20,20), mat);
+    hub.position.y = shaftLen*0.31 + 8;
+    g.add(hub);
+    for(let i=0;i<3;i++){
+      const ang = (i/3)*Math.PI*2 + Math.PI/6;
+      const spoke = new THREE.Mesh(new THREE.CylinderGeometry(3.4,3.4,42,14), mat);
+      spoke.position.set(Math.cos(ang)*22, shaftLen*0.31+20, Math.sin(ang)*22);
+      spoke.rotation.z = Math.cos(ang)*0.9;
+      spoke.rotation.x = Math.sin(ang)*0.9;
+      g.add(spoke);
+    }
+    const foot = new THREE.Mesh(new THREE.CylinderGeometry(16,10,14,20), mat);
+    foot.position.y = -shaftLen*0.31 - 10;
+    g.add(foot);
+    g.rotation.z = Math.PI/2;
+    return g;
+  }
+
+  function buildBlock(){
+    const g = new THREE.Group();
+    const w = 34 + rnd(seed)*14, h = 26 + rnd(seed+1)*8, d = 24 + rnd(seed+2)*8;
+    const shape = new THREE.Shape();
+    shape.moveTo(-w/2,-h/2);
+    shape.lineTo(w/2,-h/2);
+    shape.lineTo(w/2,h/2);
+    shape.lineTo(-w/2,h/2);
+    shape.closePath();
+    shape.holes.push(circlePath(0,0,h*0.28));
+    const geo = new THREE.ExtrudeGeometry(shape, { depth:d, bevelEnabled:true, bevelThickness:2, bevelSize:2, bevelSegments:3, curveSegments:20 });
+    geo.translate(0,0,-d/2);
+    const block = new THREE.Mesh(geo, mat);
+    g.add(block);
+
+    const boss = new THREE.Mesh(new THREE.CylinderGeometry(h*0.3, h*0.3, w*0.9, 24), mat);
+    boss.rotation.z = Math.PI/2;
+    boss.position.x = w*0.55;
+    g.add(boss);
+    const bolt = new THREE.Mesh(new THREE.CylinderGeometry(h*0.14,h*0.14,d*1.4,14), darkMat);
+    bolt.position.x = w*0.55;
+    g.add(bolt);
+    return g;
+  }
+
+  const BUILDERS = { plate:buildPlate, nail:buildNail, screw:buildScrew, rod:buildRod, tube:buildTube, ring:buildRing, washer:buildWasher, wire:buildWire, wrench:buildWrench, block:buildBlock };
+  const partMesh = (BUILDERS[archetype] || buildBlock)();
+  partMesh.scale.setScalar(0.001);
+  core.add(partMesh);
+
+  /* faint reflection */
+  const reflection = partMesh.clone(true);
+  reflection.traverse(o=>{ if(o.material){ o.material = o.material.clone(); o.material.transparent = true; o.material.opacity = 0.12; } });
+  reflection.scale.y = -0.001;
+  reflection.position.y = -140;
+  core.add(reflection);
+
+  /* ---------- intro grow-in ---------- */
+  const introStart = performance.now();
+  const INTRO_MS = 850;
+  function easeOutBack(x){ const c1=1.70158, c3=c1+1; return 1 + c3*Math.pow(x-1,3) + c1*Math.pow(x-1,2); }
+  let introActive = true;
+
+  /* ============================================================
+     INTERACTION
+  ============================================================ */
+  let isDragging = false;
+  let prev = { x:0, y:0 };
+  let autoRotate = true;
+  let targetRotX = 0, targetRotY = 0.4;
+  let targetZoom = camera.position.z;
+  const ROT_DAMP = 0.14, ZOOM_DAMP = 0.16;
+  const ZOOM_MIN = 140, ZOOM_MAX = 720;
+
+  function pointerDown(e){
+    isDragging = true; autoRotate = false;
+    const p = e.touches ? e.touches[0] : e;
+    prev.x = p.clientX; prev.y = p.clientY;
+    stage.classList.add('dragging');
+  }
+  function pointerMove(e){
+    if(!isDragging) return;
+    const p = e.touches ? e.touches[0] : e;
+    const dx = p.clientX - prev.x, dy = p.clientY - prev.y;
+    prev.x = p.clientX; prev.y = p.clientY;
+    targetRotY += dx*0.006; targetRotX += dy*0.006;
+    targetRotX = Math.max(-1.2, Math.min(1.2, targetRotX));
+  }
+  function pointerUp(){
+    isDragging = false; stage.classList.remove('dragging');
+    setTimeout(()=>{ if(!isDragging) autoRotate = true; }, 2400);
+  }
+  stage.addEventListener('mousedown', pointerDown);
+  window.addEventListener('mousemove', pointerMove);
+  window.addEventListener('mouseup', pointerUp);
+  stage.addEventListener('touchstart', pointerDown, {passive:true});
+  window.addEventListener('touchmove', pointerMove, {passive:true});
+  window.addEventListener('touchend', pointerUp);
+  stage.addEventListener('wheel', (e)=>{
+    e.preventDefault();
+    targetZoom += e.deltaY*0.4;
+    targetZoom = Math.max(ZOOM_MIN, Math.min(ZOOM_MAX, targetZoom));
+  }, { passive:false });
+
+  /* ============================================================
+     HAND GESTURE CONTROL
+  ============================================================ */
+  const gpToggle = document.getElementById('gestureToggle');
+  const gpStatus = document.getElementById('gestureStatus');
+  const gpHandState = document.getElementById('gpHandState');
+  const gpNote = document.getElementById('gestureNote');
+  const gCanvas = document.getElementById('gestureCanvas');
+  const gCtx = gCanvas.getContext('2d');
+
+  const HAND_CONNECTIONS = [[0,1],[1,2],[2,3],[3,4],[0,5],[5,6],[6,7],[7,8],[5,9],[9,10],[10,11],[11,12],[9,13],[13,14],[14,15],[15,16],[13,17],[17,18],[18,19],[19,20],[0,17]];
+
+  let videoEl=null, mediaStream=null, handsModel=null, gestureActive=false, lastHandSeenAt=0;
+  let smoothedPinchRatio=null, lastPinchRatio=null, smoothedPalm=null, lastPalm=null;
+  let candidateShape=null, candidateCount=0, committedShape='NONE';
+
+  const EXTEND_MARGIN=1.15, PINCH_SPLIT=0.62, DEBOUNCE_FRAMES=3, EMA_PALM=0.5, EMA_PINCH=0.45;
+  const ZOOM_SENSITIVITY=420, ROTATE_SENSITIVITY=3.0;
+
+  function dist2D(a,b){ const dx=a.x-b.x, dy=a.y-b.y; return Math.sqrt(dx*dx+dy*dy); }
+  function lerp(a,b,t){ return a+(b-a)*t; }
+
+  function classifyHandRaw(lm){
+    const wrist=lm[0], handScale=dist2D(wrist,lm[5])||0.001;
+    const ext=(tipIdx,pipIdx)=> dist2D(wrist,lm[tipIdx]) > dist2D(wrist,lm[pipIdx])*EXTEND_MARGIN;
+    const indexExt=ext(8,6), middleExt=ext(12,10), ringExt=ext(16,14), pinkyExt=ext(20,18);
+    const pinchRatio = dist2D(lm[4],lm[8])/handScale;
+    const claw = !middleExt && !ringExt && !pinkyExt;
+    let shape;
+    if(claw && pinchRatio<PINCH_SPLIT) shape='PINCH';
+    else if(indexExt&&middleExt&&ringExt&&pinkyExt) shape='OPEN';
+    else shape='UNKNOWN';
+    return { shape, pinchRatio };
+  }
+  function debounce(rawShape){
+    if(rawShape===candidateShape) candidateCount++;
+    else { candidateShape=rawShape; candidateCount=1; }
+    if(candidateCount>=DEBOUNCE_FRAMES) committedShape=rawShape;
+    return committedShape;
+  }
+  function drawHandOverlay(landmarks, shape){
+    gCtx.clearRect(0,0,gCanvas.width,gCanvas.height);
+    if(videoEl && videoEl.readyState>=2) gCtx.drawImage(videoEl,0,0,gCanvas.width,gCanvas.height);
+    gCtx.fillStyle='rgba(4,6,12,0.25)'; gCtx.fillRect(0,0,gCanvas.width,gCanvas.height);
+    if(!landmarks) return;
+    const toXY=(lm)=>[lm.x*gCanvas.width, lm.y*gCanvas.height];
+    gCtx.strokeStyle='rgba(15,169,104,0.85)'; gCtx.lineWidth=1.5;
+    HAND_CONNECTIONS.forEach(([a,b])=>{ const [ax,ay]=toXY(landmarks[a]), [bx,by]=toXY(landmarks[b]); gCtx.beginPath(); gCtx.moveTo(ax,ay); gCtx.lineTo(bx,by); gCtx.stroke(); });
+    landmarks.forEach((lm)=>{ const [x,y]=toXY(lm); gCtx.beginPath(); gCtx.fillStyle='#dfe6fa'; gCtx.arc(x,y,2,0,Math.PI*2); gCtx.fill(); });
+    if(shape==='PINCH'){ const [tx,ty]=toXY(landmarks[4]), [ix,iy]=toXY(landmarks[8]); gCtx.beginPath(); gCtx.strokeStyle='#ff5b5b'; gCtx.lineWidth=2; gCtx.moveTo(tx,ty); gCtx.lineTo(ix,iy); gCtx.stroke(); }
+  }
+  function onHandResults(results){
+    const hasHand = results.multiHandLandmarks && results.multiHandLandmarks.length>0;
+    if(!hasHand){
+      drawHandOverlay(null,null);
+      gpHandState.textContent='بدون دست'; gpStatus.textContent='کف دست خود را نشان دهید';
+      smoothedPinchRatio=null; lastPinchRatio=null; smoothedPalm=null; lastPalm=null;
+      candidateShape=null; candidateCount=0; committedShape='NONE';
+      return;
+    }
+    lastHandSeenAt = performance.now(); autoRotate = false;
+    const lm = results.multiHandLandmarks[0];
+    const raw = classifyHandRaw(lm);
+    const shape = debounce(raw.shape);
+    drawHandOverlay(lm, shape);
+    gpHandState.textContent = 'ردیابی فعال';
+
+    smoothedPinchRatio = smoothedPinchRatio===null ? raw.pinchRatio : lerp(smoothedPinchRatio, raw.pinchRatio, EMA_PINCH);
+    if(shape!=='PINCH') lastPinchRatio=null;
+    if(shape!=='OPEN'){ lastPalm=null; smoothedPalm=null; }
+
+    if(shape==='PINCH'){
+      gpStatus.textContent = 'مشت‌کردن → زوم';
+      if(lastPinchRatio!==null){
+        const delta = smoothedPinchRatio - lastPinchRatio;
+        targetZoom -= delta*ZOOM_SENSITIVITY;
+        targetZoom = Math.max(ZOOM_MIN, Math.min(ZOOM_MAX, targetZoom));
+      }
+      lastPinchRatio = smoothedPinchRatio;
+    } else if(shape==='OPEN'){
+      gpStatus.textContent = 'کف دست باز → چرخش';
+      const palm = lm[9];
+      smoothedPalm = smoothedPalm===null ? {x:palm.x,y:palm.y} : { x: lerp(smoothedPalm.x, palm.x, EMA_PALM), y: lerp(smoothedPalm.y, palm.y, EMA_PALM) };
+      if(lastPalm){
+        const dx = -(smoothedPalm.x - lastPalm.x), dy = (smoothedPalm.y - lastPalm.y);
+        targetRotY += dx*ROTATE_SENSITIVITY; targetRotX += dy*ROTATE_SENSITIVITY;
+        targetRotX = Math.max(-1.2, Math.min(1.2, targetRotX));
+      }
+      lastPalm = { x:smoothedPalm.x, y:smoothedPalm.y };
+    } else {
+      gpStatus.textContent = 'کف دست: چرخش · مشت: زوم';
+    }
+  }
+  async function gestureLoop(){
+    if(!gestureActive) return;
+    if(videoEl && videoEl.readyState>=2) await handsModel.send({ image: videoEl });
+    requestAnimationFrame(gestureLoop);
+  }
+  async function enableGestureControl(){
+    gpNote.classList.remove('show');
+    gpStatus.textContent = 'در حال درخواست دسترسی دوربین…';
+    try{
+      mediaStream = await navigator.mediaDevices.getUserMedia({ video:{width:480,height:360,facingMode:'user'}, audio:false });
+    } catch(err){
+      gpStatus.textContent = 'دسترسی دوربین رد شد'; gpNote.classList.add('show'); return;
+    }
+    videoEl = document.createElement('video');
+    videoEl.srcObject = mediaStream; videoEl.muted = true; videoEl.playsInline = true;
+    await videoEl.play();
+    if(typeof Hands === 'undefined'){
+      gpStatus.textContent = 'کتابخانه ردیابی در دسترس نیست'; gpNote.classList.add('show');
+      mediaStream.getTracks().forEach(t=>t.stop()); return;
+    }
+    handsModel = new Hands({ locateFile:(file)=>`https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}` });
+    handsModel.setOptions({ maxNumHands:1, modelComplexity:1, minDetectionConfidence:0.65, minTrackingConfidence:0.65 });
+    handsModel.onResults(onHandResults);
+    gestureActive = true;
+    gpToggle.textContent = 'غیرفعال‌سازی کنترل با دست'; gpToggle.classList.add('active');
+    gpHandState.textContent = 'آماده'; gpStatus.textContent = 'کف دست خود را نشان دهید';
+    gestureLoop();
+  }
+  function disableGestureControl(){
+    gestureActive = false;
+    if(mediaStream){ mediaStream.getTracks().forEach(t=>t.stop()); mediaStream = null; }
+    videoEl = null;
+    gCtx.clearRect(0,0,gCanvas.width,gCanvas.height);
+    gpToggle.textContent = 'فعال‌سازی کنترل با دست'; gpToggle.classList.remove('active');
+    gpHandState.textContent = 'خاموش'; gpStatus.textContent = 'آماده به کار';
+    smoothedPinchRatio=null; lastPinchRatio=null; smoothedPalm=null; lastPalm=null;
+  }
+  gpToggle.addEventListener('click', ()=>{ gestureActive ? disableGestureControl() : enableGestureControl(); });
+
+  /* ============================================================
+     RENDER LOOP
+  ============================================================ */
+  function easeOutCubic(x){ return 1-Math.pow(1-x,3); }
+  function animate(){
+    requestAnimationFrame(animate);
+    const now = performance.now();
+    const t = now*0.001;
+    const elapsed = now - introStart;
+
+    if(introActive){
+      const gT = Math.max(0, Math.min(1, elapsed/INTRO_MS));
+      const s = Math.max(0.001, easeOutBack(gT));
+      partMesh.scale.setScalar(s);
+      reflection.scale.set(s, -s, s);
+      if(gT>=1){ introActive=false; partMesh.scale.setScalar(1); reflection.scale.set(1,-1,1); }
+    }
+
+    if(gestureActive && !autoRotate && performance.now()-lastHandSeenAt>2500) autoRotate = true;
+    if(autoRotate && !isDragging) targetRotY += 0.0022;
+
+    core.rotation.y += (targetRotY - core.rotation.y)*ROT_DAMP;
+    core.rotation.x += (targetRotX - core.rotation.x)*ROT_DAMP;
+    camera.position.z += (targetZoom - camera.position.z)*ZOOM_DAMP;
+    camera.position.x = Math.sin(t*0.15)*3;
+    camera.lookAt(0,0,0);
+
+    renderer.render(scene, camera);
+  }
+  animate();
+
+  window.addEventListener('resize', ()=>{
+    camera.aspect = window.innerWidth/window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  });
+
+})();
+</script>
+</body>
+</html>
