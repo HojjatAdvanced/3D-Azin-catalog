@@ -96,6 +96,24 @@
   }
   .info-block .material b{ color:#e8ecf8; }
 
+  .brand-watermark{
+    position:absolute; left:0; right:0; bottom:8px; z-index:8; pointer-events:none;
+    display:flex; flex-direction:column; align-items:center; gap:6px;
+  }
+  .brand-watermark .bw-line{
+    width:64px; height:1px; background:linear-gradient(90deg, transparent, var(--green), transparent);
+    opacity:0.6; animation: bwGlow 3s ease-in-out infinite;
+  }
+  .brand-watermark .bw-text{
+    font-size:11px; letter-spacing:4px; font-weight:700; color:rgba(200,215,240,0.55);
+    text-shadow:0 0 12px rgba(23,224,138,0.35);
+  }
+  .brand-watermark .bw-text b{ color:var(--green); }
+  @keyframes bwGlow{
+    0%,100%{ opacity:0.35; width:44px; }
+    50%{ opacity:0.85; width:84px; }
+  }
+
   .hint{
     position:absolute; bottom:26px; left:50%; transform:translateX(-50%);
     font-size:10.5px; letter-spacing:1.5px; color:var(--muted);
@@ -213,6 +231,11 @@
 
   <div class="hint">درگ برای چرخش · اسکرول برای زوم — یا کف دست باز برای چرخش · مشت‌کردن برای زوم</div>
 
+  <div class="brand-watermark">
+    <div class="bw-line"></div>
+    <div class="bw-text">MEDAZINCO · <b>آذین طب سلامت رازی</b></div>
+  </div>
+
   <button class="info-fab" id="infoFab" title="اطلاعات کامل قطعه">
     <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><line x1="12" y1="11" x2="12" y2="16.5"/><circle cx="12" cy="7.6" r="0.9" fill="#04140c" stroke="none"/></svg>
   </button>
@@ -251,7 +274,7 @@
   /* ============================================================
      PRODUCT DATA + ARCHETYPE ASSIGNMENT
   ============================================================ */
-  const PRODUCTS = [{"page": 77, "cat": "ilizarov", "title": "Foot Ring", "material": "Aluminium / Stainless Steel", "img": "assets/thumbs/p077.jpg", "color": "#e5c40a", "desc_fa": "الیزاروف (فوت رینگ): یکی از اجزای تشکیل‌دهنده‌ی ست ایلیزاروف، فوت رینگ است. فوت رینگ در قسمت کف پا استفاده می‌شود. با استفاده از فوت رینگ می‌توان قسمت مچ پا که دچار آسیب‌دیدگی یا شکستگی شده را ثابت نگه داشت. فوت رینگ در سایزهای مختلف، تولید شرکت آذین طب سلامت رازی می‌باشد.\n\nسایزهای موجود (میلی‌متر): ۱۲۰-۱۴۰، ۱۴۰-۱۶۰، ۱۶۰-۱۸۰، ۱۸۰-۲۰۰، ۲۰۰-۲۲۰"}];
+  const PRODUCTS = [{"page": 77, "cat": "ilizarov", "title": "Foot Ring", "material": "Aluminium / Stainless Steel", "img": "assets/thumbs/p077.jpg", "color": "#e5c40a", "desc_fa": "الیزاروف (فوت رینگ): یکی از اجزای تشکیل‌دهنده‌ی ست ایلیزاروف، فوت رینگ است. فوت رینگ در قسمت کف پا استفاده می‌شود. با استفاده از فوت رینگ می‌توان قسمت مچ پا که دچار آسیب‌دیدگی یا شکستگی شده را ثابت نگه داشت. فوت رینگ در سایزهای مختلف، تولید شرکت آذین طب سلامت رازی می‌باشد.\n\nسایزهای موجود (میلی‌متر): ۱۲۰-۱۴۰، ۱۴۰-۱۶۰، ۱۶۰-۱۸۰، ۱۸۰-۲۰۰، ۲۰۰-۲۲۰"}, {"page": 73, "cat": "ilizarov", "title": "فول رینگ (Full Ring)", "material": "استیل", "img": "assets/thumbs/p073.jpg", "color": "#f0b335", "desc_fa": "فول رینگ: با تجهیزات الیزاروف ۲۰ سانتی‌متر بلندتر شوید. یکی از قطعات الیزاروف، فول رینگ است. جراحی افزایش قد با الیزاروف تا ۲۰ سانتی‌متر. روش الیزاروف اولین روش افزایش قد با جراحی در دنیاست که الهام‌گرفته از تجهیزات الیزاروف است و یکی از چندین روش اصلی جراحی افزایش قد به‌شمار می‌رود. تجهیزات الیزاروف نامی آشنا برای کسانی‌ست که به‌دنبال مشاوره‌ی جراحی افزایش قد هستند و امروزه در اختیار متخصصین ارتوپد در راستای جراحی استخوان و افزایش و بازسازی طول استخوان قرار گرفته است. با استفاده از تجهیزات الیزاروف و جراحی افزایش قد به روش اسلایدینگ می‌توان از ناحیه‌ی ران و ساق پا تا ماکزیمم ۲۰ سانتی‌متر افزایش قد را، بسته به وضعیت جسمانی مراجعه‌کننده، تجربه کرد.\n\nاطلاعات اضافی:\nسایز (میلی‌متر): ۱۴۰-۱۵۰، ۱۶۰-۱۸۰، ۱۹۰-۲۰۰، ۲۱۰، ۲۲۰-۲۳۰، ۲۴۰-۲۵۰، ۲۶۰-۲۸۰، ۸۰-۱۳۰\nجنس تیغه: استیل\nحوزه‌ی عملکرد: ارتوپدی"}, {"page": 74, "cat": "ilizarov", "title": "هالف رینگ (Half Ring)", "material": "استیل", "img": "assets/thumbs/p074.jpg", "color": "#ba0000", "desc_fa": "با تجهیزات الیزاروف ۲۰ سانتی‌متر بلندتر شوید. یکی از قطعات الیزاروف، هالف رینگ است. تجهیزات الیزاروف امروز در اختیار متخصصین ارتوپد در راستای جراحی استخوان و افزایش و بازسازی طول استخوان قرار گرفته است.\n\nفیکساتورهای خارجی هالف‌رینگ برای سیستم‌های ثابت ارتوپدی خارجی ساخته شده‌اند تا استخوان‌های شکسته (به‌جز ستون فقرات) را تثبیت کنند. دو هالف‌رینگ با قطر یکسان و با پله‌هایی مرحله‌ای به‌هم متصل می‌شوند و یک رینگ کامل را تشکیل می‌دهند. برای تثبیت هالف‌رینگ‌ها به یکدیگر از دو پیچ و مهره استفاده می‌شود. هالف‌رینگ را می‌توان روی ساعد، بازو، درشت‌نی، یک‌سوم میانی یا دیستال ران نصب کرد. با استفاده از پلیت رابط، هالف‌رینگ‌ها را می‌توان به شکل بیضی، نعل‌اسبی یا رینگ ۵/۸ درآورد. برای ترمیم شکستگی درشت‌نی، چهار رینگ (هشت هالف‌رینگ) مورد نیاز است.\n\nاطلاعات اضافی:\nسایز (میلی‌متر): ۸۰-۱۳۰، ۱۴۰-۱۶۰، ۱۷۰-۱۹۰، ۲۰۰-۲۲۰، ۲۳۰-۲۵۰، ۲۶۰\nجنس تیغه: استیل\nحوزه‌ی عملکرد: ارتوپدی"}, {"page": 75, "cat": "ilizarov", "title": "رینگ ۳/۴ ، ۵/۸", "material": "استیل", "img": "assets/thumbs/p075.jpg", "color": "#ebb13d", "desc_fa": "جهت افزایش و ترمیم استخوان خردشده، تولید شرکت آذین طب سلامت رازی. از قطعات الیزاروف می‌توان به رینگ‌ها اشاره کرد که پایه‌ی اساسیِ تشکیل‌دهنده‌ی الیزاروف هستند. رینگ ۳/۴ و ۵/۸ از رینگ‌های کاربردی هستند که در سایزهای مختلف تولید می‌شوند. الیزاروف در دسته‌ی فیکساتورهای خارجی بدن محسوب می‌شود.\n\nاطلاعات اضافی:\nسایز (میلی‌متر): ۱۴۰، ۱۶۰، ۱۸۰، ۲۰۰، ۲۲۰"}, {"page": 76, "cat": "ilizarov", "title": "آرک رینگ (Arc Ring)", "material": "استیل", "img": "assets/thumbs/p076.jpg", "color": "#d59100", "desc_fa": "یکی از قطعات ست الیزاروف، آرک رینگ است که جزء اکسترنال‌های فیکس‌کننده‌ی خارج بدن محسوب می‌شود. تولید شرکت آذین طب سلامت رازی.\n\nاطلاعات اضافی:\nسایز (میلی‌متر): ۱۶۰، ۲۲۰"}, {"page": 78, "cat": "ilizarov", "title": "پست نری (Male Post)", "material": "استیل", "img": "assets/thumbs/p078.jpg", "color": "#c8ccd4", "desc_fa": "پست نری از قطعات ست الیزاروف است و برای اتصال و تنظیم فاصله‌ی بین رینگ‌ها در قاب الیزاروف استفاده می‌شود. تولید شرکت آذین طب سلامت رازی.\n\nاطلاعات اضافی:\nسوراخ: ۱، ۲، ۳، ۴ (بر اساس طول)"}, {"page": 79, "cat": "ilizarov", "title": "پست مادگی (Female Post)", "material": "استیل", "img": "assets/thumbs/p079.jpg", "color": "#c8ccd4", "desc_fa": "پست مادگی مکمل پست نری از قطعات ست الیزاروف است و برای اتصال و تنظیم فاصله‌ی بین رینگ‌ها در قاب الیزاروف استفاده می‌شود. تولید شرکت آذین طب سلامت رازی.\n\nاطلاعات اضافی:\nسوراخ: ۱، ۲، ۳، ۴ (بر اساس طول)"}, {"page": 80, "cat": "ilizarov", "title": "هینج نری (Male Hinge)", "material": "استیل", "img": "assets/thumbs/p080a.jpg", "color": "#c8ccd4", "desc_fa": "هینج نری از قطعات ست الیزاروف است.\n\nاطلاعات اضافی:\nسوراخ: ۱"}, {"page": 200, "cat": "ilizarov", "title": "هینج مادگی (Female Hinge)", "material": "استیل", "img": "assets/thumbs/p080b.jpg", "color": "#c8ccd4", "desc_fa": "هینج مادگی از قطعات ست الیزاروف است.\n\nاطلاعات اضافی:\nسوراخ: ۱"}, {"page": 81, "cat": "ilizarov", "title": "کانکشن پلیت (Connection Plate)", "material": "استیل", "img": "assets/thumbs/p081.jpg", "color": "#c8ccd4", "desc_fa": "جهت اتصال هالف‌رینگ‌ها به یکدیگر است و با استفاده از کانکشن پلیت‌ها می‌توان سایز دلخواه جراح را به‌دست آورد. تولید شرکت دانش‌بنیان تجهیزات پزشکی آذین طب سلامت رازی، در سایزهای مختلف.\n\nاطلاعات اضافی:\nسوراخ: ۲-۵، ۶-۱۰"}, {"page": 83, "cat": "ilizarov", "title": "ابلیک (Oblique Connection)", "material": "آلومینیوم", "img": "assets/thumbs/p083.jpg", "color": "#c3b28e", "desc_fa": "ابلیک از قطعات ست الیزاروف است و برای اتصال مایل بین اجزای مختلف قاب الیزاروف استفاده می‌شود. تولید شرکت آذین طب سلامت رازی."}, {"page": 85, "cat": "ilizarov", "title": "کوپلینگ (Coupling)", "material": "استیل", "img": "assets/thumbs/p085.jpg", "color": "#c8ccd4", "desc_fa": "کوپلینگ از قطعات ست الیزاروف است و برای اتصال دو میله‌ی رزوه‌دار به یکدیگر در طول مسیر قاب الیزاروف استفاده می‌شود."}, {"page": 86, "cat": "ilizarov", "title": "بوشینگ (Bushing)", "material": "استیل", "img": "assets/thumbs/p086.jpg", "color": "#c8ccd4", "desc_fa": "بوشینگ از قطعات ست الیزاروف است و به‌عنوان واسط اتصال میان قطعات مختلف قاب الیزاروف استفاده می‌شود."}, {"page": 89, "cat": "ilizarov", "title": "راد رزوه‌دار (Threaded Rod)", "material": "استیل", "img": "assets/thumbs/p089.jpg", "color": "#c8ccd4", "desc_fa": "برای متصل‌کردن رینگ‌ها به یکدیگر از راد رزوه‌دار استفاده می‌شود و فاصله‌ی رینگ‌ها با یکدیگر به‌وسیله‌ی راد رزوه‌دار قابل تنظیم است. یکی از قطعات مهم ست الیزاروف است، تولید شرکت آذین طب سلامت رازی.\n\nاطلاعات اضافی:\nسایز (میلی‌متر): ۱۵۰، ۲۰۰، ۲۵۰، ۳۰۰، ۳۵۰، ۴۰۰، ۴۵۰، ۵۰۰، ۵۵۰، ۶۰۰"}, {"page": 15, "cat": "plates_general", "title": "۱/۳ توبولار (3.5mm 1/3 Tubular Plate)", "material": "Titanium", "img": "assets/thumbs/p015.jpg", "color": "#658968", "desc_fa": "پلیت تیوبولار یک‌سوم برای تثبیت شکستگی‌های استخوان‌های کوچک و نازک مانند فیبولا یا نواحی با پوشش نرم بافتی کم استفاده می‌شود."}, {"page": 16, "cat": "plates_general", "title": "لاکینگ ۱/۳ توبولار (3.5mm 1/3 Tubular Locking Plate)", "material": "Titanium", "img": "assets/thumbs/p016.jpg", "color": "#615d71", "desc_fa": "مشابه پلیت لوله‌ای استاندارد ۱/۳، این نسخه‌ی قفل‌شونده دارای سوراخ‌های پیچ است که امکان مکانیزم قفل‌شدن را فراهم می‌کند و پایداری بیشتری ارائه می‌دهد. ضخامت ۳.۵ میلی‌متری، تعادلی بین استحکام و سازگاری با انواع مختلف شکستگی ایجاد می‌کند. مکانیزم قفل‌شوندگی از عقب‌رفتن پیچ‌ها جلوگیری می‌کند و حتی در صورت جابجایی استخوان اطراف، تثبیت پایدار را حفظ می‌کند؛ این امر به‌ویژه در شرایطی که کیفیت استخوان به خطر می‌افتد مفید است."}];
 
   const CAT_LABEL = {
     nailing:"سیستم‌های میخ داخل استخوانی",
@@ -260,7 +283,7 @@
     screws:"پیچ‌ها",
     fixators:"فیکساتور خارجی",
     rods:"راد",
-    ilizarov:"ایلیزاروف"
+    ilizarov:"الیزاروف"
   };
 
   const params = new URLSearchParams(window.location.search);
@@ -346,14 +369,21 @@
       return 'block';
     }
     if(p.cat==='ilizarov'){
-      if(t.includes('foot ring')) return 'footring';
-      if(t.includes('ring')) return 'ring';
-      if(t.includes('wrench')) return 'wrench';
+      if(p.page===77 || t.includes('foot ring')) return 'footring';
+      if(p.page===76 || t.includes('arc ring')) return 'arcring';
+      if(p.page===73 || p.page===74 || p.page===75 || t.includes('ring')) return 'ring';
+      if(p.page===80 || (t.includes('hinge') && t.includes('male'))) return 'malehinge';
+      if(p.page===200 || (t.includes('hinge') && t.includes('female'))) return 'femalehinge';
+      if(p.page===78 || (t.includes('post') && t.includes('male'))) return 'malepost';
+      if(p.page===79 || (t.includes('post') && t.includes('female'))) return 'femalepost';
+      if(p.page===81 || t.includes('connection plate')) return 'connplate';
+      if(p.page===83 || t.includes('oblique')) return 'oblique';
+      if(p.page===85 || t.includes('coupling')) return 'coupling';
+      if(p.page===86 || t.includes('bushing')) return 'bushing';
+      if(p.page===89 || t.includes('threaded rod')) return 'threadedrodpart';
       if(t.includes('wire')) return 'wire';
       if(t.includes('washer')) return 'washer';
-      if(t.includes('nut')) return 'washer';
       if(t.includes('screw')||t.includes('bolt')) return 'screw';
-      if(t.includes('post')) return 'rod';
       if(t.includes('rod')) return 'rod';
       if(t.includes('plate')) return 'plate';
       return 'block';
@@ -490,10 +520,12 @@
     const t = product.title.toLowerCase();
     // clearly distinct geometry per ring type: sweep fraction, radius and hole density all differ
     let sweepFrac = 1.0, radiusScale = 1.0, holeDensity = 1.0;
-    if(t.includes('5/8')){ sweepFrac = 0.625; radiusScale = 1.0; holeDensity = 1.0; }
+    if(product.page===74){ sweepFrac = 0.5; radiusScale = 0.92; holeDensity = 0.85; }        // Half Ring
+    else if(product.page===75){ sweepFrac = 0.7; radiusScale = 1.0; holeDensity = 1.0; }     // Ring 3/4, 5/8
+    else if(product.page===73){ sweepFrac = 1.0; radiusScale = 1.0; holeDensity = 1.2; }     // Full Ring
+    else if(t.includes('5/8')){ sweepFrac = 0.625; radiusScale = 1.0; holeDensity = 1.0; }
     else if(t.includes('half')){ sweepFrac = 0.5; radiusScale = 0.92; holeDensity = 0.85; }
     else if(t.includes('arch')){ sweepFrac = 0.42; radiusScale = 1.12; holeDensity = 0.7; }
-    else if(t.includes('foot')){ sweepFrac = 0.34; radiusScale = 0.7; holeDensity = 0.8; }
     else if(t.includes('full')){ sweepFrac = 1.0; radiusScale = 1.0; holeDensity = 1.2; }
 
     const outerR = (95 + rnd(seed)*14) * radiusScale;
@@ -649,7 +681,305 @@
     return new THREE.Mesh(geo, mat);
   }
 
-  const BUILDERS = { plate:buildPlate, nail:buildNail, screw:buildScrew, rod:buildRod, tube:buildTube, ring:buildRing, footring:buildFootRing, washer:buildWasher, wire:buildWire, wrench:buildWrench, block:buildBlock };
+  /* ============================================================
+     ARC RING — curved bracket with wide 4-hole clusters at both
+     ends, an elongated central slot, and scattered small-hole
+     clusters flanking it, matching the real photographed part.
+  ============================================================ */
+  function buildArcRing(){
+    const Rc = 145;
+    const halfAngle = 52 * Math.PI/180;
+
+    function halfWidthAt(t){
+      const at = Math.abs(t);
+      if(at > 0.82){ const k=(at-0.82)/0.18; return 34 - k*10; }
+      if(at > 0.5) { const k=(at-0.5)/0.32; return 20 + k*14; }
+      return 15 + at*(20-15)/0.5;
+    }
+    function pt(a, rho){ return [rho*Math.sin(a), Rc - rho*Math.cos(a)]; }
+
+    const shape = new THREE.Shape();
+    const segs = 60;
+    for(let i=0;i<=segs;i++){
+      const t = -1 + 2*i/segs, a = t*halfAngle, rho = Rc + halfWidthAt(t);
+      const [x,y] = pt(a,rho);
+      i===0 ? shape.moveTo(x,y) : shape.lineTo(x,y);
+    }
+    for(let i=segs;i>=0;i--){
+      const t = -1 + 2*i/segs, a = t*halfAngle, rho = Rc - halfWidthAt(t);
+      const [x,y] = pt(a,rho);
+      shape.lineTo(x,y);
+    }
+    shape.closePath();
+
+    const holeR = 5.6;
+    [-1,1].forEach(side=>{
+      [0.72,0.90].forEach(tOff=>{
+        [-6,6].forEach(rhoOff=>{
+          const t = side*tOff, a = t*halfAngle, rho = Rc + rhoOff;
+          const [x,y] = pt(a,rho);
+          shape.holes.push(circlePath(x,y,holeR));
+        });
+      });
+    });
+
+    const smallR = 3.6;
+    const cluster = [[0.32,-9],[0.38,3],[0.44,-4],[0.49,7],[0.55,-2],[0.60,5]];
+    [-1,1].forEach(side=>{
+      cluster.forEach(([tOff,rhoOff])=>{
+        const t = side*tOff, a = t*halfAngle, rho = Rc + rhoOff;
+        const [x,y] = pt(a,rho);
+        shape.holes.push(circlePath(x,y,smallR));
+      });
+    });
+
+    // central elongated slot (stadium), traced directly since near-flat at t=0
+    const slotHalfLen = 44, slotHalfW = 7.5, segs2 = 16;
+    const slotPath = new THREE.Path();
+    slotPath.moveTo(-slotHalfLen, slotHalfW);
+    for(let i=0;i<=segs2;i++){ const ang = Math.PI/2 + Math.PI*(i/segs2); slotPath.lineTo(-slotHalfLen + slotHalfW*Math.cos(ang), slotHalfW*Math.sin(ang)); }
+    slotPath.lineTo(slotHalfLen, -slotHalfW);
+    for(let i=0;i<=segs2;i++){ const ang = -Math.PI/2 + Math.PI*(i/segs2); slotPath.lineTo(slotHalfLen + slotHalfW*Math.cos(ang), slotHalfW*Math.sin(ang)); }
+    slotPath.closePath();
+    shape.holes.push(slotPath);
+
+    const geo = new THREE.ExtrudeGeometry(shape, { depth:8, bevelEnabled:true, bevelThickness:1.2, bevelSize:1.2, bevelSegments:3, curveSegments:40 });
+    geo.translate(0,0,-4);
+    return new THREE.Mesh(geo, mat);
+  }
+
+  /* ============================================================
+     HINGES — eyelet loop + hex collar + threaded stud (male),
+     or eyelet loop + block with a recessed hex socket (female).
+  ============================================================ */
+  function buildMaleHinge(){
+    const g = new THREE.Group();
+    const eyeR = 11, eyeHoleR = 5.6, eyeThick = 9;
+    const ring = new THREE.Mesh(new THREE.TorusGeometry((eyeR+eyeHoleR)/2, (eyeR-eyeHoleR)/2, 16, 32), mat);
+    ring.position.y = 34;
+    g.add(ring);
+    const neck = new THREE.Mesh(new THREE.CylinderGeometry(9, 11, 16, 8), mat);
+    neck.position.y = 20;
+    g.add(neck);
+    const collar = new THREE.Mesh(new THREE.CylinderGeometry(11, 11, 10, 8), mat);
+    collar.position.y = 9;
+    g.add(collar);
+    const shaftLen = 30;
+    const shaft = new THREE.Mesh(new THREE.CylinderGeometry(5.4, 5.4, shaftLen, 20), mat);
+    shaft.position.y = 9 - shaftLen/2 - 2;
+    g.add(shaft);
+    const threadCount = 8;
+    for(let i=0;i<threadCount;i++){
+      const trow = new THREE.Mesh(new THREE.TorusGeometry(5.7, 0.9, 6, 16), mat);
+      trow.rotation.x = Math.PI/2;
+      trow.position.y = 2 - i*(shaftLen/threadCount);
+      g.add(trow);
+    }
+    return g;
+  }
+
+  function buildFemaleHinge(){
+    const g = new THREE.Group();
+    const eyeR = 11, eyeHoleR = 5.6;
+    const ring = new THREE.Mesh(new THREE.TorusGeometry((eyeR+eyeHoleR)/2, (eyeR-eyeHoleR)/2, 16, 32), mat);
+    ring.position.y = 30;
+    g.add(ring);
+    const neck = new THREE.Mesh(new THREE.CylinderGeometry(9.5, 11, 12, 8), mat);
+    neck.position.y = 18;
+    g.add(neck);
+    const bodyH = 26;
+    const body = new THREE.Mesh(new THREE.CylinderGeometry(11.5, 12.5, bodyH, 8), mat);
+    body.position.y = 18 - bodyH/2 - 1;
+    g.add(body);
+    const socket = new THREE.Mesh(new THREE.CylinderGeometry(6.2, 6.2, 12, 20), darkMat);
+    socket.position.set(0, 18 - bodyH/2 - 1, 6);
+    socket.rotation.x = Math.PI/2;
+    g.add(socket);
+    return g;
+  }
+
+  /* ============================================================
+     POSTS — male (eyelet top, row of holes down a round shaft,
+     threaded bottom) and female (rectangular block with a row
+     of counterbored round holes).
+  ============================================================ */
+  function buildMalePost(){
+    const g = new THREE.Group();
+    const holeCount = 2;
+    const spacing = 20;
+    const eyeR = 10, eyeHoleR = 5.2;
+    const bodyLen = spacing*(holeCount-1) + 30;
+    const topY = bodyLen/2 + 10;
+
+    const ring = new THREE.Mesh(new THREE.TorusGeometry((eyeR+eyeHoleR)/2, (eyeR-eyeHoleR)/2, 14, 28), mat);
+    ring.position.y = topY;
+    g.add(ring);
+    const neck = new THREE.Mesh(new THREE.CylinderGeometry(8, 9, 12, 8), mat);
+    neck.position.y = topY - 11;
+    g.add(neck);
+
+    const body = new THREE.Mesh(new THREE.CylinderGeometry(9, 9, bodyLen, 24), mat);
+    body.position.y = topY - 11 - 6 - bodyLen/2;
+    g.add(body);
+    const bodyTopY = topY - 17;
+    for(let i=0;i<holeCount;i++){
+      const hole = new THREE.Mesh(new THREE.CylinderGeometry(4.6, 4.6, 20, 16), darkMat);
+      hole.rotation.z = Math.PI/2;
+      hole.position.y = bodyTopY - 15 - i*spacing;
+      g.add(hole);
+    }
+    const shaftLen = 22;
+    const shaftY = bodyTopY - bodyLen - shaftLen/2;
+    const shaft = new THREE.Mesh(new THREE.CylinderGeometry(5, 5, shaftLen, 18), mat);
+    shaft.position.y = shaftY;
+    g.add(shaft);
+    for(let i=0;i<7;i++){
+      const trow = new THREE.Mesh(new THREE.TorusGeometry(5.3, 0.8, 6, 16), mat);
+      trow.rotation.x = Math.PI/2;
+      trow.position.y = shaftY + shaftLen/2 - 2 - i*3.1;
+      g.add(trow);
+    }
+    g.position.y = -topY*0.35;
+    return g;
+  }
+
+  function buildFemalePost(){
+    const g = new THREE.Group();
+    const holeCount = 2, spacing = 20;
+    const w = 17, d = 17;
+    const bodyLen = spacing*(holeCount-1) + 30;
+
+    const block = new THREE.Mesh(new THREE.CylinderGeometry(w/2, w/2, bodyLen, 8), mat);
+    g.add(block);
+    for(let i=0;i<holeCount;i++){
+      const y = bodyLen/2 - 15 - i*spacing;
+      const hole = new THREE.Mesh(new THREE.CylinderGeometry(4.8, 4.8, w+2, 20), darkMat);
+      hole.rotation.z = Math.PI/2;
+      hole.position.y = y;
+      g.add(hole);
+    }
+    const socketLen = 14;
+    const socket = new THREE.Mesh(new THREE.CylinderGeometry(6, 6, socketLen, 20), darkMat);
+    socket.rotation.z = Math.PI/2;
+    socket.position.set(0, -bodyLen/2 - 2, 0);
+    socket.rotation.x = Math.PI/2;
+    socket.position.y = -bodyLen/2 + 6;
+    socket.position.z = w/2 - 4;
+    socket.rotation.set(Math.PI/2,0,0);
+    g.add(socket);
+    return g;
+  }
+
+  /* ============================================================
+     OBLIQUE CONNECTION — bent connector, eyelet at one end,
+     threaded stud at the other.
+  ============================================================ */
+  function buildOblique(){
+    const g = new THREE.Group();
+    const eyeR = 10.5, eyeHoleR = 5.4;
+    const ring = new THREE.Mesh(new THREE.TorusGeometry((eyeR+eyeHoleR)/2, (eyeR-eyeHoleR)/2, 14, 28), mat);
+    ring.position.set(-42, 14, 0);
+    g.add(ring);
+
+    const armPts = [[-42,14],[-30,16],[-10,17],[10,15],[26,8],[36,2]];
+    for(let i=0;i<armPts.length-1;i++){
+      const a = armPts[i], b = armPts[i+1];
+      const dx=b[0]-a[0], dy=b[1]-a[1];
+      const len = Math.sqrt(dx*dx+dy*dy);
+      const seg = new THREE.Mesh(new THREE.CylinderGeometry(9,9,len+4,16), mat);
+      seg.position.set((a[0]+b[0])/2, (a[1]+b[1])/2, 0);
+      seg.rotation.z = Math.atan2(dy,dx) + Math.PI/2;
+      g.add(seg);
+    }
+    const shaftLen = 26;
+    const shaft = new THREE.Mesh(new THREE.CylinderGeometry(5,5,shaftLen,18), mat);
+    shaft.rotation.z = Math.PI/2;
+    shaft.position.set(36 + shaftLen/2, 2, 0);
+    g.add(shaft);
+    for(let i=0;i<7;i++){
+      const trow = new THREE.Mesh(new THREE.TorusGeometry(5.3,0.8,6,16), mat);
+      trow.rotation.y = Math.PI/2;
+      trow.position.set(36 + 2 + i*3.3, 2, 0);
+      g.add(trow);
+    }
+    g.position.x = -6;
+    return g;
+  }
+
+  /* ============================================================
+     CONNECTION PLATE — flat bar with an evenly spaced row of
+     round holes.
+  ============================================================ */
+  function buildConnPlate(){
+    const holeCount = 4, spacing = 22;
+    const len = spacing*(holeCount-1) + 30, w = 20;
+    const shape = new THREE.Shape();
+    const r = w/2;
+    shape.moveTo(-len/2 + r, -w/2);
+    shape.lineTo(len/2 - r, -w/2);
+    shape.absarc(len/2 - r, 0, r, -Math.PI/2, Math.PI/2, false);
+    shape.lineTo(-len/2 + r, w/2);
+    shape.absarc(-len/2 + r, 0, r, Math.PI/2, 3*Math.PI/2, false);
+    for(let i=0;i<holeCount;i++){
+      const x = -len/2 + 15 + i*spacing;
+      shape.holes.push(circlePath(x, 0, 5.4));
+    }
+    const geo = new THREE.ExtrudeGeometry(shape, { depth:9, bevelEnabled:true, bevelThickness:1.2, bevelSize:1.2, bevelSegments:3, curveSegments:24 });
+    geo.translate(0,0,-4.5);
+    return new THREE.Mesh(geo, mat);
+  }
+
+  /* ============================================================
+     COUPLING — hex-prism connector with an axial threaded hole.
+  ============================================================ */
+  function buildCoupling(){
+    const g = new THREE.Group();
+    const body = new THREE.Mesh(new THREE.CylinderGeometry(11, 11, 30, 6), mat);
+    g.add(body);
+    const hole = new THREE.Mesh(new THREE.CylinderGeometry(5.4, 5.4, 32, 20), darkMat);
+    g.add(hole);
+    return g;
+  }
+
+  /* ============================================================
+     BUSHING — short cylinder with two perpendicular threaded holes.
+  ============================================================ */
+  function buildBushing(){
+    const g = new THREE.Group();
+    const body = new THREE.Mesh(new THREE.CylinderGeometry(13, 13, 16, 24), mat);
+    g.add(body);
+    const holeV = new THREE.Mesh(new THREE.CylinderGeometry(5.6, 5.6, 18, 18), darkMat);
+    g.add(holeV);
+    const holeH = new THREE.Mesh(new THREE.CylinderGeometry(5.6, 5.6, 28, 18), darkMat);
+    holeH.rotation.z = Math.PI/2;
+    holeH.position.y = -1;
+    g.add(holeH);
+    return g;
+  }
+
+  /* ============================================================
+     THREADED ROD PART — full-length threaded rod (Ilizarov).
+  ============================================================ */
+  function buildThreadedRodPart(){
+    const g = new THREE.Group();
+    const length = 210 + rnd(seed)*60;
+    const dia = 7;
+    const rod = new THREE.Mesh(new THREE.CylinderGeometry(dia/2, dia/2, length, 24), mat);
+    rod.rotation.z = Math.PI/2;
+    g.add(rod);
+    const threadCount = Math.floor(length/5.2);
+    for(let i=0;i<threadCount;i++){
+      const trow = new THREE.Mesh(new THREE.TorusGeometry(dia/2*1.06, 0.85, 6, 16), mat);
+      trow.rotation.y = Math.PI/2;
+      trow.position.x = -length/2 + i*5.2;
+      g.add(trow);
+    }
+    return g;
+  }
+
+  const BUILDERS = { plate:buildPlate, nail:buildNail, screw:buildScrew, rod:buildRod, tube:buildTube, ring:buildRing, footring:buildFootRing, washer:buildWasher, wire:buildWire, wrench:buildWrench, block:buildBlock,
+    arcring:buildArcRing, malehinge:buildMaleHinge, femalehinge:buildFemaleHinge, malepost:buildMalePost, femalepost:buildFemalePost,
+    connplate:buildConnPlate, oblique:buildOblique, coupling:buildCoupling, bushing:buildBushing, threadedrodpart:buildThreadedRodPart };
   const partMesh = (BUILDERS[archetype] || buildBlock)();
   partMesh.scale.setScalar(0.001);
   core.add(partMesh);
