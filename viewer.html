@@ -165,7 +165,7 @@
   <div class="topbar">
     <div class="brand">
       <img src="assets/logo.jpg" alt="MEDAZINCO">
-      <div class="txt"><b>مدازینکو</b><small>نمایش سه‌بعدی تعاملی</small></div>
+      <div class="txt"><b>MEDAZINCO</b><small>AzinTeb Salamat Razi</small></div>
     </div>
     <button class="backBtn" id="backBtn">&rsaquo; بازگشت به کاتالوگ</button>
   </div>
@@ -174,6 +174,7 @@
     <div class="cat" id="catLabel">—</div>
     <h1 id="prodTitle">در حال بارگذاری…</h1>
     <div class="material" id="prodMaterial"></div>
+    <div id="colorSwatches" style="display:none; margin-top:14px; gap:10px; justify-content:flex-end;"></div>
   </div>
 
   <div class="hint">درگ برای چرخش · اسکرول برای زوم — یا کف دست باز برای چرخش · مشت‌کردن برای زوم</div>
@@ -206,7 +207,7 @@
   /* ============================================================
      PRODUCT DATA + ARCHETYPE ASSIGNMENT
   ============================================================ */
-  const PRODUCTS = [{"page": 1, "cat": "nailing", "title": "Gamma Nail", "material": "Titanium", "img": "assets/thumbs/p001.jpg"}, {"page": 2, "cat": "nailing", "title": "Gamma Nail End Cap / Gamma Nail Blade", "material": "Titanium", "img": "assets/thumbs/p002.jpg"}, {"page": 3, "cat": "nailing", "title": "Femoral Interlocking Nail", "material": "Titanium / Stainless Steel", "img": "assets/thumbs/p003.jpg"}, {"page": 4, "cat": "nailing", "title": "Tibia Interlocking Nail", "material": "Titanium / Stainless Steel", "img": "assets/thumbs/p004.jpg"}, {"page": 5, "cat": "nailing", "title": "Expert Tibia Nail", "material": "Titanium", "img": "assets/thumbs/p005.jpg"}, {"page": 6, "cat": "nailing", "title": "Ankle Arthrodesis Nail (Ankle Fusion)", "material": "Titanium", "img": "assets/thumbs/p006.jpg"}, {"page": 7, "cat": "nailing", "title": "Humerus Nail", "material": "Titanium", "img": "assets/thumbs/p007.jpg"}, {"page": 8, "cat": "nailing", "title": "TEN Nail (Titanium Elastic Nail)", "material": "Titanium / Stainless Steel", "img": "assets/thumbs/p008.jpg"}, {"page": 10, "cat": "plates_general", "title": "4.5mm DCP Plate, Narrow", "material": "Titanium", "img": "assets/thumbs/p010.jpg"}, {"page": 11, "cat": "plates_general", "title": "4.5mm DCP Plate, Broad", "material": "Titanium", "img": "assets/thumbs/p011.jpg"}, {"page": 12, "cat": "plates_general", "title": "3.5mm DCP Plate", "material": "Titanium", "img": "assets/thumbs/p012.jpg"}, {"page": 13, "cat": "plates_general", "title": "3.5mm Reconstruction Plate, Straight", "material": "Titanium", "img": "assets/thumbs/p013.jpg"}, {"page": 14, "cat": "plates_general", "title": "3.5mm LCP Reconstruction Plate, Straight", "material": "Titanium", "img": "assets/thumbs/p014.jpg"}, {"page": 15, "cat": "plates_general", "title": "3.5mm 1/3 Tubular Plate", "material": "Titanium", "img": "assets/thumbs/p015.jpg"}, {"page": 16, "cat": "plates_general", "title": "3.5mm 1/3 Tubular Locking Plate", "material": "Titanium", "img": "assets/thumbs/p016.jpg"}, {"page": 17, "cat": "plates_general", "title": "3.5mm LCP Plate", "material": "Titanium", "img": "assets/thumbs/p017.jpg"}, {"page": 18, "cat": "plates_general", "title": "4.5mm LCP Narrow Plate", "material": "Titanium", "img": "assets/thumbs/p018.jpg"}, {"page": 19, "cat": "plates_general", "title": "4.5mm LCP Broad Plate", "material": "Titanium", "img": "assets/thumbs/p019.jpg"}, {"page": 20, "cat": "plates_general", "title": "4.5mm Locking T Plate", "material": "Titanium", "img": "assets/thumbs/p020.jpg"}, {"page": 21, "cat": "plates_general", "title": "3mm LCP Mini Straight Plate", "material": "Titanium", "img": "assets/thumbs/p021.jpg"}, {"page": 22, "cat": "plates_general", "title": "3mm Locking mini L Plate (Right/Left)", "material": "Titanium", "img": "assets/thumbs/p022.jpg"}, {"page": 24, "cat": "plates_anatomical", "title": "4.5mm LCP Distal Femur Plate", "material": "Titanium / Stainless Steel", "img": "assets/thumbs/p024.jpg"}, {"page": 25, "cat": "plates_anatomical", "title": "3.5mm LCP Medial Distal Tibia Plate", "material": "Titanium / Stainless Steel", "img": "assets/thumbs/p025.jpg"}, {"page": 26, "cat": "plates_anatomical", "title": "3.5mm LCP Superior Anterior Clavicle Plate (Right/Left)", "material": "Titanium", "img": "assets/thumbs/p026.jpg"}, {"page": 27, "cat": "plates_anatomical", "title": "4.5mm Locking Distal Femour Osteotomy Medial Plate (Right/Left)", "material": "Titanium", "img": "assets/thumbs/p027.jpg"}, {"page": 28, "cat": "plates_anatomical", "title": "3.5mm LCP Distal Fibula Plate", "material": "Titanium", "img": "assets/thumbs/p028.jpg"}, {"page": 29, "cat": "plates_anatomical", "title": "4.5mm Locking Distal Femour Osteotomy Lateral Plate (Right/Left)", "material": "Titanium", "img": "assets/thumbs/p029.jpg"}, {"page": 30, "cat": "plates_anatomical", "title": "DCP Medial High Tibia Osteotomy Plate (MHT)", "material": "Titanium", "img": "assets/thumbs/p030.jpg"}, {"page": 31, "cat": "plates_anatomical", "title": "3.5mm LCP Calcaneal Plate", "material": "Titanium", "img": "assets/thumbs/p031.jpg"}, {"page": 32, "cat": "plates_anatomical", "title": "3.5mm Calcaneal Plate", "material": "Titanium", "img": "assets/thumbs/p032.jpg"}, {"page": 33, "cat": "plates_anatomical", "title": "4.5mm Locking High Tibial Osteotomy Plate, 3H in Head", "material": "Titanium", "img": "assets/thumbs/p033.jpg"}, {"page": 34, "cat": "plates_anatomical", "title": "HTO Plate", "material": "Titanium", "img": "assets/thumbs/p034.jpg"}, {"page": 35, "cat": "plates_anatomical", "title": "3mm LCP Distal Radius Plate, 4H in Head (Right/Left)", "material": "Titanium", "img": "assets/thumbs/p035.jpg"}, {"page": 36, "cat": "plates_anatomical", "title": "3mm LCP Distal Radius Plate, 7H in Head (Right/Left)", "material": "Titanium", "img": "assets/thumbs/p036.jpg"}, {"page": 37, "cat": "plates_anatomical", "title": "4.5mm Locking MTP Plate (Right/Left)", "material": "Titanium", "img": "assets/thumbs/p037.jpg"}, {"page": 38, "cat": "plates_anatomical", "title": "19mm Locking U Universal Midfoot Plate", "material": "Titanium", "img": "assets/thumbs/p038.jpg"}, {"page": 39, "cat": "plates_anatomical", "title": "DCP / LCP Dynamic Hip Screw (DHS) System", "material": "Stainless Steel", "img": "assets/thumbs/p039.jpg"}, {"page": 41, "cat": "screws", "title": "4.9mm Interlocking Screw", "material": "Titanium / Stainless Steel", "img": "assets/thumbs/p041.jpg"}, {"page": 42, "cat": "screws", "title": "3.9mm Interlocking Screw", "material": "Titanium / Stainless Steel", "img": "assets/thumbs/p042.jpg"}, {"page": 43, "cat": "screws", "title": "4.5mm Cortex Screw, Self Tapping", "material": "Titanium / Stainless Steel", "img": "assets/thumbs/p043.jpg"}, {"page": 44, "cat": "screws", "title": "3.5mm Cortex Screw, Self Tapping", "material": "Titanium / Stainless Steel", "img": "assets/thumbs/p044.jpg"}, {"page": 45, "cat": "screws", "title": "5.0mm Locking Screw", "material": "Titanium / Stainless Steel", "img": "assets/thumbs/p045.jpg"}, {"page": 46, "cat": "screws", "title": "3.5mm Locking Screw", "material": "Titanium / Stainless Steel", "img": "assets/thumbs/p046.jpg"}, {"page": 47, "cat": "screws", "title": "4.0mm Cancellous Screw, Partial Threaded", "material": "Titanium", "img": "assets/thumbs/p047.jpg"}, {"page": 48, "cat": "screws", "title": "4.0mm Cancellous Screw, Threaded 1/3mm", "material": "Titanium", "img": "assets/thumbs/p048.jpg"}, {"page": 49, "cat": "screws", "title": "4.0mm Cancellous Screw, Fully Threaded", "material": "Titanium", "img": "assets/thumbs/p049.jpg"}, {"page": 50, "cat": "screws", "title": "6.5mm Cancellous Screw, Threaded 16mm", "material": "Titanium", "img": "assets/thumbs/p050.jpg"}, {"page": 51, "cat": "screws", "title": "6.5mm Cancellous Screw, Threaded 32mm", "material": "Titanium", "img": "assets/thumbs/p051.jpg"}, {"page": 52, "cat": "screws", "title": "6.5mm Cancellous Screw, Fully Threaded", "material": "Titanium", "img": "assets/thumbs/p052.jpg"}, {"page": 53, "cat": "screws", "title": "4.0mm Cannulated Screw, Partial Threaded", "material": "Titanium", "img": "assets/thumbs/p053.jpg"}, {"page": 54, "cat": "screws", "title": "4.0mm Cannulated Screw, Threaded 1/3mm", "material": "Titanium", "img": "assets/thumbs/p054.jpg"}, {"page": 55, "cat": "screws", "title": "4.0mm Cannulated Screw, Full Threaded", "material": "Titanium", "img": "assets/thumbs/p055.jpg"}, {"page": 56, "cat": "screws", "title": "6.5mm Cannulated Screw, Threaded 16mm", "material": "Titanium", "img": "assets/thumbs/p056.jpg"}, {"page": 57, "cat": "screws", "title": "6.5mm Cannulated Screw, Threaded 32mm", "material": "Titanium", "img": "assets/thumbs/p057.jpg"}, {"page": 58, "cat": "screws", "title": "6.5mm Cannulated Screw, Fully Threaded", "material": "Titanium", "img": "assets/thumbs/p058.jpg"}, {"page": 61, "cat": "fixators", "title": "Mini Fragment", "material": "Aluminium / Stainless Steel", "img": "assets/thumbs/p061.jpg"}, {"page": 62, "cat": "fixators", "title": "Wrist Fixation", "material": "Aluminium / Stainless Steel", "img": "assets/thumbs/p062.jpg"}, {"page": 63, "cat": "fixators", "title": "Sliding (LRS)", "material": "Aluminium", "img": "assets/thumbs/p063.jpg"}, {"page": 64, "cat": "fixators", "title": "Tubular (LRS)", "material": "Aluminium", "img": "assets/thumbs/p064.jpg"}, {"page": 65, "cat": "fixators", "title": "Monotube", "material": "Aluminium", "img": "assets/thumbs/p065.jpg"}, {"page": 66, "cat": "fixators", "title": "CDU", "material": "Stainless Steel", "img": "assets/thumbs/p066.jpg"}, {"page": 67, "cat": "fixators", "title": "Elbow Hinge Fixator", "material": "Aluminium", "img": "assets/thumbs/p067.jpg"}, {"page": 68, "cat": "fixators", "title": "Clamp (Square / Universal / Mini / Single)", "material": "Aluminium / Stainless Steel", "img": "assets/thumbs/p068.jpg"}, {"page": 69, "cat": "rods", "title": "Tubular Rod", "material": "Stainless Steel", "img": "assets/thumbs/p069.jpg"}, {"page": 70, "cat": "rods", "title": "Mini Rod", "material": "Stainless Steel", "img": "assets/thumbs/p070.jpg"}, {"page": 73, "cat": "ilizarov", "title": "Full Ring", "material": "Aluminium / Stainless Steel", "img": "assets/thumbs/p073.jpg"}, {"page": 74, "cat": "ilizarov", "title": "Half Ring", "material": "Aluminium / Stainless Steel", "img": "assets/thumbs/p074.jpg"}, {"page": 75, "cat": "ilizarov", "title": "5/8 Ring", "material": "Aluminium / Stainless Steel", "img": "assets/thumbs/p075.jpg"}, {"page": 76, "cat": "ilizarov", "title": "Arch Ring", "material": "Aluminium / Stainless Steel", "img": "assets/thumbs/p076.jpg"}, {"page": 77, "cat": "ilizarov", "title": "Foot Ring", "material": "Aluminium / Stainless Steel", "img": "assets/thumbs/p077.jpg"}, {"page": 78, "cat": "ilizarov", "title": "Male Post", "material": "Stainless Steel", "img": "assets/thumbs/p078.jpg"}, {"page": 79, "cat": "ilizarov", "title": "Female Post", "material": "Stainless Steel", "img": "assets/thumbs/p079.jpg"}, {"page": 80, "cat": "ilizarov", "title": "Male Hinge / Female Hinge", "material": "Stainless Steel", "img": "assets/thumbs/p080.jpg"}, {"page": 81, "cat": "ilizarov", "title": "Connection Plate", "material": "Stainless Steel", "img": "assets/thumbs/p081.jpg"}, {"page": 82, "cat": "ilizarov", "title": "Twisted Plate", "material": "Stainless Steel", "img": "assets/thumbs/p082.jpg"}, {"page": 83, "cat": "ilizarov", "title": "Oblique Connection", "material": "Stainless Steel", "img": "assets/thumbs/p083.jpg"}, {"page": 84, "cat": "ilizarov", "title": "Square Socket", "material": "Stainless Steel", "img": "assets/thumbs/p084.jpg"}, {"page": 85, "cat": "ilizarov", "title": "Coupling", "material": "Stainless Steel", "img": "assets/thumbs/p085.jpg"}, {"page": 86, "cat": "ilizarov", "title": "Bushing", "material": "Stainless Steel", "img": "assets/thumbs/p086.jpg"}, {"page": 87, "cat": "ilizarov", "title": "Schanz Holder / Foundation Clamp", "material": "Stainless Steel", "img": "assets/thumbs/p087.jpg"}, {"page": 88, "cat": "ilizarov", "title": "Bolt Slotted", "material": "Stainless Steel", "img": "assets/thumbs/p088.jpg"}, {"page": 89, "cat": "ilizarov", "title": "Threaded Rod", "material": "Stainless Steel", "img": "assets/thumbs/p089.jpg"}, {"page": 90, "cat": "ilizarov", "title": "Schanz Screw", "material": "Stainless Steel", "img": "assets/thumbs/p090.jpg"}, {"page": 91, "cat": "ilizarov", "title": "Ilizarov Wire / Olive Wire / Kirschner Wire", "material": "Stainless Steel", "img": "assets/thumbs/p091.jpg"}, {"page": 92, "cat": "ilizarov", "title": "Washer / Slotted Washer / Spherical Washer / Oval Washer", "material": "Stainless Steel", "img": "assets/thumbs/p092.jpg"}, {"page": 93, "cat": "ilizarov", "title": "Simple Screw, Nut", "material": "Stainless Steel", "img": "assets/thumbs/p093.jpg"}, {"page": 94, "cat": "ilizarov", "title": "Tension Wrench", "material": "Stainless Steel", "img": "assets/thumbs/p094.jpg"}];
+  const PRODUCTS = [{"page": 1, "cat": "nailing", "title": "Gamma Nail", "material": "Titanium", "img": "assets/thumbs/p001.jpg", "color": "#413558", "desc_fa": "گاما نیل یک سیستم پیشرفته‌ی تثبیت داخل استخوانی است که برای درمان شکستگی‌های ناحیه‌ی پروگزیمال فمور (نزدیک مفصل هیپ) طراحی شده. این سیستم برای شکستگی‌های تروکانتریک، ساب‌تروکانتریک و ناپایدار کاربرد دارد و شامل یک بلید برای تثبیت چرخشی گردن فمور است."}, {"page": 2, "cat": "nailing", "title": "Gamma Nail End Cap / Gamma Nail Blade", "material": "Titanium", "img": "assets/thumbs/p002.jpg", "color": "#543253", "desc_fa": "اند-کپ و بلید گاما نیل، قطعات جانبی سیستم گاما نیل هستند که برای تکمیل و قفل‌کردن نهایی میخ داخل استخوانی در انواع مدل (فمورال، هیومروس، تیبیا) استفاده می‌شوند."}, {"page": 3, "cat": "nailing", "title": "Femoral Interlocking Nail", "material": "Titanium / Stainless Steel", "img": "assets/thumbs/p003.jpg", "color": "#b59450", "desc_fa": "میخ اینترلاکینگ فمورال برای درمان شکستگی‌های تنه‌ی استخوان فمور به‌کار می‌رود و در هر دو سمت راست و چپ با روش بسته (بدون باز کردن محل شکستگی) قابل جای‌گذاری است."}, {"page": 4, "cat": "nailing", "title": "Tibia Interlocking Nail", "material": "Titanium / Stainless Steel", "img": "assets/thumbs/p004.jpg", "color": "#a98b41", "desc_fa": "میخ اینترلاکینگ تیبیا برای تثبیت و اصلاح شکستگی‌های تنه‌ی استخوان درشت‌نی (تیبیا) استفاده می‌شود و در قطرها و طول‌های مختلف موجود است."}, {"page": 5, "cat": "nailing", "title": "Expert Tibia Nail", "material": "Titanium", "img": "assets/thumbs/p005.jpg", "color": "#b59f6b", "desc_fa": "میخ اکسپرت تیبیا برای تثبیت داخل استخوانی شکستگی‌های پروگزیمال و دیستال تیبیا طراحی شده و امکان قفل‌شدن چندجهته برای پایداری بیشتر را فراهم می‌کند."}, {"page": 6, "cat": "nailing", "title": "Ankle Arthrodesis Nail (Ankle Fusion)", "material": "Titanium", "img": "assets/thumbs/p006.jpg", "color": "#b29568", "desc_fa": "میخ آرترودزیس مچ پا (فیوژن مچ پا) برای اصلاح دائمی و تثبیت مفصل تیبیوتالار و ساب‌تالار در بیمارانی که دچار درد یا بی‌ثباتی مزمن مچ پا هستند به‌کار می‌رود."}, {"page": 7, "cat": "nailing", "title": "Humerus Nail", "material": "Titanium", "img": "assets/thumbs/p007.jpg", "color": "#c2a36f", "desc_fa": "میخ هیومروس برای تثبیت شکستگی‌های تنه‌ی استخوان بازو (هیومروس) طراحی شده و ثبات و بهبود سریع‌تر را در آسیب‌های دیافیزیال فراهم می‌کند."}, {"page": 8, "cat": "nailing", "title": "TEN Nail (Titanium Elastic Nail)", "material": "Titanium / Stainless Steel", "img": "assets/thumbs/p008.jpg", "color": "#ccbd95", "desc_fa": "میخ الاستیک تیتانیومی (تن نیل) برای درمان شکستگی‌های استخوان‌های بلند به‌ویژه در کودکان و نوجوانان به‌کار می‌رود؛ روشی کم‌تهاجمی با حفظ صفحات رشد استخوان."}, {"page": 10, "cat": "plates_general", "title": "4.5mm DCP Plate, Narrow", "material": "Titanium", "img": "assets/thumbs/p010.jpg", "color": "#836625", "desc_fa": "پلیت DCP (فشرده‌سازی پویا) با هدف ایجاد فشار بین قطعات استخوانی شکسته و تثبیت محکم آن‌ها طراحی شده و در جراحی‌های شکستگی استخوان‌های بلند کاربرد گسترده دارد."}, {"page": 11, "cat": "plates_general", "title": "4.5mm DCP Plate, Broad", "material": "Titanium", "img": "assets/thumbs/p011.jpg", "color": "#3e5a46", "desc_fa": "پلیت DCP (فشرده‌سازی پویا) با هدف ایجاد فشار بین قطعات استخوانی شکسته و تثبیت محکم آن‌ها طراحی شده و در جراحی‌های شکستگی استخوان‌های بلند کاربرد گسترده دارد."}, {"page": 12, "cat": "plates_general", "title": "3.5mm DCP Plate", "material": "Titanium", "img": "assets/thumbs/p012.jpg", "color": "#284c64", "desc_fa": "پلیت DCP (فشرده‌سازی پویا) با هدف ایجاد فشار بین قطعات استخوانی شکسته و تثبیت محکم آن‌ها طراحی شده و در جراحی‌های شکستگی استخوان‌های بلند کاربرد گسترده دارد."}, {"page": 13, "cat": "plates_general", "title": "3.5mm Reconstruction Plate, Straight", "material": "Titanium", "img": "assets/thumbs/p013.jpg", "color": "#6c664c", "desc_fa": "پلیت بازسازی (Reconstruction) به‌دلیل قابلیت خم‌شدن سه‌بعدی، برای نواحی آناتومیک با انحنای پیچیده مانند لگن یا ناحیه‌ی دیستال استخوان‌ها استفاده می‌شود."}, {"page": 14, "cat": "plates_general", "title": "3.5mm LCP Reconstruction Plate, Straight", "material": "Titanium", "img": "assets/thumbs/p014.jpg", "color": "#5a4359", "desc_fa": "پلیت قفلی LCP بازسازی، ترکیبی از قابلیت خم‌شدن پلیت بازسازی و پایداری زاویه‌ثابت پیچ‌های قفلی است که ثبات بیشتری در نواحی پیچیده فراهم می‌کند."}, {"page": 15, "cat": "plates_general", "title": "3.5mm 1/3 Tubular Plate", "material": "Titanium", "img": "assets/thumbs/p015.jpg", "color": "#648a66", "desc_fa": "پلیت تیوبولار یک‌سوم برای تثبیت شکستگی‌های استخوان‌های کوچک و نازک مانند فیبولا یا نواحی با پوشش نرم بافتی کم استفاده می‌شود."}, {"page": 16, "cat": "plates_general", "title": "3.5mm 1/3 Tubular Locking Plate", "material": "Titanium", "img": "assets/thumbs/p016.jpg", "color": "#716f7f", "desc_fa": "پلیت قفلی تیوبولار یک‌سوم، نسخه‌ی قفلی پلیت تیوبولار است که با پیچ‌های زاویه‌ثابت، ثبات بیشتری برای استخوان‌های کوچک فراهم می‌کند."}, {"page": 17, "cat": "plates_general", "title": "3.5mm LCP Plate", "material": "Titanium", "img": "assets/thumbs/p017.jpg", "color": "#b59437", "desc_fa": "پلیت قفلی LCP برای تثبیت زاویه‌ثابت شکستگی‌ها طراحی شده و به‌دلیل عدم نیاز به تماس کامل با سطح استخوان، به خون‌رسانی محل شکستگی آسیب کمتری می‌رساند."}, {"page": 18, "cat": "plates_general", "title": "4.5mm LCP Narrow Plate", "material": "Titanium", "img": "assets/thumbs/p018.jpg", "color": "#d9ac59", "desc_fa": "پلیت قفلی LCP باریک برای استخوان‌های بلند با قطر کمتر و در نواحی با فضای محدود برای جای‌گذاری استفاده می‌شود."}, {"page": 19, "cat": "plates_general", "title": "4.5mm LCP Broad Plate", "material": "Titanium", "img": "assets/thumbs/p019.jpg", "color": "#ca7f8d", "desc_fa": "پلیت قفلی LCP پهن برای استخوان‌های بلند با قطر بیشتر طراحی شده و پایداری مکانیکی بالاتری در برابر نیروهای پیچشی فراهم می‌کند."}, {"page": 20, "cat": "plates_general", "title": "4.5mm Locking T Plate", "material": "Titanium", "img": "assets/thumbs/p020.jpg", "color": "#d7ad53", "desc_fa": "پلیت T شکل قفلی برای تثبیت شکستگی‌های نزدیک به مفاصل که نیاز به پوشش عرضی چند پیچ در انتهای استخوان دارند، طراحی شده است."}, {"page": 21, "cat": "plates_general", "title": "3mm LCP Mini Straight Plate", "material": "Titanium", "img": "assets/thumbs/p021.jpg", "color": "#c092c2", "desc_fa": "پلیت مینی LCP صاف برای تثبیت شکستگی‌های استخوان‌های کوچک دست و پا کاربرد دارد."}, {"page": 22, "cat": "plates_general", "title": "3mm Locking mini L Plate (Right/Left)", "material": "Titanium", "img": "assets/thumbs/p022.png", "color": "#6286b8", "desc_fa": "پلیت مینی L قفلی (راست/چپ) برای تثبیت شکستگی‌های زاویه‌دار در استخوان‌های کوچک انتهایی مانند فالانکس یا متاکارپ/متاتارس استفاده می‌شود."}, {"page": 24, "cat": "plates_anatomical", "title": "4.5mm LCP Distal Femur Plate", "material": "Titanium / Stainless Steel", "img": "assets/thumbs/p024.jpg", "color": "#79334c", "desc_fa": "پلیت آناتومیک LCP دیستال فمور برای تثبیت شکستگی‌های انتهای پایینی استخوان ران (نزدیک زانو) طراحی شده و با انحنای متناسب با آناتومی واقعی استخوان ساخته شده است."}, {"page": 25, "cat": "plates_anatomical", "title": "3.5mm LCP Medial Distal Tibia Plate", "material": "Titanium / Stainless Steel", "img": "assets/thumbs/p025.jpg", "color": "#842a1b", "desc_fa": "پلیت آناتومیک LCP دیستال و داخلی تیبیا برای تثبیت شکستگی‌های نزدیک به مچ پا در سطح داخلی درشت‌نی استفاده می‌شود."}, {"page": 26, "cat": "plates_anatomical", "title": "3.5mm LCP Superior Anterior Clavicle Plate (Right/Left)", "material": "Titanium", "img": "assets/thumbs/p026.jpg", "color": "#d79a2c", "desc_fa": "پلیت LCP فوقانی-قدامی ترقوه (راست/چپ) برای تثبیت شکستگی‌های استخوان ترقوه با انطباق آناتومیک بر سطح فوقانی آن طراحی شده است."}, {"page": 27, "cat": "plates_anatomical", "title": "4.5mm Locking Distal Femour Osteotomy Medial Plate (Right/Left)", "material": "Titanium", "img": "assets/thumbs/p027.jpg", "color": "#8c3d64", "desc_fa": "پلیت استئوتومی داخلی دیستال فمور برای ثابت‌نگه‌داشتن استخوان پس از عمل اصلاحی استئوتومی (تغییر زاویه‌ی استخوان) در ناحیه‌ی زانو استفاده می‌شود."}, {"page": 28, "cat": "plates_anatomical", "title": "3.5mm LCP Distal Fibula Plate", "material": "Titanium", "img": "assets/thumbs/p028.jpg", "color": "#e66a65", "desc_fa": "پلیت LCP دیستال فیبولا برای تثبیت شکستگی‌های انتهای پایینی استخوان نازک‌نی، نزدیک مچ پا، طراحی شده است."}, {"page": 29, "cat": "plates_anatomical", "title": "4.5mm Locking Distal Femour Osteotomy Lateral Plate (Right/Left)", "material": "Titanium", "img": "assets/thumbs/p029.jpg", "color": "#6c7950", "desc_fa": "پلیت استئوتومی جانبی دیستال فمور مشابه نوع داخلی، برای اصلاح و تثبیت زاویه‌ی استخوان ران از سمت جانبی به‌کار می‌رود."}, {"page": 30, "cat": "plates_anatomical", "title": "DCP Medial High Tibia Osteotomy Plate (MHT)", "material": "Titanium", "img": "assets/thumbs/p030.jpg", "color": "#9a7a3e", "desc_fa": "پلیت استئوتومی داخلی تیبیای پروگزیمال (MHT) برای اصلاح ناهنجاری‌های زاویه‌ای زانو (مانند زانوی پرانتزی) از طریق استئوتومی بالای تیبیا استفاده می‌شود."}, {"page": 31, "cat": "plates_anatomical", "title": "3.5mm LCP Calcaneal Plate", "material": "Titanium", "img": "assets/thumbs/p031.jpg", "color": "#52737b", "desc_fa": "پلیت قفلی LCP کالکانئال برای تثبیت شکستگی‌های استخوان پاشنه (کالکانئوس) طراحی شده و با آناتومی جانبی پاشنه تطابق دارد."}, {"page": 32, "cat": "plates_anatomical", "title": "3.5mm Calcaneal Plate", "material": "Titanium", "img": "assets/thumbs/p032.jpg", "color": "#895f68", "desc_fa": "پلیت کالکانئال استاندارد نیز برای تثبیت شکستگی‌های استخوان پاشنه استفاده می‌شود و در کنار نوع قفلی، گزینه‌ای مکمل برای جراح فراهم می‌کند."}, {"page": 33, "cat": "plates_anatomical", "title": "4.5mm Locking High Tibial Osteotomy Plate, 3H in Head", "material": "Titanium", "img": "assets/thumbs/p033.jpg", "color": "#7d495b", "desc_fa": "پلیت استئوتومی تیبیای پروگزیمال با سه سوراخ در سر پلیت، برای اصلاح زاویه‌ی تیبیا با ثبات بیشتر در ناحیه‌ی مفصلی طراحی شده است."}, {"page": 34, "cat": "plates_anatomical", "title": "HTO Plate", "material": "Titanium", "img": "assets/thumbs/p034.jpg", "color": "#647177", "desc_fa": "پلیت HTO برای استئوتومی بالای تیبیا در اصلاح ناهنجاری‌های محوری زانو مانند آرتروز تک‌جانبه به‌کار می‌رود."}, {"page": 35, "cat": "plates_anatomical", "title": "3mm LCP Distal Radius Plate, 4H in Head (Right/Left)", "material": "Titanium", "img": "assets/thumbs/p035.jpg", "color": "#4175b9", "desc_fa": "پلیت LCP دیستال رادیوس با ۴ سوراخ در سر پلیت، برای تثبیت شکستگی‌های انتهای پایینی استخوان زند زبرین (رادیوس)، نزدیک مچ دست، طراحی شده است."}, {"page": 36, "cat": "plates_anatomical", "title": "3mm LCP Distal Radius Plate, 7H in Head (Right/Left)", "material": "Titanium", "img": "assets/thumbs/p036.png", "color": "#87bf92", "desc_fa": "پلیت LCP دیستال رادیوس با ۷ سوراخ در سر پلیت، برای شکستگی‌های پیچیده‌تر دیستال رادیوس با نیاز به پوشش گسترده‌تر استفاده می‌شود."}, {"page": 37, "cat": "plates_anatomical", "title": "4.5mm Locking MTP Plate (Right/Left)", "material": "Titanium", "img": "assets/thumbs/p037.jpg", "color": "#6c8bc2", "desc_fa": "پلیت قفلی MTP برای تثبیت مفصل متاتارسوفالانژیال (انگشت شست پا) در جراحی‌های اصلاحی یا فیوژن استفاده می‌شود."}, {"page": 38, "cat": "plates_anatomical", "title": "19mm Locking U Universal Midfoot Plate", "material": "Titanium", "img": "assets/thumbs/p038.jpg", "color": "#d8711f", "desc_fa": "پلیت U شکل قفلی یونیورسال میدفوت برای تثبیت شکستگی‌ها یا فیوژن مفاصل ناحیه‌ی میانی پا (میدفوت) طراحی شده است."}, {"page": 39, "cat": "plates_anatomical", "title": "DCP / LCP Dynamic Hip Screw (DHS) System", "material": "Stainless Steel", "img": "assets/thumbs/p039.jpg", "color": "#a19382", "desc_fa": "سیستم پیچ فشاری دینامیک هیپ (DHS) برای تثبیت شکستگی‌های گردن و بین‌تروکانتریک استخوان ران با ترکیب پلیت و پیچ لغزنده استفاده می‌شود."}, {"page": 41, "cat": "screws", "title": "4.9mm Interlocking Screw", "material": "Titanium / Stainless Steel", "img": "assets/thumbs/p041.jpg", "color": "#ab938e", "desc_fa": "پیچ اینترلاکینگ ۴.۹ میلی‌متری برای قفل‌کردن میخ‌های داخل‌استخوانی با قطر بزرگ‌تر (مانند میخ فمور) در محل خود استفاده می‌شود."}, {"page": 42, "cat": "screws", "title": "3.9mm Interlocking Screw", "material": "Titanium / Stainless Steel", "img": "assets/thumbs/p042.jpg", "color": "#ae9792", "desc_fa": "پیچ اینترلاکینگ ۳.۹ میلی‌متری برای قفل‌کردن میخ‌های داخل‌استخوانی با قطر کوچک‌تر مانند میخ تیبیا یا هیومروس به‌کار می‌رود."}, {"page": 43, "cat": "screws", "title": "4.5mm Cortex Screw, Self Tapping", "material": "Titanium / Stainless Steel", "img": "assets/thumbs/p043.jpg", "color": "#598c84", "desc_fa": "پیچ کورتکس ۴.۵ میلی‌متری خودتراش برای تثبیت پلیت‌ها بر روی لایه‌ی سخت خارجی استخوان (کورتکس) در استخوان‌های بزرگ استفاده می‌شود."}, {"page": 44, "cat": "screws", "title": "3.5mm Cortex Screw, Self Tapping", "material": "Titanium / Stainless Steel", "img": "assets/thumbs/p044.jpg", "color": "#26778d", "desc_fa": "پیچ کورتکس ۳.۵ میلی‌متری خودتراش نسخه‌ی کوچک‌تر همین پیچ برای استخوان‌های با قطر کمتر است."}, {"page": 45, "cat": "screws", "title": "5.0mm Locking Screw", "material": "Titanium / Stainless Steel", "img": "assets/thumbs/p045.jpg", "color": "#a88f44", "desc_fa": "پیچ قفلی ۵.۰ میلی‌متری در پلیت‌های قفلی (LCP) با قطر بزرگ برای ایجاد پایداری زاویه‌ثابت استفاده می‌شود."}, {"page": 46, "cat": "screws", "title": "3.5mm Locking Screw", "material": "Titanium / Stainless Steel", "img": "assets/thumbs/p046.jpg", "color": "#8da072", "desc_fa": "پیچ قفلی ۳.۵ میلی‌متری نسخه‌ی کوچک‌تر پیچ قفلی برای استخوان‌ها و پلیت‌های با قطر کمتر است."}, {"page": 47, "cat": "screws", "title": "4.0mm Cancellous Screw, Partial Threaded", "material": "Titanium", "img": "assets/thumbs/p047.jpg", "color": "#354b4c", "desc_fa": "پیچ اسفنجی (کنسلوس) ۴.۰ میلی‌متری با رزوه‌ی جزئی برای تثبیت در بافت اسفنجی استخوان با فشردگی بین دو قطعه استفاده می‌شود."}, {"page": 48, "cat": "screws", "title": "4.0mm Cancellous Screw, Threaded 1/3mm", "material": "Titanium", "img": "assets/thumbs/p048.jpg", "color": "#571b4b", "desc_fa": "پیچ اسفنجی ۴.۰ میلی‌متری با رزوه ۱۳ میلی‌متری، برای تثبیت با طول رزوه‌ی مشخص در بافت اسفنجی استخوان به‌کار می‌رود."}, {"page": 49, "cat": "screws", "title": "4.0mm Cancellous Screw, Fully Threaded", "material": "Titanium", "img": "assets/thumbs/p049.jpg", "color": "#70520e", "desc_fa": "پیچ اسفنجی ۴.۰ میلی‌متری تمام‌رزوه برای مواردی که فشردگی بین‌قطعه‌ای مدنظر نیست و صرفاً تثبیت مطلوب است استفاده می‌شود."}, {"page": 50, "cat": "screws", "title": "6.5mm Cancellous Screw, Threaded 16mm", "material": "Titanium", "img": "assets/thumbs/p050.jpg", "color": "#615258", "desc_fa": "پیچ اسفنجی ۶.۵ میلی‌متری با رزوه ۱۶ میلی‌متری برای استخوان‌های بزرگ‌تر با نیاز به فشردگی موضعی استفاده می‌شود."}, {"page": 51, "cat": "screws", "title": "6.5mm Cancellous Screw, Threaded 32mm", "material": "Titanium", "img": "assets/thumbs/p051.jpg", "color": "#7c4321", "desc_fa": "پیچ اسفنجی ۶.۵ میلی‌متری با رزوه ۳۲ میلی‌متری برای تثبیت در بافت اسفنجی با طول رزوه‌ی بیشتر به‌کار می‌رود."}, {"page": 52, "cat": "screws", "title": "6.5mm Cancellous Screw, Fully Threaded", "material": "Titanium", "img": "assets/thumbs/p052.jpg", "color": "#444636", "desc_fa": "پیچ اسفنجی ۶.۵ میلی‌متری تمام‌رزوه برای تثبیت بدون فشردگی بین‌قطعه‌ای در استخوان‌های بزرگ استفاده می‌شود."}, {"page": 53, "cat": "screws", "title": "4.0mm Cannulated Screw, Partial Threaded", "material": "Titanium", "img": "assets/thumbs/p053.jpg", "color": "#8f7729", "desc_fa": "پیچ کانولیتد (توخالی) ۴.۰ میلی‌متری با رزوه‌ی جزئی، امکان جای‌گذاری روی سیم راهنما را برای دقت بالاتر فراهم می‌کند."}, {"page": 54, "cat": "screws", "title": "4.0mm Cannulated Screw, Threaded 1/3mm", "material": "Titanium", "img": "assets/thumbs/p054.jpg", "color": "#6d273f", "desc_fa": "پیچ کانولیتد ۴.۰ میلی‌متری با رزوه ۱۳ میلی‌متری، برای تثبیت دقیق روی سیم راهنما با طول رزوه‌ی مشخص استفاده می‌شود."}, {"page": 55, "cat": "screws", "title": "4.0mm Cannulated Screw, Full Threaded", "material": "Titanium", "img": "assets/thumbs/p055.jpg", "color": "#413d32", "desc_fa": "پیچ کانولیتد ۴.۰ میلی‌متری تمام‌رزوه برای تثبیت بدون فشردگی، با قابلیت جای‌گذاری روی سیم راهنما است."}, {"page": 56, "cat": "screws", "title": "6.5mm Cannulated Screw, Threaded 16mm", "material": "Titanium", "img": "assets/thumbs/p056.jpg", "color": "#7a454c", "desc_fa": "پیچ کانولیتد ۶.۵ میلی‌متری با رزوه ۱۶ میلی‌متری برای استخوان‌های بزرگ‌تر با دقت جای‌گذاری بالا استفاده می‌شود."}, {"page": 57, "cat": "screws", "title": "6.5mm Cannulated Screw, Threaded 32mm", "material": "Titanium", "img": "assets/thumbs/p057.jpg", "color": "#114f5f", "desc_fa": "پیچ کانولیتد ۶.۵ میلی‌متری با رزوه ۳۲ میلی‌متری برای تثبیت با طول رزوه‌ی بیشتر روی سیم راهنما به‌کار می‌رود."}, {"page": 58, "cat": "screws", "title": "6.5mm Cannulated Screw, Fully Threaded", "material": "Titanium", "img": "assets/thumbs/p058.jpg", "color": "#4f2e4d", "desc_fa": "پیچ کانولیتد ۶.۵ میلی‌متری تمام‌رزوه برای تثبیت بدون فشردگی در استخوان‌های بزرگ استفاده می‌شود."}, {"page": 61, "cat": "fixators", "title": "Mini Fragment", "material": "Aluminium / Stainless Steel", "img": "assets/thumbs/p061.jpg", "color": "#2e769d", "desc_fa": "فیکساتور خارجی مینی فرگمنت برای تثبیت شکستگی‌های استخوان‌های کوچک دست و پا از خارج بدن، بدون نیاز به جراحی باز گسترده، استفاده می‌شود."}, {"page": 62, "cat": "fixators", "title": "Wrist Fixation", "material": "Aluminium / Stainless Steel", "img": "assets/thumbs/p062.jpg", "color": "#2f3a70", "desc_fa": "فیکساتور مچ دست برای تثبیت خارجی شکستگی‌های دیستال رادیوس و اطراف مچ دست به‌کار می‌رود."}, {"page": 63, "cat": "fixators", "title": "Sliding (LRS)", "material": "Aluminium", "img": "assets/thumbs/p063.jpg", "color": "#bf2349", "desc_fa": "فیکساتور لغزنده (LRS) امکان تنظیم طول استخوان و اصلاح تدریجی دفورمیتی‌ها را از طریق سازوکار لغزشی فراهم می‌کند."}, {"page": 64, "cat": "fixators", "title": "Tubular (LRS)", "material": "Aluminium", "img": "assets/thumbs/p064.jpg", "color": "#972236", "desc_fa": "فیکساتور تیوبولار (LRS) نسخه‌ی لوله‌ای این سیستم برای تثبیت خارجی استخوان‌های بلند با پایداری بالا استفاده می‌شود."}, {"page": 65, "cat": "fixators", "title": "Monotube", "material": "Aluminium", "img": "assets/thumbs/p065.jpg", "color": "#782230", "desc_fa": "مونوتیوب فیکساتور خارجی تک‌میله‌ای برای تثبیت شکستگی‌های استخوان‌های بلند با امکان تنظیم فشردگی/کشش طراحی شده است."}, {"page": 66, "cat": "fixators", "title": "CDU", "material": "Stainless Steel", "img": "assets/thumbs/p066.jpg", "color": "#8f7d76", "desc_fa": "فیکساتور CDU برای اصلاح و تثبیت دفورمیتی‌های زاویه‌ای و طولی استخوان با قابلیت تنظیم دقیق استفاده می‌شود."}, {"page": 67, "cat": "fixators", "title": "Elbow Hinge Fixator", "material": "Aluminium", "img": "assets/thumbs/p067.jpg", "color": "#75365b", "desc_fa": "فیکساتور مفصلی آرنج (Elbow Hinge) برای تثبیت خارجی مفصل آرنج با حفظ دامنه‌ی کنترل‌شده‌ی حرکت در دوران بهبودی طراحی شده است."}, {"page": 68, "cat": "fixators", "title": "Clamp (Square / Universal / Mini / Single)", "material": "Aluminium / Stainless Steel", "img": "assets/thumbs/p068.jpg", "color": "#2559a8", "desc_fa": "کلمپ‌های فیکساتور خارجی (مربعی، یونیورسال، مینی، تک) برای اتصال میله‌ها و پین‌های فیکساتور به یکدیگر در پیکربندی‌های مختلف استفاده می‌شوند."}, {"page": 69, "cat": "rods", "title": "Tubular Rod", "material": "Stainless Steel", "img": "assets/thumbs/p069.jpg", "color": "#949695", "desc_fa": "راد تیوبولار میله‌ی اتصال استاندارد در سیستم‌های فیکساتور خارجی برای اتصال کلمپ‌ها و پین‌ها به یکدیگر است."}, {"page": 70, "cat": "rods", "title": "Mini Rod", "material": "Stainless Steel", "img": "assets/thumbs/p070.jpg", "color": "#9c9a95", "desc_fa": "مینی راد نسخه‌ی کوچک‌تر میله‌ی اتصال، برای فیکساتورهای خارجی استخوان‌های کوچک دست و پا استفاده می‌شود."}, {"page": 73, "cat": "ilizarov", "title": "Full Ring", "material": "Aluminium / Stainless Steel", "img": "assets/thumbs/p073.jpg", "color": "#eeb539", "desc_fa": "رینگ کامل ایلیزاروف یک حلقه‌ی تمام (۳۶۰ درجه) برای تثبیت دورادور استخوان در روش ایلیزاروف است و بیشترین پایداری را در بخش میانی اندام فراهم می‌کند."}, {"page": 74, "cat": "ilizarov", "title": "Half Ring", "material": "Aluminium / Stainless Steel", "img": "assets/thumbs/p074.jpg", "color": "#f2bb2d", "desc_fa": "هاف رینگ (نیم‌حلقه) برای نواحی که دسترسی کامل دورادور اندام ممکن نیست، مانند نزدیکی مفاصل، استفاده می‌شود."}, {"page": 75, "cat": "ilizarov", "title": "5/8 Ring", "material": "Aluminium / Stainless Steel", "img": "assets/thumbs/p075.jpg", "color": "#eeb640", "desc_fa": "رینگ ۵/۸ با پوشش حدود سه‌چهارم محیط اندام، تعادلی بین پایداری رینگ کامل و دسترسی جراحی هاف رینگ فراهم می‌کند و معمولاً نزدیک مفاصل به‌کار می‌رود."}, {"page": 76, "cat": "ilizarov", "title": "Arch Ring", "material": "Aluminium / Stainless Steel", "img": "assets/thumbs/p076.jpg", "color": "#dca706", "desc_fa": "آرچ رینگ (رینگ کمانی) برای نواحی با محدودیت آناتومیک خاص، مانند نزدیکی زانو یا آرنج، جهت عبور دادن اندام بدون فشار به بافت نرم طراحی شده است."}, {"page": 77, "cat": "ilizarov", "title": "Foot Ring", "material": "Aluminium / Stainless Steel", "img": "assets/thumbs/p077.jpg", "color": "#e5c40a", "desc_fa": "الیزاروف (فوت رینگ): یکی از اجزای تشکیل‌دهنده‌ی ست ایلیزاروف، فوت رینگ است. فوت رینگ در قسمت کف پا استفاده می‌شود. با استفاده از فوت رینگ می‌توان قسمت مچ پا که دچار آسیب‌دیدگی یا شکستگی شده را ثابت نگه داشت. فوت رینگ در سایزهای مختلف، تولید شرکت آذین طب سلامت رازی می‌باشد.\n\nسایزهای موجود (میلی‌متر): ۱۲۰-۱۴۰، ۱۴۰-۱۶۰، ۱۶۰-۱۸۰، ۱۸۰-۲۰۰، ۲۰۰-۲۲۰"}, {"page": 78, "cat": "ilizarov", "title": "Male Post", "material": "Stainless Steel", "img": "assets/thumbs/p078.jpg", "color": "#a89c9d", "desc_fa": "پست نری (Male Post) قطعه‌ی اتصال‌دهنده‌ی عمودی بین رینگ‌های ایلیزاروف است که فاصله و راستای بین دو رینگ را حفظ می‌کند."}, {"page": 79, "cat": "ilizarov", "title": "Female Post", "material": "Stainless Steel", "img": "assets/thumbs/p079.jpg", "color": "#aa9f98", "desc_fa": "پست مادگی (Female Post) مکمل پست نری برای اتصال و تنظیم فاصله‌ی بین رینگ‌ها در قاب ایلیزاروف است."}, {"page": 80, "cat": "ilizarov", "title": "Male Hinge / Female Hinge", "material": "Stainless Steel", "img": "assets/thumbs/p080.jpg", "color": "#8d7970", "desc_fa": "لولا‌های نری و مادگی (Male/Female Hinge) امکان ایجاد حرکت زاویه‌ای کنترل‌شده بین دو بخش قاب ایلیزاروف، مثلاً برای اصلاح تدریجی زاویه، را فراهم می‌کنند."}, {"page": 81, "cat": "ilizarov", "title": "Connection Plate", "material": "Stainless Steel", "img": "assets/thumbs/p081.jpg", "color": "#a99f9a", "desc_fa": "پلیت اتصال (Connection Plate) برای اتصال محکم بین اجزای مختلف قاب ایلیزاروف در راستای مستقیم استفاده می‌شود."}, {"page": 82, "cat": "ilizarov", "title": "Twisted Plate", "material": "Stainless Steel", "img": "assets/thumbs/p082.jpg", "color": "#aba199", "desc_fa": "پلیت پیچشی (Twisted Plate) برای اتصال اجزای قاب ایلیزاروف در زوایای غیرهم‌راستا و پیچیده به‌کار می‌رود."}, {"page": 83, "cat": "ilizarov", "title": "Oblique Connection", "material": "Stainless Steel", "img": "assets/thumbs/p083.jpg", "color": "#aaa39a", "desc_fa": "اتصال مایل (Oblique Connection) برای اتصال دو جزء از قاب ایلیزاروف با زاویه‌ی مایل نسبت به هم استفاده می‌شود."}, {"page": 84, "cat": "ilizarov", "title": "Square Socket", "material": "Stainless Steel", "img": "assets/thumbs/p084.jpg", "color": "#968d85", "desc_fa": "ساکت مربعی (Square Socket) محل اتصال میله‌های تهدید‌شونده به رینگ در قاب ایلیزاروف با مقطع مربعی است."}, {"page": 85, "cat": "ilizarov", "title": "Coupling", "material": "Stainless Steel", "img": "assets/thumbs/p085.jpg", "color": "#9f958d", "desc_fa": "کوپلینگ (Coupling) قطعه‌ی اتصال‌دهنده‌ی دو میله‌ی رزوه‌دار به یکدیگر در طول مسیر قاب ایلیزاروف است."}, {"page": 86, "cat": "ilizarov", "title": "Bushing", "material": "Stainless Steel", "img": "assets/thumbs/p086.jpg", "color": "#989089", "desc_fa": "بوشینگ (Bushing) یک قطعه‌ی واسط برای تنظیم قطر سوراخ‌های رینگ متناسب با قطر میله یا پین مورد استفاده است."}, {"page": 87, "cat": "ilizarov", "title": "Schanz Holder / Foundation Clamp", "material": "Stainless Steel", "img": "assets/thumbs/p087.jpg", "color": "#948a84", "desc_fa": "نگه‌دارنده‌ی شانتز (Schanz Holder / Foundation Clamp) برای گرفتن و تثبیت پین‌های شانتز روی رینگ در زوایای دلخواه استفاده می‌شود."}, {"page": 88, "cat": "ilizarov", "title": "Bolt Slotted", "material": "Stainless Steel", "img": "assets/thumbs/p088.jpg", "color": "#9b918a", "desc_fa": "بولت شیاردار (Bolt Slotted) پیچ اتصال با شیار برای ثابت‌نگه‌داشتن اجزای مختلف قاب ایلیزاروف در کنار یکدیگر است."}, {"page": 89, "cat": "ilizarov", "title": "Threaded Rod", "material": "Stainless Steel", "img": "assets/thumbs/p089.jpg", "color": "#9e948f", "desc_fa": "راد رزوه‌دار (Threaded Rod) میله‌ی کاملاً رزوه‌دار برای اتصال و امکان تنظیم دقیق فاصله بین دو رینگ در قاب ایلیزاروف است."}, {"page": 90, "cat": "ilizarov", "title": "Schanz Screw", "material": "Stainless Steel", "img": "assets/thumbs/p090.jpg", "color": "#a2969a", "desc_fa": "پین شانتز (Schanz Screw) پین فلزی است که مستقیماً داخل استخوان جای‌گذاری شده و از طریق نگه‌دارنده به قاب فیکساتور متصل می‌شود."}, {"page": 91, "cat": "ilizarov", "title": "Ilizarov Wire / Olive Wire / Kirschner Wire", "material": "Stainless Steel", "img": "assets/thumbs/p091.jpg", "color": "#b2cfbb", "desc_fa": "سیم‌های ایلیزاروف، اولیو و کریشنر، سیم‌های نازک فلزی برای عبور از داخل استخوان و اتصال آن به رینگ‌ها جهت ایجاد کشش و تثبیت هستند."}, {"page": 92, "cat": "ilizarov", "title": "Washer / Slotted Washer / Spherical Washer / Oval Washer", "material": "Stainless Steel", "img": "assets/thumbs/p092.jpg", "color": "#959f93", "desc_fa": "واشرهای ساده، شیاردار و کروی، برای توزیع یکنواخت فشار روی رینگ و جلوگیری از آسیب هنگام سفت‌کردن مهره‌ها و پیچ‌ها استفاده می‌شوند."}, {"page": 93, "cat": "ilizarov", "title": "Simple Screw, Nut", "material": "Stainless Steel", "img": "assets/thumbs/p093.jpg", "color": "#8b8078", "desc_fa": "پیچ و مهره‌ی ساده برای اتصال و سفت‌کردن نهایی اجزای مختلف قاب ایلیزاروف به‌کار می‌روند."}, {"page": 94, "cat": "ilizarov", "title": "Tension Wrench", "material": "Stainless Steel", "img": "assets/thumbs/p094.jpg", "color": "#747776", "desc_fa": "آچار تنشن (Tension Wrench) ابزاری برای کشیدن و ایجاد تنش مناسب در سیم‌های ایلیزاروف پیش از تثبیت نهایی روی رینگ است."}];
 
   const CAT_LABEL = {
     nailing:"سیستم‌های میخ داخل استخوانی",
@@ -218,58 +219,14 @@
     ilizarov:"ایلیزاروف"
   };
 
-  function getArchetype(p){
-    const t = p.title.toLowerCase();
-    if(p.cat==='plates_general' || p.cat==='plates_anatomical') return 'plate';
-    if(p.cat==='nailing') return 'nail';
-    if(p.cat==='screws') return 'screw';
-    if(p.cat==='rods') return t.includes('tubular') ? 'tube' : 'rod';
-    if(p.cat==='fixators'){
-      if(t.includes('clamp')) return 'block';
-      if(t.includes('hinge')) return 'block';
-      if(t.includes('tubular')) return 'tube';
-      if(t.includes('rod')||t.includes('sliding')||t.includes('monotube')||t.includes('cdu')) return 'rod';
-      return 'block';
-    }
-    if(p.cat==='ilizarov'){
-      if(t.includes('ring')) return 'ring';
-      if(t.includes('wrench')) return 'wrench';
-      if(t.includes('wire')) return 'wire';
-      if(t.includes('washer')) return 'washer';
-      if(t.includes('nut')) return 'washer';
-      if(t.includes('screw')||t.includes('bolt')) return 'screw';
-      if(t.includes('post')) return 'rod';
-      if(t.includes('rod')) return 'rod';
-      if(t.includes('plate')) return 'plate';
-      return 'block';
-    }
-    return 'block';
-  }
-
-  function colorFor(material){
-    const m = material.toLowerCase();
-    if(m.includes('titanium'))  return 0x8b96ac;
-    if(m.includes('aluminium')) return 0xd8cf9c;
-    if(m.includes('stainless')) return 0xd7dce3;
-    return 0xaab0c0;
-  }
-
   const params = new URLSearchParams(window.location.search);
   const pageId = parseInt(params.get('id'), 10);
   let product = PRODUCTS.find(p => p.page === pageId) || PRODUCTS[0];
-  const archetype = getArchetype(product);
-  const seed = product.page;
 
   document.getElementById('catLabel').textContent = CAT_LABEL[product.cat] || '';
   document.getElementById('prodTitle').textContent = product.title;
   document.getElementById('prodMaterial').innerHTML = 'جنس: <b>' + product.material + '</b>';
   document.getElementById('backBtn').addEventListener('click', ()=>{ window.location.href = 'catalog.html'; });
-
-  /* deterministic pseudo-random per product, for visual variety across items in the same archetype */
-  function rnd(seedVal){
-    let x = Math.sin(seedVal*999)*10000;
-    return x - Math.floor(x);
-  }
 
   /* ============================================================
      THREE.JS SCENE
@@ -284,15 +241,15 @@
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.15;
+  renderer.toneMappingExposure = 1.2;
   stage.appendChild(renderer.domElement);
 
-  scene.add(new THREE.AmbientLight(0x304060, 1.15));
+  scene.add(new THREE.AmbientLight(0x404560, 1.1));
   const keyLight = new THREE.DirectionalLight(0xffffff, 1.5);
   keyLight.position.set(240, 300, 280); scene.add(keyLight);
-  const rimLight = new THREE.DirectionalLight(0x0fa968, 0.55);
+  const rimLight = new THREE.DirectionalLight(0x0fa968, 0.5);
   rimLight.position.set(-260, -100, -220); scene.add(rimLight);
-  const fillLight = new THREE.PointLight(0x1a2f7a, 0.7, 1000);
+  const fillLight = new THREE.PointLight(0xffffff, 0.5, 1000);
   fillLight.position.set(-150, 80, 220); scene.add(fillLight);
 
   /* faint starfield-like particle backdrop, navy/green tint */
@@ -317,14 +274,48 @@
   scene.add(core);
 
   /* ============================================================
-     GEOMETRY GENERATORS
+     GEOMETRY GENERATORS -- real 3D shapes, colored using the
+     actual dominant color sampled from each product's real photo.
   ============================================================ */
-  const baseColor = colorFor(product.material);
+  function getArchetype(p){
+    const t = p.title.toLowerCase();
+    if(p.cat==='plates_general' || p.cat==='plates_anatomical') return 'plate';
+    if(p.cat==='nailing') return 'nail';
+    if(p.cat==='screws') return 'screw';
+    if(p.cat==='rods') return t.includes('tubular') ? 'tube' : 'rod';
+    if(p.cat==='fixators'){
+      if(t.includes('clamp')) return 'block';
+      if(t.includes('hinge')) return 'block';
+      if(t.includes('tubular')) return 'tube';
+      if(t.includes('rod')||t.includes('sliding')||t.includes('monotube')||t.includes('cdu')) return 'rod';
+      return 'block';
+    }
+    if(p.cat==='ilizarov'){
+      if(t.includes('foot ring')) return 'footring';
+      if(t.includes('ring')) return 'ring';
+      if(t.includes('wrench')) return 'wrench';
+      if(t.includes('wire')) return 'wire';
+      if(t.includes('washer')) return 'washer';
+      if(t.includes('nut')) return 'washer';
+      if(t.includes('screw')||t.includes('bolt')) return 'screw';
+      if(t.includes('post')) return 'rod';
+      if(t.includes('rod')) return 'rod';
+      if(t.includes('plate')) return 'plate';
+      return 'block';
+    }
+    return 'block';
+  }
+
+  const archetype = getArchetype(product);
+  const seed = product.page;
+  function rnd(seedVal){ let x = Math.sin(seedVal*999)*10000; return x - Math.floor(x); }
+
+  const baseColorHex = product.color || '#aab0c0';
   const mat = new THREE.MeshStandardMaterial({
-    color: baseColor, metalness: 0.85, roughness: 0.28,
-    emissive: 0x050a18, emissiveIntensity: 0.15
+    color: new THREE.Color(baseColorHex), metalness: 0.8, roughness: 0.32,
+    emissive: new THREE.Color(baseColorHex), emissiveIntensity: 0.06
   });
-  const darkMat = new THREE.MeshStandardMaterial({ color:0x0a0d16, metalness:0.5, roughness:0.6 });
+  const darkMat = new THREE.MeshStandardMaterial({ color:0x2a2f3d, metalness:0.4, roughness:0.6 });
 
   function circlePath(cx,cy,r){ const p = new THREE.Path(); p.absarc(cx,cy,r,0,Math.PI*2,false); return p; }
 
@@ -401,7 +392,6 @@
     const shaft = new THREE.Mesh(new THREE.CylinderGeometry(dia/2, dia/2*0.9, length*0.78, 24), mat);
     shaft.rotation.z = Math.PI/2;
     g.add(shaft);
-    // thread ridges
     const threadCount = Math.floor(length*0.78/6);
     for(let i=0;i<threadCount;i++){
       const ring = new THREE.Mesh(new THREE.TorusGeometry(dia/2*1.05, dia*0.05, 6, 16), mat);
@@ -443,15 +433,16 @@
 
   function buildRing(){
     const t = product.title.toLowerCase();
-    let sweepFrac = 1.0;
-    if(t.includes('5/8')) sweepFrac = 0.625;
-    else if(t.includes('half')) sweepFrac = 0.5;
-    else if(t.includes('arch')) sweepFrac = 0.72;
-    else if(t.includes('foot')) sweepFrac = 0.55;
-    else if(t.includes('full')) sweepFrac = 1.0;
+    // clearly distinct geometry per ring type: sweep fraction, radius and hole density all differ
+    let sweepFrac = 1.0, radiusScale = 1.0, holeDensity = 1.0;
+    if(t.includes('5/8')){ sweepFrac = 0.625; radiusScale = 1.0; holeDensity = 1.0; }
+    else if(t.includes('half')){ sweepFrac = 0.5; radiusScale = 0.92; holeDensity = 0.85; }
+    else if(t.includes('arch')){ sweepFrac = 0.42; radiusScale = 1.12; holeDensity = 0.7; }
+    else if(t.includes('foot')){ sweepFrac = 0.34; radiusScale = 0.7; holeDensity = 0.8; }
+    else if(t.includes('full')){ sweepFrac = 1.0; radiusScale = 1.0; holeDensity = 1.2; }
 
-    const outerR = 95 + rnd(seed)*20;
-    const innerR = outerR - (16 + rnd(seed+1)*6);
+    const outerR = (95 + rnd(seed)*14) * radiusScale;
+    const innerR = outerR - (15 + rnd(seed+1)*5);
     const gapCenter = Math.PI/2;
     const gapHalf = (1-sweepFrac)*Math.PI;
     const startA = gapCenter + gapHalf;
@@ -470,10 +461,10 @@
 
     const midR = (outerR+innerR)/2;
     const holeR = 4.4;
-    const nHoles = 14 + Math.floor(rnd(seed+2)*6);
+    const nHoles = Math.max(4, Math.round((14 + Math.floor(rnd(seed+2)*6)) * sweepFrac * holeDensity + 3));
     const marginFrac = sweepFrac>=0.999 ? 0 : 0.08;
     for(let i=0;i<nHoles;i++){
-      const t2 = sweepFrac>=0.999 ? i/nHoles : marginFrac + (1-2*marginFrac)*i/(nHoles-1);
+      const t2 = sweepFrac>=0.999 ? i/nHoles : marginFrac + (1-2*marginFrac)*i/Math.max(1,(nHoles-1));
       const a = sweepFrac>=0.999 ? t2*Math.PI*2 : startA+(endA-startA)*t2;
       shape.holes.push(circlePath(Math.cos(a)*midR, Math.sin(a)*midR, holeR));
     }
@@ -550,23 +541,78 @@
     return g;
   }
 
-  const BUILDERS = { plate:buildPlate, nail:buildNail, screw:buildScrew, rod:buildRod, tube:buildTube, ring:buildRing, washer:buildWasher, wire:buildWire, wrench:buildWrench, block:buildBlock };
+  function buildFootRing(){
+    // custom shape matching the real photographed part: a horseshoe/"U" band
+    // with two straight parallel arms and a rounded bottom, open at the top.
+    const armGap = 84, armHalfW = 16, armTop = 118, R = armGap/2;
+    const outerR = R + armHalfW, innerR = R - armHalfW;
+    const shape = new THREE.Shape();
+    const segs = 48;
+    shape.moveTo(-outerR, armTop);
+    shape.lineTo(-outerR, 0);
+    for(let i=0;i<=segs;i++){ const a = Math.PI + Math.PI*(i/segs); shape.lineTo(Math.cos(a)*outerR, Math.sin(a)*outerR); }
+    shape.lineTo(outerR, armTop);
+    shape.lineTo(innerR, armTop);
+    shape.lineTo(innerR, 0);
+    for(let i=0;i<=segs;i++){ const a = 2*Math.PI - Math.PI*(i/segs); shape.lineTo(Math.cos(a)*innerR, Math.sin(a)*innerR); }
+    shape.lineTo(-innerR, armTop);
+    shape.closePath();
+
+    const holeR = 5.4;
+    const armHoleCount = 7;
+    for(let i=0;i<armHoleCount;i++){
+      const y = 14 + i*((armTop-24)/(armHoleCount-1));
+      shape.holes.push(circlePath(-R, y, holeR));
+      shape.holes.push(circlePath(R, y, holeR));
+    }
+    const bottomHoleCount = 7;
+    for(let i=0;i<bottomHoleCount;i++){
+      const a = Math.PI + Math.PI*(i/(bottomHoleCount-1));
+      shape.holes.push(circlePath(Math.cos(a)*R, Math.sin(a)*R, holeR));
+    }
+
+    const geo = new THREE.ExtrudeGeometry(shape, { depth:9, bevelEnabled:true, bevelThickness:1.4, bevelSize:1.4, bevelSegments:3, curveSegments:32 });
+    geo.translate(0,0,-4.5);
+    return new THREE.Mesh(geo, mat);
+  }
+
+  const BUILDERS = { plate:buildPlate, nail:buildNail, screw:buildScrew, rod:buildRod, tube:buildTube, ring:buildRing, footring:buildFootRing, washer:buildWasher, wire:buildWire, wrench:buildWrench, block:buildBlock };
   const partMesh = (BUILDERS[archetype] || buildBlock)();
   partMesh.scale.setScalar(0.001);
   core.add(partMesh);
 
-  /* faint reflection */
-  const reflection = partMesh.clone(true);
-  reflection.traverse(o=>{ if(o.material){ o.material = o.material.clone(); o.material.transparent = true; o.material.opacity = 0.12; } });
-  reflection.scale.y = -0.001;
-  reflection.position.y = -140;
-  core.add(reflection);
+  /* color swatches — currently only for Foot Ring, which we photographed in 3 anodized colors */
+  if(archetype === 'footring'){
+    const swatchColors = [
+      { hex:'#2d30aa', name:'آبی' },
+      { hex:'#ca9608', name:'طلایی' },
+      { hex:'#5a0b62', name:'بنفش' }
+    ];
+    const wrap = document.getElementById('colorSwatches');
+    wrap.style.display = 'flex';
+    swatchColors.forEach((c, i)=>{
+      const btn = document.createElement('button');
+      btn.title = c.name;
+      btn.style.cssText = `width:26px;height:26px;border-radius:50%;border:2px solid ${i===0?'#fff':'rgba(255,255,255,0.35)'};background:${c.hex};cursor:pointer;padding:0;`;
+      btn.addEventListener('click', ()=>{
+        mat.color.set(c.hex);
+        mat.emissive.set(c.hex);
+        Array.from(wrap.children).forEach(b=> b.style.borderColor = 'rgba(255,255,255,0.35)');
+        btn.style.borderColor = '#fff';
+      });
+      wrap.appendChild(btn);
+    });
+    // start on the blue variant to match the primary catalog photo
+    mat.color.set(swatchColors[0].hex);
+    mat.emissive.set(swatchColors[0].hex);
+  }
 
-  /* ---------- intro grow-in ---------- */
+  /* ---------- boot / intro: part grows in ---------- */
   const introStart = performance.now();
   const INTRO_MS = 850;
   function easeOutBack(x){ const c1=1.70158, c3=c1+1; return 1 + c3*Math.pow(x-1,3) + c1*Math.pow(x-1,2); }
   let introActive = true;
+
 
   /* ============================================================
      INTERACTION
@@ -831,8 +877,7 @@
       const gT = Math.max(0, Math.min(1, elapsed/INTRO_MS));
       const s = Math.max(0.001, easeOutBack(gT));
       partMesh.scale.setScalar(s);
-      reflection.scale.set(s, -s, s);
-      if(gT>=1){ introActive=false; partMesh.scale.setScalar(1); reflection.scale.set(1,-1,1); }
+      if(gT>=1){ introActive=false; partMesh.scale.setScalar(1); }
     }
 
     if(gestureActive && !autoRotate && performance.now()-lastHandSeenAt>2500) autoRotate = true;
