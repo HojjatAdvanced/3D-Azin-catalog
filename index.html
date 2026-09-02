@@ -16,6 +16,15 @@
     --ink:     #eef2fb;
     --muted:   #8b96b8;
   }
+  body.light-mode{
+    --panel:  rgba(255,255,255,0.85);
+    --border: rgba(15,169,104,0.32);
+    --ink:    #16203c;
+    --muted:  #5b6478;
+  }
+  body.light-mode #bgCanvas{
+    background:radial-gradient(ellipse at 50% 0%, #eef6f1 0%, #eef2f8 55%, #e7ecf5 100%);
+  }
   *{ box-sizing:border-box; }
   html,body{ margin:0; background:var(--bg); font-family:'Vazirmatn',Tahoma,sans-serif; color:var(--ink); overflow-x:hidden; }
   img{ display:block; max-width:100%; }
@@ -44,6 +53,14 @@
   }
   .topbar nav a:hover{ background:rgba(23,224,138,0.1); border-color:var(--green); color:#fff; }
   .topbar nav a.active{ background:linear-gradient(135deg, var(--green-2), var(--green)); border-color:transparent; color:#04140c; font-weight:800; }
+
+  .theme-toggle{
+    width:38px; height:38px; border-radius:11px; border:1px solid var(--border);
+    background:rgba(23,224,138,0.08); cursor:pointer; display:flex; align-items:center; justify-content:center;
+    transition:all .2s; flex:none;
+  }
+  .theme-toggle:hover{ background:rgba(23,224,138,0.18); border-color:var(--green); }
+  .theme-toggle svg{ width:19px; height:19px; stroke:var(--green); fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
 
   .hero{ position:relative; overflow:hidden; }
   .hero-img-wrap{ position:relative; }
@@ -79,7 +96,7 @@
 
   .founder-card img{ width:100%; filter:saturate(1.05); }
   .founder-body{ padding:24px 26px 28px; text-align:right; }
-  .founder-name{ font-size:17px; font-weight:800; color:#fff; }
+  .founder-name{ font-size:17px; font-weight:800; color:var(--ink); }
   .founder-role{ font-size:12px; color:var(--green); font-weight:700; margin-top:5px; letter-spacing:.2px; }
   .founder-bio{ font-size:13px; line-height:2.1; color:#c3cbe6; margin-top:16px; }
 
@@ -141,6 +158,9 @@
     <a href="catalog.html">کاتالوگ</a>
     <a href="contact.html">تماس با ما</a>
   </nav>
+  <button class="theme-toggle" id="themeToggle" title="تغییر حالت روشن/تیره">
+    <svg viewBox="0 0 24 24"><path d="M9 2v6M15 2v6M6 8h12v3a6 6 0 0 1-6 6 6 6 0 0 1-6-6V8Z"/><path d="M12 17v3M9 22h6"/></svg>
+  </button>
 </div>
 
 <div class="hero">
@@ -198,6 +218,18 @@
   مدیریت: مهندس رضا عبداللهی
 </footer>
 </div>
+
+<script>
+(function(){
+  const btn = document.getElementById('themeToggle');
+  const saved = localStorage.getItem('medazinco_theme');
+  if(saved === 'light') document.body.classList.add('light-mode');
+  btn.addEventListener('click', ()=>{
+    document.body.classList.toggle('light-mode');
+    localStorage.setItem('medazinco_theme', document.body.classList.contains('light-mode') ? 'light' : 'dark');
+  });
+})();
+</script>
 
 <script>
 (function(){
