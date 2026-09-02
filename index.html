@@ -3,124 +3,135 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>MEDAZINCO | آذین طب سلامت رازی</title>
+<title>مدازینکو | آذین طب سلامت رازی</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800;900&display=swap');
 
   :root{
-    --navy:  #0e1a4d;
-    --navy-2:#182a72;
-    --green: #0fa968;
-    --green-2:#12c47a;
-    --ink:   #1c2440;
-    --muted: #6b7488;
-    --bg:    #f4f6fa;
-    --border:#e7eaf2;
+    --bg:      #050b18;
+    --panel:   rgba(14,22,45,0.55);
+    --border:  rgba(15,169,104,0.22);
+    --green:   #17e08a;
+    --green-2: #0fa968;
+    --ink:     #eef2fb;
+    --muted:   #8b96b8;
   }
   *{ box-sizing:border-box; }
-  html,body{ margin:0; background:var(--bg); font-family:'Vazirmatn',Tahoma,sans-serif; color:var(--ink); }
+  html,body{ margin:0; background:var(--bg); font-family:'Vazirmatn',Tahoma,sans-serif; color:var(--ink); overflow-x:hidden; }
   img{ display:block; max-width:100%; }
 
-  /* ---------- top brand bar ---------- */
+  #bgCanvas{
+    position:fixed; inset:0; z-index:0; pointer-events:none;
+    background:radial-gradient(ellipse at 50% 0%, #0a1730 0%, #050b18 55%, #030710 100%);
+  }
+
+  .page{ position:relative; z-index:1; }
+
   .topbar{
-    background:linear-gradient(135deg, var(--navy), var(--navy-2));
-    color:#fff; padding:16px 26px;
+    background:rgba(5,11,24,0.7); backdrop-filter:blur(14px);
+    border-bottom:1px solid var(--border);
+    color:#fff; padding:16px 26px; position:sticky; top:0; z-index:20;
     display:flex; align-items:center; gap:12px; flex-wrap:wrap;
   }
-  .topbar img{ width:38px; height:38px; border-radius:9px; background:#fff; padding:3px; }
-  .topbar .txt b{ display:block; font-size:15px; letter-spacing:.3px; }
-  .topbar .txt small{ display:block; font-size:10.5px; color:#b9c2e6; margin-top:1px; }
+  .topbar img{ width:36px; height:36px; border-radius:9px; background:#fff; padding:3px; }
+  .topbar .txt b{ display:block; font-size:14.5px; letter-spacing:.4px; }
+  .topbar .txt small{ display:block; font-size:10px; color:var(--muted); margin-top:1px; letter-spacing:.3px; }
   .topbar .spacer{ flex:1; }
   .topbar nav{ display:flex; gap:8px; }
   .topbar nav a{
-    color:#dfe4f7; text-decoration:none; font-size:12px; padding:8px 14px;
-    border-radius:9px; border:1px solid rgba(255,255,255,0.18);
+    color:#cfd8f5; text-decoration:none; font-size:12px; padding:8px 15px;
+    border-radius:10px; border:1px solid var(--border); transition:all .2s;
   }
-  .topbar nav a:hover{ background:rgba(255,255,255,0.1); }
-  .topbar nav a.active{ background:var(--green); border-color:transparent; color:#fff; font-weight:700; }
+  .topbar nav a:hover{ background:rgba(23,224,138,0.1); border-color:var(--green); color:#fff; }
+  .topbar nav a.active{ background:linear-gradient(135deg, var(--green-2), var(--green)); border-color:transparent; color:#04140c; font-weight:800; }
 
-  /* ---------- hero ---------- */
-  .hero{
-    position:relative; overflow:hidden;
-    background:#050914;
-  }
-  .hero img{ width:100%; height:auto; opacity:0.55; display:block; }
+  .hero{ position:relative; overflow:hidden; }
+  .hero-img-wrap{ position:relative; }
+  .hero img.hero-photo{ width:100%; height:auto; display:block; opacity:0.32; mix-blend-mode:luminosity; }
   .hero .overlay{
     position:absolute; inset:0;
-    background:linear-gradient(180deg, rgba(5,9,20,0.15) 0%, rgba(5,9,20,0.55) 55%, rgba(5,9,20,0.94) 100%);
+    background:linear-gradient(180deg, rgba(5,11,24,0.25) 0%, rgba(5,11,24,0.75) 55%, var(--bg) 100%);
     display:flex; flex-direction:column; align-items:center; justify-content:flex-end;
-    text-align:center; padding:26px 22px 34px;
+    text-align:center; padding:30px 22px 44px;
   }
-  .hero .logo{ width:150px; margin-bottom:14px; border-radius:14px; }
-  .hero h1{ color:#fff; font-size:19px; font-weight:800; letter-spacing:.2px; line-height:1.6; }
-  .hero p{ color:#aeb8d8; font-size:12.5px; margin-top:8px; letter-spacing:.3px; }
+  .hero .logo{ width:130px; margin-bottom:18px; border-radius:16px; box-shadow:0 0 40px rgba(23,224,138,0.25); }
+  .hero .eyebrow{
+    font-size:10.5px; letter-spacing:3px; color:var(--green); font-weight:700; margin-bottom:10px;
+    text-transform:uppercase;
+  }
+  .hero h1{ color:#fff; font-size:21px; font-weight:800; line-height:1.7; text-shadow:0 2px 20px rgba(0,0,0,0.5); }
+  .hero p{ color:var(--muted); font-size:12.5px; margin-top:10px; letter-spacing:.3px; }
 
-  /* ---------- sections ---------- */
-  main{ max-width:900px; margin:0 auto; padding:34px 22px 10px; }
+  main{ max-width:920px; margin:0 auto; padding:40px 22px 10px; }
 
   .section-title{
-    font-size:15px; font-weight:800; color:var(--navy); margin:0 0 16px;
-    display:flex; align-items:center; gap:10px;
+    font-size:14px; font-weight:800; color:var(--green); margin:0 0 18px;
+    display:flex; align-items:center; gap:10px; letter-spacing:.5px;
   }
-  .section-title .bar{ width:4px; height:16px; background:var(--green); border-radius:3px; }
+  .section-title .bar{ width:4px; height:16px; background:linear-gradient(var(--green), var(--green-2)); border-radius:3px; box-shadow:0 0 10px rgba(23,224,138,0.6); }
 
   .card{
-    background:#fff; border:1px solid var(--border); border-radius:18px;
-    overflow:hidden; margin-bottom:34px;
-    box-shadow:0 10px 30px rgba(14,26,77,0.06);
+    background:var(--panel); backdrop-filter:blur(16px);
+    border:1px solid var(--border); border-radius:20px;
+    overflow:hidden; margin-bottom:36px;
+    box-shadow:0 20px 50px rgba(0,0,0,0.35);
   }
 
-  /* founder card */
-  .founder-card img{ width:100%; }
-  .founder-body{ padding:22px 24px 26px; text-align:right; }
-  .founder-name{ font-size:16.5px; font-weight:800; color:var(--navy); }
-  .founder-role{ font-size:12px; color:var(--green); font-weight:700; margin-top:4px; }
-  .founder-bio{ font-size:13px; line-height:2.05; color:#404a68; margin-top:14px; }
+  .founder-card img{ width:100%; filter:saturate(1.05); }
+  .founder-body{ padding:24px 26px 28px; text-align:right; }
+  .founder-name{ font-size:17px; font-weight:800; color:#fff; }
+  .founder-role{ font-size:12px; color:var(--green); font-weight:700; margin-top:5px; letter-spacing:.2px; }
+  .founder-bio{ font-size:13px; line-height:2.1; color:#c3cbe6; margin-top:16px; }
 
-  /* facility card */
-  .facility-card img{ width:100%; }
+  .facility-card img{ width:100%; filter:saturate(1.1) contrast(1.05); }
   .facility-caption{
-    padding:16px 22px; text-align:right; font-size:12px; color:var(--muted); line-height:1.9;
+    padding:18px 24px; text-align:right; font-size:12px; color:var(--muted); line-height:1.9;
   }
 
-  /* stats row */
   .stats{
-    display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-bottom:34px;
+    display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-bottom:36px;
   }
   .stat{
-    background:#fff; border:1px solid var(--border); border-radius:16px;
-    padding:20px 12px; text-align:center;
+    background:var(--panel); backdrop-filter:blur(16px);
+    border:1px solid var(--border); border-radius:18px;
+    padding:22px 12px; text-align:center; position:relative; overflow:hidden;
   }
-  .stat .n{ font-size:22px; font-weight:800; color:var(--green); }
-  .stat .l{ font-size:11px; color:var(--muted); margin-top:6px; letter-spacing:.2px; }
+  .stat::before{
+    content:''; position:absolute; inset:0; opacity:0.5;
+    background:radial-gradient(circle at 50% 0%, rgba(23,224,138,0.12), transparent 70%);
+  }
+  .stat .n{ font-size:24px; font-weight:900; color:var(--green); text-shadow:0 0 18px rgba(23,224,138,0.5); position:relative; }
+  .stat .l{ font-size:11px; color:var(--muted); margin-top:7px; letter-spacing:.2px; position:relative; }
 
-  /* CTA */
-  .cta-wrap{ text-align:center; padding:10px 22px 60px; }
+  .cta-wrap{ text-align:center; padding:14px 22px 70px; }
   .cta-btn{
     display:inline-flex; align-items:center; gap:10px;
-    padding:17px 42px; border-radius:14px; border:none;
+    padding:18px 44px; border-radius:16px; border:none;
     background:linear-gradient(135deg, var(--green), var(--green-2));
-    color:#fff; font-family:inherit; font-size:15px; font-weight:800;
+    color:#04140c; font-family:inherit; font-size:15px; font-weight:800;
     cursor:pointer; text-decoration:none;
-    box-shadow:0 14px 32px rgba(15,169,104,0.32);
+    box-shadow:0 18px 44px rgba(23,224,138,0.35), 0 0 0 1px rgba(23,224,138,0.3) inset;
     transition:transform .15s, box-shadow .15s;
   }
-  .cta-btn:hover{ transform:translateY(-2px); box-shadow:0 18px 40px rgba(15,169,104,0.4); }
-  .cta-sub{ margin-top:12px; font-size:11.5px; color:var(--muted); }
+  .cta-btn:hover{ transform:translateY(-2px); box-shadow:0 22px 54px rgba(23,224,138,0.45); }
+  .cta-sub{ margin-top:14px; font-size:11.5px; color:var(--muted); }
 
   footer{
-    text-align:center; padding:24px 22px 30px; font-size:11px; color:var(--muted);
-    border-top:1px solid var(--border); background:#fff; line-height:2;
+    text-align:center; padding:26px 22px 32px; font-size:11px; color:var(--muted);
+    border-top:1px solid var(--border); background:rgba(5,11,24,0.6); line-height:2; position:relative; z-index:1;
   }
 
   @media (min-width:720px){
-    .hero .overlay{ padding:40px 22px 50px; }
-    .hero h1{ font-size:24px; }
+    .hero .overlay{ padding:46px 22px 56px; }
+    .hero h1{ font-size:26px; }
   }
 </style>
 </head>
 <body>
 
+<canvas id="bgCanvas"></canvas>
+
+<div class="page">
 <div class="topbar">
   <img src="assets/logo.jpg" alt="MEDAZINCO">
   <div class="txt"><b>MEDAZINCO</b><small>AzinTeb Salamat Razi</small></div>
@@ -133,11 +144,14 @@
 </div>
 
 <div class="hero">
-  <img src="assets/about/hero_building.jpg" alt="ساختمان شرکت آذین طب سلامت رازی">
-  <div class="overlay">
-    <img class="logo" src="assets/logo.jpg" alt="MEDAZINCO">
-    <h1>تولیدکننده‌ی ایمپلنت و فیکساتور خارجی ارتوپدی</h1>
-    <p>Production of Orthopedic External Fixators and Implants</p>
+  <div class="hero-img-wrap">
+    <img class="hero-photo" src="assets/about/hero_building.jpg" alt="ساختمان شرکت آذین طب سلامت رازی">
+    <div class="overlay">
+      <img class="logo" src="assets/logo.jpg" alt="MEDAZINCO">
+      <div class="eyebrow">Advanced Orthopedic Technology</div>
+      <h1>تولیدکننده‌ی ایمپلنت و فیکساتور خارجی ارتوپدی</h1>
+      <p>Production of Orthopedic External Fixators and Implants</p>
+    </div>
   </div>
 </div>
 
@@ -175,9 +189,92 @@
 </main>
 
 <footer>
+  <nav style="display:flex;justify-content:center;gap:18px;margin-bottom:14px;">
+    <a href="index.html" style="color:var(--green);text-decoration:none;font-size:11.5px;font-weight:700;">درباره‌ما</a>
+    <a href="catalog.html" style="color:var(--muted);text-decoration:none;font-size:11.5px;">کاتالوگ</a>
+    <a href="contact.html" style="color:var(--muted);text-decoration:none;font-size:11.5px;">تماس با ما</a>
+  </nav>
   کلیه حقوق این وب‌سایت متعلق به شرکت دانش‌بنیان فن‌آور آذین طب سلامت رازی می‌باشد.<br>
   مدیریت: مهندس رضا عبداللهی
 </footer>
+</div>
+
+<script>
+(function(){
+  const canvas = document.getElementById('bgCanvas');
+  const ctx = canvas.getContext('2d');
+  let w, h, dpr;
+  let particles = [];
+  const COUNT = 70;
+  const LINK_DIST = 130;
+
+  function resize(){
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    w = window.innerWidth; h = document.documentElement.scrollHeight;
+    canvas.width = w * dpr; canvas.height = h * dpr;
+    canvas.style.width = w + 'px'; canvas.style.height = h + 'px';
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+  }
+
+  function initParticles(){
+    particles = [];
+    const count = Math.min(COUNT, Math.floor((w*h)/18000));
+    for(let i=0;i<count;i++){
+      particles.push({
+        x: Math.random()*w,
+        y: Math.random()*h,
+        vx: (Math.random()-0.5)*0.25,
+        vy: (Math.random()-0.5)*0.25,
+        r: 1.2 + Math.random()*1.8,
+        pulse: Math.random()*Math.PI*2
+      });
+    }
+  }
+
+  function step(){
+    ctx.clearRect(0,0,w,h);
+
+    for(const p of particles){
+      p.x += p.vx; p.y += p.vy;
+      p.pulse += 0.02;
+      if(p.x < -20) p.x = w+20; if(p.x > w+20) p.x = -20;
+      if(p.y < -20) p.y = h+20; if(p.y > h+20) p.y = -20;
+    }
+
+    for(let i=0;i<particles.length;i++){
+      for(let j=i+1;j<particles.length;j++){
+        const a = particles[i], b = particles[j];
+        const dx = a.x-b.x, dy = a.y-b.y;
+        const dist = Math.sqrt(dx*dx+dy*dy);
+        if(dist < LINK_DIST){
+          const op = (1 - dist/LINK_DIST) * 0.35;
+          ctx.strokeStyle = `rgba(23,224,138,${op})`;
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y);
+          ctx.stroke();
+        }
+      }
+    }
+
+    for(const p of particles){
+      const glow = 0.55 + Math.sin(p.pulse)*0.35;
+      ctx.beginPath();
+      ctx.fillStyle = `rgba(23,224,138,${glow})`;
+      ctx.shadowColor = 'rgba(23,224,138,0.9)';
+      ctx.shadowBlur = 6;
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+      ctx.fill();
+      ctx.shadowBlur = 0;
+    }
+
+    requestAnimationFrame(step);
+  }
+
+  window.addEventListener('resize', ()=>{ resize(); initParticles(); });
+  resize(); initParticles(); step();
+})();
+</script>
 
 </body>
 </html>
