@@ -165,7 +165,7 @@
   <div class="topbar">
     <div class="brand">
       <img src="assets/logo.jpg" alt="MEDAZINCO">
-      <div class="txt"><b>مدازینکو</b><small>نمایش سه‌بعدی تعاملی</small></div>
+      <div class="txt"><b>MEDAZINCO</b><small>AzinTeb Salamat Razi</small></div>
     </div>
     <button class="backBtn" id="backBtn">&rsaquo; بازگشت به کاتالوگ</button>
   </div>
@@ -218,58 +218,14 @@
     ilizarov:"ایلیزاروف"
   };
 
-  function getArchetype(p){
-    const t = p.title.toLowerCase();
-    if(p.cat==='plates_general' || p.cat==='plates_anatomical') return 'plate';
-    if(p.cat==='nailing') return 'nail';
-    if(p.cat==='screws') return 'screw';
-    if(p.cat==='rods') return t.includes('tubular') ? 'tube' : 'rod';
-    if(p.cat==='fixators'){
-      if(t.includes('clamp')) return 'block';
-      if(t.includes('hinge')) return 'block';
-      if(t.includes('tubular')) return 'tube';
-      if(t.includes('rod')||t.includes('sliding')||t.includes('monotube')||t.includes('cdu')) return 'rod';
-      return 'block';
-    }
-    if(p.cat==='ilizarov'){
-      if(t.includes('ring')) return 'ring';
-      if(t.includes('wrench')) return 'wrench';
-      if(t.includes('wire')) return 'wire';
-      if(t.includes('washer')) return 'washer';
-      if(t.includes('nut')) return 'washer';
-      if(t.includes('screw')||t.includes('bolt')) return 'screw';
-      if(t.includes('post')) return 'rod';
-      if(t.includes('rod')) return 'rod';
-      if(t.includes('plate')) return 'plate';
-      return 'block';
-    }
-    return 'block';
-  }
-
-  function colorFor(material){
-    const m = material.toLowerCase();
-    if(m.includes('titanium'))  return 0x8b96ac;
-    if(m.includes('aluminium')) return 0xd8cf9c;
-    if(m.includes('stainless')) return 0xd7dce3;
-    return 0xaab0c0;
-  }
-
   const params = new URLSearchParams(window.location.search);
   const pageId = parseInt(params.get('id'), 10);
   let product = PRODUCTS.find(p => p.page === pageId) || PRODUCTS[0];
-  const archetype = getArchetype(product);
-  const seed = product.page;
 
   document.getElementById('catLabel').textContent = CAT_LABEL[product.cat] || '';
   document.getElementById('prodTitle').textContent = product.title;
   document.getElementById('prodMaterial').innerHTML = 'جنس: <b>' + product.material + '</b>';
   document.getElementById('backBtn').addEventListener('click', ()=>{ window.location.href = 'catalog.html'; });
-
-  /* deterministic pseudo-random per product, for visual variety across items in the same archetype */
-  function rnd(seedVal){
-    let x = Math.sin(seedVal*999)*10000;
-    return x - Math.floor(x);
-  }
 
   /* ============================================================
      THREE.JS SCENE
@@ -283,17 +239,11 @@
   const renderer = new THREE.WebGLRenderer({ antialias:true, alpha:true });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.15;
+  renderer.toneMapping = THREE.NoToneMapping; /* preserve exact source colors */
+  renderer.outputEncoding = THREE.sRGBEncoding;
   stage.appendChild(renderer.domElement);
 
-  scene.add(new THREE.AmbientLight(0x304060, 1.15));
-  const keyLight = new THREE.DirectionalLight(0xffffff, 1.5);
-  keyLight.position.set(240, 300, 280); scene.add(keyLight);
-  const rimLight = new THREE.DirectionalLight(0x0fa968, 0.55);
-  rimLight.position.set(-260, -100, -220); scene.add(rimLight);
-  const fillLight = new THREE.PointLight(0x1a2f7a, 0.7, 1000);
-  fillLight.position.set(-150, 80, 220); scene.add(fillLight);
+  scene.add(new THREE.AmbientLight(0xffffff, 0.9));
 
   /* faint starfield-like particle backdrop, navy/green tint */
   {
@@ -317,256 +267,50 @@
   scene.add(core);
 
   /* ============================================================
-     GEOMETRY GENERATORS
+     PHOTO CARD -- the exact real product image from the catalog,
+     mounted on a thin 3D card (unlit material = true source colors,
+     no shadows, no lighting artifacts).
   ============================================================ */
-  const baseColor = colorFor(product.material);
-  const mat = new THREE.MeshStandardMaterial({
-    color: baseColor, metalness: 0.85, roughness: 0.28,
-    emissive: 0x050a18, emissiveIntensity: 0.15
+  const loader = new THREE.TextureLoader();
+  loader.crossOrigin = 'anonymous';
+
+  const CARD_HEIGHT = 210; // world units; width derives from image aspect ratio
+  const CARD_DEPTH = 3.2;
+
+  let cardMesh = null;
+
+  loader.load(product.img, function(texture){
+    texture.encoding = THREE.sRGBEncoding;
+    texture.anisotropy = renderer.capabilities.getMaxAnisotropy();
+    texture.minFilter = THREE.LinearMipmapLinearFilter;
+
+    const iw = texture.image.width, ih = texture.image.height;
+    const aspect = iw / ih;
+    const h = CARD_HEIGHT, w = CARD_HEIGHT * aspect;
+
+    const frontMat = new THREE.MeshBasicMaterial({ map: texture, toneMapped: false });
+    const edgeMat = new THREE.MeshBasicMaterial({ color: 0x0e1a4d, toneMapped: false });
+    const backMat = new THREE.MeshBasicMaterial({ color: 0x0a1338, toneMapped: false });
+
+    const geo = new THREE.BoxGeometry(w, h, CARD_DEPTH);
+    // BoxGeometry face order: +x,-x,+y,-y,+z(front),-z(back)
+    const mats = [edgeMat, edgeMat, edgeMat, edgeMat, frontMat, backMat];
+
+    cardMesh = new THREE.Mesh(geo, mats);
+    cardMesh.scale.setScalar(0.001);
+    core.add(cardMesh);
+    startIntro();
+  }, undefined, function(){
+    document.getElementById('prodTitle').textContent = product.title + ' (خطا در بارگذاری تصویر)';
   });
-  const darkMat = new THREE.MeshStandardMaterial({ color:0x0a0d16, metalness:0.5, roughness:0.6 });
 
-  function circlePath(cx,cy,r){ const p = new THREE.Path(); p.absarc(cx,cy,r,0,Math.PI*2,false); return p; }
-
-  function buildPlate(){
-    const len = 200 + rnd(seed)*90;
-    const halfLen = len/2;
-    const width = 26 + rnd(seed+1)*14;
-    const holeCount = 4 + Math.floor(rnd(seed+2)*4);
-
-    const shape = new THREE.Shape();
-    const kf = [
-      [-halfLen, 3], [-halfLen*0.9, width*0.42], [-halfLen*0.7, width*0.5],
-      [0, width*0.46], [halfLen*0.7, width*0.5], [halfLen*0.9, width*0.42], [halfLen, 3]
-    ];
-    function hw(x){
-      for(let i=0;i<kf.length-1;i++){
-        const a=kf[i], b=kf[i+1];
-        if(x>=a[0] && x<=b[0]){
-          let t=(x-a[0])/(b[0]-a[0]); t=t*t*(3-2*t);
-          return a[1]+(b[1]-a[1])*t;
-        }
-      }
-      return kf[kf.length-1][1];
-    }
-    const steps=60;
-    for(let i=0;i<=steps;i++){ const x=-halfLen+len*i/steps, y=hw(x); i===0?shape.moveTo(x,y):shape.lineTo(x,y); }
-    for(let i=steps;i>=0;i--){ const x=-halfLen+len*i/steps, y=-hw(x); shape.lineTo(x,y); }
-    shape.closePath();
-
-    for(let i=0;i<holeCount;i++){
-      const t = (i+0.5)/holeCount;
-      const x = -halfLen*0.82 + len*0.72*t;
-      shape.holes.push(circlePath(x,0,width*0.14));
-    }
-
-    const geo = new THREE.ExtrudeGeometry(shape, { depth:8, bevelEnabled:true, bevelThickness:1.3, bevelSize:1.3, bevelSegments:3, curveSegments:20 });
-    geo.translate(0,0,-4);
-    const pos = geo.attributes.position;
-    for(let i=0;i<pos.count;i++){
-      const x=pos.getX(i), z=pos.getZ(i);
-      const t=(x+halfLen)/len;
-      pos.setZ(i, z + Math.sin(t*Math.PI)*14);
-    }
-    geo.computeVertexNormals();
-    return new THREE.Mesh(geo, mat);
-  }
-
-  function buildNail(){
-    const length = 220 + rnd(seed)*90;
-    const dia = 10 + rnd(seed+1)*6;
-    const g = new THREE.Group();
-    const shaft = new THREE.Mesh(new THREE.CylinderGeometry(dia/2, dia/2, length*0.82, 28), mat);
-    shaft.rotation.z = Math.PI/2;
-    g.add(shaft);
-    const tip = new THREE.Mesh(new THREE.ConeGeometry(dia/2, length*0.18, 28), mat);
-    tip.rotation.z = -Math.PI/2;
-    tip.position.x = -(length*0.82)/2 - (length*0.18)/2;
-    g.add(tip);
-    const holeCount = 2 + Math.floor(rnd(seed+2)*2);
-    for(let i=0;i<holeCount;i++){
-      const hx = (length*0.82)*0.5 - (i+1)*(length*0.82)/(holeCount+1.4);
-      const hole = new THREE.Mesh(new THREE.CylinderGeometry(dia*0.14, dia*0.14, dia*1.05, 14), darkMat);
-      hole.rotation.x = Math.PI/2;
-      hole.position.x = hx;
-      g.add(hole);
-    }
-    return g;
-  }
-
-  function buildScrew(){
-    const length = 55 + rnd(seed)*45;
-    const dia = 7 + rnd(seed+1)*5;
-    const g = new THREE.Group();
-    const shaft = new THREE.Mesh(new THREE.CylinderGeometry(dia/2, dia/2*0.9, length*0.78, 24), mat);
-    shaft.rotation.z = Math.PI/2;
-    g.add(shaft);
-    // thread ridges
-    const threadCount = Math.floor(length*0.78/6);
-    for(let i=0;i<threadCount;i++){
-      const ring = new THREE.Mesh(new THREE.TorusGeometry(dia/2*1.05, dia*0.05, 6, 16), mat);
-      ring.rotation.y = Math.PI/2;
-      ring.position.x = -length*0.39 + i*6;
-      g.add(ring);
-    }
-    const head = new THREE.Mesh(new THREE.CylinderGeometry(dia*0.85, dia*0.85, dia*0.7, 6), mat);
-    head.rotation.z = Math.PI/2;
-    head.position.x = length*0.39 + dia*0.35;
-    g.add(head);
-    const tip = new THREE.Mesh(new THREE.ConeGeometry(dia/2*0.9, dia*1.1, 24), mat);
-    tip.rotation.z = -Math.PI/2;
-    tip.position.x = -length*0.39 - dia*0.55;
-    g.add(tip);
-    return g;
-  }
-
-  function buildRod(){
-    const length = 180 + rnd(seed)*100;
-    const dia = 8 + rnd(seed+1)*6;
-    const rod = new THREE.Mesh(new THREE.CylinderGeometry(dia/2, dia/2, length, 26), mat);
-    rod.rotation.z = Math.PI/2;
-    return rod;
-  }
-
-  function buildTube(){
-    const length = 180 + rnd(seed)*100;
-    const outerDia = 14 + rnd(seed+1)*8;
-    const g = new THREE.Group();
-    const outer = new THREE.Mesh(new THREE.CylinderGeometry(outerDia/2, outerDia/2, length, 28, 1, true), mat);
-    outer.rotation.z = Math.PI/2;
-    g.add(outer);
-    const inner = new THREE.Mesh(new THREE.CylinderGeometry(outerDia/2*0.78, outerDia/2*0.78, length*1.002, 28, 1, true), darkMat);
-    inner.rotation.z = Math.PI/2;
-    g.add(inner);
-    return g;
-  }
-
-  function buildRing(){
-    const t = product.title.toLowerCase();
-    let sweepFrac = 1.0;
-    if(t.includes('5/8')) sweepFrac = 0.625;
-    else if(t.includes('half')) sweepFrac = 0.5;
-    else if(t.includes('arch')) sweepFrac = 0.72;
-    else if(t.includes('foot')) sweepFrac = 0.55;
-    else if(t.includes('full')) sweepFrac = 1.0;
-
-    const outerR = 95 + rnd(seed)*20;
-    const innerR = outerR - (16 + rnd(seed+1)*6);
-    const gapCenter = Math.PI/2;
-    const gapHalf = (1-sweepFrac)*Math.PI;
-    const startA = gapCenter + gapHalf;
-    const endA   = gapCenter - gapHalf + Math.PI*2;
-
-    const shape = new THREE.Shape();
-    const segs = 96;
-    if(sweepFrac >= 0.999){
-      shape.absarc(0,0,outerR,0,Math.PI*2,false);
-      shape.holes.push(circlePath(0,0,innerR));
-    } else {
-      for(let i=0;i<=segs;i++){ const a=startA+(endA-startA)*i/segs; const x=Math.cos(a)*outerR,y=Math.sin(a)*outerR; i===0?shape.moveTo(x,y):shape.lineTo(x,y); }
-      for(let i=segs;i>=0;i--){ const a=startA+(endA-startA)*i/segs; const x=Math.cos(a)*innerR,y=Math.sin(a)*innerR; shape.lineTo(x,y); }
-      shape.closePath();
-    }
-
-    const midR = (outerR+innerR)/2;
-    const holeR = 4.4;
-    const nHoles = 14 + Math.floor(rnd(seed+2)*6);
-    const marginFrac = sweepFrac>=0.999 ? 0 : 0.08;
-    for(let i=0;i<nHoles;i++){
-      const t2 = sweepFrac>=0.999 ? i/nHoles : marginFrac + (1-2*marginFrac)*i/(nHoles-1);
-      const a = sweepFrac>=0.999 ? t2*Math.PI*2 : startA+(endA-startA)*t2;
-      shape.holes.push(circlePath(Math.cos(a)*midR, Math.sin(a)*midR, holeR));
-    }
-
-    const geo = new THREE.ExtrudeGeometry(shape, { depth:9, bevelEnabled:true, bevelThickness:1.3, bevelSize:1.3, bevelSegments:3, curveSegments:40 });
-    geo.translate(0,0,-4.5);
-    return new THREE.Mesh(geo, mat);
-  }
-
-  function buildWasher(){
-    const outerR = 14 + rnd(seed)*8;
-    const innerR = outerR*0.5;
-    const shape = new THREE.Shape();
-    shape.absarc(0,0,outerR,0,Math.PI*2,false);
-    shape.holes.push(circlePath(0,0,innerR));
-    const geo = new THREE.ExtrudeGeometry(shape, { depth:3.4, bevelEnabled:true, bevelThickness:0.5, bevelSize:0.5, bevelSegments:2, curveSegments:32 });
-    geo.translate(0,0,-1.7);
-    return new THREE.Mesh(geo, mat);
-  }
-
-  function buildWire(){
-    const length = 200 + rnd(seed)*80;
-    const dia = 1.6 + rnd(seed+1)*1;
-    const wire = new THREE.Mesh(new THREE.CylinderGeometry(dia/2, dia/2, length, 14), mat);
-    wire.rotation.z = Math.PI/2;
-    return wire;
-  }
-
-  function buildWrench(){
-    const g = new THREE.Group();
-    const shaftLen = 120 + rnd(seed)*40;
-    const shaft = new THREE.Mesh(new THREE.CylinderGeometry(6,6,shaftLen*0.62,20), mat);
-    g.add(shaft);
-    const hub = new THREE.Mesh(new THREE.CylinderGeometry(15,15,20,20), mat);
-    hub.position.y = shaftLen*0.31 + 8;
-    g.add(hub);
-    for(let i=0;i<3;i++){
-      const ang = (i/3)*Math.PI*2 + Math.PI/6;
-      const spoke = new THREE.Mesh(new THREE.CylinderGeometry(3.4,3.4,42,14), mat);
-      spoke.position.set(Math.cos(ang)*22, shaftLen*0.31+20, Math.sin(ang)*22);
-      spoke.rotation.z = Math.cos(ang)*0.9;
-      spoke.rotation.x = Math.sin(ang)*0.9;
-      g.add(spoke);
-    }
-    const foot = new THREE.Mesh(new THREE.CylinderGeometry(16,10,14,20), mat);
-    foot.position.y = -shaftLen*0.31 - 10;
-    g.add(foot);
-    g.rotation.z = Math.PI/2;
-    return g;
-  }
-
-  function buildBlock(){
-    const g = new THREE.Group();
-    const w = 34 + rnd(seed)*14, h = 26 + rnd(seed+1)*8, d = 24 + rnd(seed+2)*8;
-    const shape = new THREE.Shape();
-    shape.moveTo(-w/2,-h/2);
-    shape.lineTo(w/2,-h/2);
-    shape.lineTo(w/2,h/2);
-    shape.lineTo(-w/2,h/2);
-    shape.closePath();
-    shape.holes.push(circlePath(0,0,h*0.28));
-    const geo = new THREE.ExtrudeGeometry(shape, { depth:d, bevelEnabled:true, bevelThickness:2, bevelSize:2, bevelSegments:3, curveSegments:20 });
-    geo.translate(0,0,-d/2);
-    const block = new THREE.Mesh(geo, mat);
-    g.add(block);
-
-    const boss = new THREE.Mesh(new THREE.CylinderGeometry(h*0.3, h*0.3, w*0.9, 24), mat);
-    boss.rotation.z = Math.PI/2;
-    boss.position.x = w*0.55;
-    g.add(boss);
-    const bolt = new THREE.Mesh(new THREE.CylinderGeometry(h*0.14,h*0.14,d*1.4,14), darkMat);
-    bolt.position.x = w*0.55;
-    g.add(bolt);
-    return g;
-  }
-
-  const BUILDERS = { plate:buildPlate, nail:buildNail, screw:buildScrew, rod:buildRod, tube:buildTube, ring:buildRing, washer:buildWasher, wire:buildWire, wrench:buildWrench, block:buildBlock };
-  const partMesh = (BUILDERS[archetype] || buildBlock)();
-  partMesh.scale.setScalar(0.001);
-  core.add(partMesh);
-
-  /* faint reflection */
-  const reflection = partMesh.clone(true);
-  reflection.traverse(o=>{ if(o.material){ o.material = o.material.clone(); o.material.transparent = true; o.material.opacity = 0.12; } });
-  reflection.scale.y = -0.001;
-  reflection.position.y = -140;
-  core.add(reflection);
-
-  /* ---------- intro grow-in ---------- */
-  const introStart = performance.now();
-  const INTRO_MS = 850;
+  /* ---------- boot / intro: card grows in ---------- */
+  let introStart = 0;
+  const INTRO_MS = 800;
   function easeOutBack(x){ const c1=1.70158, c3=c1+1; return 1 + c3*Math.pow(x-1,3) + c1*Math.pow(x-1,2); }
-  let introActive = true;
+  let introActive = false;
+  function startIntro(){ introStart = performance.now(); introActive = true; }
+
 
   /* ============================================================
      INTERACTION
@@ -827,12 +571,11 @@
     const t = now*0.001;
     const elapsed = now - introStart;
 
-    if(introActive){
+    if(introActive && cardMesh){
       const gT = Math.max(0, Math.min(1, elapsed/INTRO_MS));
       const s = Math.max(0.001, easeOutBack(gT));
-      partMesh.scale.setScalar(s);
-      reflection.scale.set(s, -s, s);
-      if(gT>=1){ introActive=false; partMesh.scale.setScalar(1); reflection.scale.set(1,-1,1); }
+      cardMesh.scale.setScalar(s);
+      if(gT>=1){ introActive=false; cardMesh.scale.setScalar(1); }
     }
 
     if(gestureActive && !autoRotate && performance.now()-lastHandSeenAt>2500) autoRotate = true;
