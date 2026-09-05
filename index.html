@@ -223,7 +223,7 @@
 (function(){
   const btn = document.getElementById('themeToggle');
   const saved = localStorage.getItem('medazinco_theme');
-  if(saved === 'light') document.body.classList.add('light-mode');
+  if(saved !== 'dark') document.body.classList.add('light-mode');
   btn.addEventListener('click', ()=>{
     document.body.classList.toggle('light-mode');
     localStorage.setItem('medazinco_theme', document.body.classList.contains('light-mode') ? 'light' : 'dark');
@@ -237,8 +237,8 @@
   const ctx = canvas.getContext('2d');
   let w, h, dpr;
   let particles = [];
-  const COUNT = 70;
-  const LINK_DIST = 130;
+  const COUNT = 150;
+  const LINK_DIST = 155;
 
   function resize(){
     dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -250,7 +250,7 @@
 
   function initParticles(){
     particles = [];
-    const count = Math.min(COUNT, Math.floor((w*h)/18000));
+    const count = Math.min(COUNT, Math.floor((w*h)/9000));
     for(let i=0;i<count;i++){
       particles.push({
         x: Math.random()*w,
@@ -279,7 +279,7 @@
         const dx = a.x-b.x, dy = a.y-b.y;
         const dist = Math.sqrt(dx*dx+dy*dy);
         if(dist < LINK_DIST){
-          const op = (1 - dist/LINK_DIST) * 0.35;
+          const op = (1 - dist/LINK_DIST) * 0.45;
           ctx.strokeStyle = `rgba(23,224,138,${op})`;
           ctx.lineWidth = 1;
           ctx.beginPath();
