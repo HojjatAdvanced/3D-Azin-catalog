@@ -92,6 +92,14 @@
   }
   .pill.active .cnt{ color:rgba(4,20,12,0.75); }
 
+  .lang-toggle{
+    width:40px; height:32px; border-radius:10px; border:1px solid var(--border);
+    background:rgba(23,224,138,0.08); color:var(--green); cursor:pointer;
+    font-family:'Vazirmatn',Tahoma,sans-serif; font-size:12px; font-weight:800; flex:none;
+    transition:all .2s;
+  }
+  .lang-toggle:hover{ background:rgba(23,224,138,0.18); border-color:var(--green); }
+
   .theme-toggle{
     width:58px; height:32px; border-radius:16px; border:1px solid var(--border);
     background:rgba(255,255,255,0.06); cursor:pointer; position:relative;
@@ -219,10 +227,26 @@
   .lb-caption .d{ font-size:12.5px; color:#c3cbe6; line-height:2; margin-top:12px; }
   .lb-caption .p{ font-size:11px; color:var(--muted); margin-top:10px; }
   .lb-caption .lb-btn3d{
-    margin-top:14px; padding:10px 18px; border-radius:10px; border:none;
+    padding:10px 18px; border-radius:10px; border:none;
     background:linear-gradient(135deg, var(--green), var(--green-2)); color:#04140c;
     font-family:inherit; font-size:12.5px; font-weight:800; cursor:pointer;
   }
+  .lb-actions{ display:flex; gap:8px; margin-top:14px; flex-wrap:wrap; }
+  .lb-btn-price{
+    padding:10px 16px; border-radius:10px; border:1px solid var(--border);
+    background:rgba(23,224,138,0.08); color:var(--ink);
+    font-family:inherit; font-size:12.5px; font-weight:700; cursor:pointer;
+  }
+  .lb-btn-price:hover{ border-color:var(--green); }
+  .lb-btn-qr{
+    width:40px; padding:10px 0; border-radius:10px; border:1px solid var(--border);
+    background:rgba(23,224,138,0.08); color:var(--ink); font-size:16px; cursor:pointer;
+  }
+  .lb-btn-qr:hover{ border-color:var(--green); }
+  .lb-qr-box{ margin-top:14px; display:none; text-align:center; }
+  .lb-qr-box.show{ display:block; }
+  .lb-qr-box canvas, .lb-qr-box img{ background:#fff; padding:8px; border-radius:10px; }
+  .lb-qr-box .lb-qr-hint{ font-size:10.5px; color:var(--muted); margin-top:8px; }
   .lb-caption .lb-btn3d:hover{ filter:brightness(1.1); box-shadow:0 0 16px rgba(23,224,138,0.4); }
 
   /* ---------- rich footer ---------- */
@@ -295,8 +319,9 @@
   </div>
   <div class="header-spacer"></div>
   <div class="visitor">
-    <a href="index.html" style="color:#dfe4f7;text-decoration:none;font-size:14px;font-weight:600;padding:10px 20px;border-radius:11px;border:1px solid var(--border);">درباره‌ما</a>
-    <a href="contact.html" style="color:#dfe4f7;text-decoration:none;font-size:14px;font-weight:600;padding:10px 20px;border-radius:11px;border:1px solid var(--border);">تماس با ما</a>
+    <a href="index.html" id="navAbout" style="color:#dfe4f7;text-decoration:none;font-size:14px;font-weight:600;padding:10px 20px;border-radius:11px;border:1px solid var(--border);" data-fa="درباره‌ما" data-en="About Us">درباره‌ما</a>
+    <a href="contact.html" id="navContact" style="color:#dfe4f7;text-decoration:none;font-size:14px;font-weight:600;padding:10px 20px;border-radius:11px;border:1px solid var(--border);" data-fa="تماس با ما" data-en="Contact Us">تماس با ما</a>
+    <button class="lang-toggle" id="langToggle" title="Switch language">FA</button>
     <button class="theme-toggle" id="themeToggle" title="تغییر حالت روشن/تیره">
       <svg class="tt-side-icon tt-sun-side" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
       <svg class="tt-side-icon tt-moon-side" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5Z"/></svg>
@@ -378,11 +403,17 @@
       <div class="m" id="lbMaterial"></div>
       <div class="d" id="lbDesc"></div>
       <div class="p" id="lbPage"></div>
-      <button class="lb-btn3d" id="lbBtn3d">&#9723; نمایش سه‌بعدی این قطعه</button>
+      <div class="lb-actions">
+        <button class="lb-btn3d" id="lbBtn3d">&#9723; <span id="lbBtn3dLabel">نمایش سه‌بعدی این قطعه</span></button>
+        <button class="lb-btn-price" id="lbBtnPrice">💬 <span id="lbBtnPriceLabel">درخواست قیمت</span></button>
+        <button class="lb-btn-qr" id="lbBtnQr" title="کد QR">▦</button>
+      </div>
+      <div class="lb-qr-box" id="lbQrBox"></div>
     </div>
   </div>
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script>
 (function(){
   const btn = document.getElementById('themeToggle');
@@ -396,19 +427,23 @@
 </script>
 
 <script>
-  const PRODUCTS = [{"page": 77, "cat": "ilizarov", "title": "Foot Ring", "material": "آلومینیوم", "img": "assets/thumbs/p077.jpg", "color": "#2d30aa", "desc_fa": "الیزاروف (فوت رینگ): یکی از اجزای تشکیل‌دهنده‌ی ست ایلیزاروف، فوت رینگ است. فوت رینگ در قسمت کف پا استفاده می‌شود. با استفاده از فوت رینگ می‌توان قسمت مچ پا که دچار آسیب‌دیدگی یا شکستگی شده را ثابت نگه داشت. فوت رینگ در سایزهای مختلف، تولید شرکت آذین طب سلامت رازی می‌باشد.\n\nسایزهای موجود (میلی‌متر): ۱۲۰-۱۴۰، ۱۴۰-۱۶۰، ۱۶۰-۱۸۰، ۱۸۰-۲۰۰، ۲۰۰-۲۲۰", "colorVariants": [{"hex": "#2d30aa", "name": "آبی"}, {"hex": "#ca9608", "name": "طلایی"}, {"hex": "#5a0b62", "name": "بنفش"}], "model": "assets/models/foot_ring.stl"}, {"page": 73, "cat": "ilizarov", "title": "فول رینگ (Full Ring)", "material": "آلومینیوم", "img": "assets/thumbs/p073.jpg", "color": "#f0b335", "desc_fa": "فول رینگ: با تجهیزات الیزاروف ۲۰ سانتی‌متر بلندتر شوید. یکی از قطعات الیزاروف، فول رینگ است. جراحی افزایش قد با الیزاروف تا ۲۰ سانتی‌متر. روش الیزاروف اولین روش افزایش قد با جراحی در دنیاست که الهام‌گرفته از تجهیزات الیزاروف است و یکی از چندین روش اصلی جراحی افزایش قد به‌شمار می‌رود. تجهیزات الیزاروف نامی آشنا برای کسانی‌ست که به‌دنبال مشاوره‌ی جراحی افزایش قد هستند و امروزه در اختیار متخصصین ارتوپد در راستای جراحی استخوان و افزایش و بازسازی طول استخوان قرار گرفته است. با استفاده از تجهیزات الیزاروف و جراحی افزایش قد به روش اسلایدینگ می‌توان از ناحیه‌ی ران و ساق پا تا ماکزیمم ۲۰ سانتی‌متر افزایش قد را، بسته به وضعیت جسمانی مراجعه‌کننده، تجربه کرد.\n\nاطلاعات اضافی:\nسایز (میلی‌متر): ۱۴۰-۱۵۰، ۱۶۰-۱۸۰، ۱۹۰-۲۰۰، ۲۱۰، ۲۲۰-۲۳۰، ۲۴۰-۲۵۰، ۲۶۰-۲۸۰، ۸۰-۱۳۰\nجنس تیغه: استیل\nحوزه‌ی عملکرد: ارتوپدی", "colorVariants": [{"hex": "#f0b335", "name": "طلایی"}, {"hex": "#b30003", "name": "قرمز"}, {"hex": "#530799", "name": "بنفش"}], "model": "assets/models/full_ring.stl"}, {"page": 74, "cat": "ilizarov", "title": "هالف رینگ (Half Ring)", "material": "آلومینیوم", "img": "assets/thumbs/p074.jpg", "color": "#ba0000", "desc_fa": "با تجهیزات الیزاروف ۲۰ سانتی‌متر بلندتر شوید. یکی از قطعات الیزاروف، هالف رینگ است. تجهیزات الیزاروف امروز در اختیار متخصصین ارتوپد در راستای جراحی استخوان و افزایش و بازسازی طول استخوان قرار گرفته است.\n\nفیکساتورهای خارجی هالف‌رینگ برای سیستم‌های ثابت ارتوپدی خارجی ساخته شده‌اند تا استخوان‌های شکسته (به‌جز ستون فقرات) را تثبیت کنند. دو هالف‌رینگ با قطر یکسان و با پله‌هایی مرحله‌ای به‌هم متصل می‌شوند و یک رینگ کامل را تشکیل می‌دهند. برای تثبیت هالف‌رینگ‌ها به یکدیگر از دو پیچ و مهره استفاده می‌شود. هالف‌رینگ را می‌توان روی ساعد، بازو، درشت‌نی، یک‌سوم میانی یا دیستال ران نصب کرد. با استفاده از پلیت رابط، هالف‌رینگ‌ها را می‌توان به شکل بیضی، نعل‌اسبی یا رینگ ۵/۸ درآورد. برای ترمیم شکستگی درشت‌نی، چهار رینگ (هشت هالف‌رینگ) مورد نیاز است.\n\nاطلاعات اضافی:\nسایز (میلی‌متر): ۸۰-۱۳۰، ۱۴۰-۱۶۰، ۱۷۰-۱۹۰، ۲۰۰-۲۲۰، ۲۳۰-۲۵۰، ۲۶۰\nجنس تیغه: استیل\nحوزه‌ی عملکرد: ارتوپدی", "colorVariants": [{"hex": "#ba0000", "name": "قرمز"}, {"hex": "#f2bd30", "name": "طلایی"}, {"hex": "#019e73", "name": "سبز"}], "model": "assets/models/half_ring.stl"}, {"page": 75, "cat": "ilizarov", "title": "رینگ ۳/۴ ، ۵/۸", "material": "آلومینیوم", "img": "assets/thumbs/p075.jpg", "color": "#940202", "desc_fa": "جهت افزایش و ترمیم استخوان خردشده، تولید شرکت آذین طب سلامت رازی. از قطعات الیزاروف می‌توان به رینگ‌ها اشاره کرد که پایه‌ی اساسیِ تشکیل‌دهنده‌ی الیزاروف هستند. رینگ ۳/۴ و ۵/۸ از رینگ‌های کاربردی هستند که در سایزهای مختلف تولید می‌شوند. الیزاروف در دسته‌ی فیکساتورهای خارجی بدن محسوب می‌شود.\n\nاطلاعات اضافی:\nسایز (میلی‌متر): ۱۴۰، ۱۶۰، ۱۸۰، ۲۰۰، ۲۲۰", "colorVariants": [{"hex": "#940202", "name": "قرمز"}, {"hex": "#ebb13d", "name": "طلایی"}, {"hex": "#008892", "name": "فیروزه‌ای"}], "model": "assets/models/ring_3_4_5_8.stl"}, {"page": 76, "cat": "ilizarov", "title": "آرک رینگ (Arc Ring)", "material": "آلومینیوم", "img": "assets/thumbs/p076.jpg", "color": "#d59100", "desc_fa": "یکی از قطعات ست الیزاروف، آرک رینگ است که جزء اکسترنال‌های فیکس‌کننده‌ی خارج بدن محسوب می‌شود. تولید شرکت آذین طب سلامت رازی.\n\nاطلاعات اضافی:\nسایز (میلی‌متر): ۱۶۰، ۲۲۰", "colorVariants": [{"hex": "#d59100", "name": "طلایی"}, {"hex": "#ad014f", "name": "صورتی"}], "model": "assets/models/arc_ring.stl"}, {"page": 78, "cat": "ilizarov", "title": "پست نری (Male Post)", "material": "استیل ضدزنگ", "img": "assets/thumbs/p078.jpg", "color": "#c8ccd4", "desc_fa": "پست نری از قطعات ست الیزاروف است و برای اتصال و تنظیم فاصله‌ی بین رینگ‌ها در قاب الیزاروف استفاده می‌شود. تولید شرکت آذین طب سلامت رازی.\n\nاطلاعات اضافی:\nسوراخ: ۱، ۲، ۳، ۴ (بر اساس طول)", "model": "assets/models/male_post.stl", "modelRotation": [1.5707963, 0, 0]}, {"page": 79, "cat": "ilizarov", "title": "پست مادگی (Female Post)", "material": "استیل ضدزنگ", "img": "assets/thumbs/p079.jpg", "color": "#c8ccd4", "desc_fa": "پست مادگی مکمل پست نری از قطعات ست الیزاروف است و برای اتصال و تنظیم فاصله‌ی بین رینگ‌ها در قاب الیزاروف استفاده می‌شود. تولید شرکت آذین طب سلامت رازی.\n\nاطلاعات اضافی:\nسوراخ: ۱، ۲، ۳، ۴ (بر اساس طول)", "model": "assets/models/female_post.stl", "modelRotation": [1.5707963, 0, 0]}, {"page": 80, "cat": "ilizarov", "title": "هینج نری (Male Hinge)", "material": "استیل ضدزنگ", "img": "assets/thumbs/p080a.jpg", "color": "#c8ccd4", "desc_fa": "هینج نری از قطعات ست الیزاروف است.\n\nاطلاعات اضافی:\nسوراخ: ۱", "model": "assets/models/male_hinge.stl", "modelRotation": [1.5707963, 0, 0]}, {"page": 200, "cat": "ilizarov", "title": "هینج مادگی (Female Hinge)", "material": "استیل ضدزنگ", "img": "assets/thumbs/p080b.jpg", "color": "#c8ccd4", "desc_fa": "هینج مادگی از قطعات ست الیزاروف است.\n\nاطلاعات اضافی:\nسوراخ: ۱", "model": "assets/models/female_hinge.stl", "modelRotation": [1.5707963, 0, 0]}, {"page": 81, "cat": "ilizarov", "title": "کانکشن پلیت (Connection Plate)", "material": "استیل", "img": "assets/thumbs/p081.jpg", "color": "#c8ccd4", "desc_fa": "جهت اتصال هالف‌رینگ‌ها به یکدیگر است و با استفاده از کانکشن پلیت‌ها می‌توان سایز دلخواه جراح را به‌دست آورد. تولید شرکت دانش‌بنیان تجهیزات پزشکی آذین طب سلامت رازی، در سایزهای مختلف.\n\nاطلاعات اضافی:\nسوراخ: ۲-۵، ۶-۱۰", "model": "assets/models/connection_plate.stl"}, {"page": 83, "cat": "ilizarov", "title": "ابلیک (Oblique Connection)", "material": "استیل", "img": "assets/thumbs/p083.jpg", "color": "#c3b28e", "desc_fa": "ابلیک از قطعات ست الیزاروف است و برای اتصال مایل بین اجزای مختلف قاب الیزاروف استفاده می‌شود. تولید شرکت آذین طب سلامت رازی."}, {"page": 85, "cat": "ilizarov", "title": "کوپلینگ (Coupling)", "material": "استیل", "img": "assets/thumbs/p085.jpg", "color": "#c8ccd4", "desc_fa": "کوپلینگ از قطعات ست الیزاروف است و برای اتصال دو میله‌ی رزوه‌دار به یکدیگر در طول مسیر قاب الیزاروف استفاده می‌شود.", "model": "assets/models/coupling.stl", "modelRotation": [1.5707963, 0, 0]}, {"page": 86, "cat": "ilizarov", "title": "بوشینگ (Bushing)", "material": "استیل", "img": "assets/thumbs/p086.jpg", "color": "#c8ccd4", "desc_fa": "بوشینگ از قطعات ست الیزاروف است و به‌عنوان واسط اتصال میان قطعات مختلف قاب الیزاروف استفاده می‌شود.", "model": "assets/models/bushing.stl", "modelRotation": [1.5707963, 0, 0]}, {"page": 89, "cat": "ilizarov", "title": "راد رزوه‌دار (Threaded Rod)", "material": "استیل", "img": "assets/thumbs/p089.jpg", "color": "#c8ccd4", "desc_fa": "برای متصل‌کردن رینگ‌ها به یکدیگر از راد رزوه‌دار استفاده می‌شود و فاصله‌ی رینگ‌ها با یکدیگر به‌وسیله‌ی راد رزوه‌دار قابل تنظیم است. یکی از قطعات مهم ست الیزاروف است، تولید شرکت آذین طب سلامت رازی.\n\nاطلاعات اضافی:\nسایز (میلی‌متر): ۱۵۰، ۲۰۰، ۲۵۰، ۳۰۰، ۳۵۰، ۴۰۰، ۴۵۰، ۵۰۰، ۵۵۰، ۶۰۰"}, {"page": 15, "cat": "plates_general", "title": "۱/۳ توبولار (3.5mm 1/3 Tubular Plate)", "material": "تیتانیوم", "img": "assets/thumbs/p015.jpg", "color": "#658968", "desc_fa": "پلیت تیوبولار یک‌سوم برای تثبیت شکستگی‌های استخوان‌های کوچک و نازک مانند فیبولا یا نواحی با پوشش نرم بافتی کم استفاده می‌شود.", "model": "assets/models/tubular_plate.stl"}, {"page": 16, "cat": "plates_general", "title": "لاکینگ ۱/۳ توبولار (3.5mm 1/3 Tubular Locking Plate)", "material": "تیتانیوم", "img": "assets/thumbs/p016.jpg", "color": "#615d71", "desc_fa": "مشابه پلیت لوله‌ای استاندارد ۱/۳، این نسخه‌ی قفل‌شونده دارای سوراخ‌های پیچ است که امکان مکانیزم قفل‌شدن را فراهم می‌کند و پایداری بیشتری ارائه می‌دهد. ضخامت ۳.۵ میلی‌متری، تعادلی بین استحکام و سازگاری با انواع مختلف شکستگی ایجاد می‌کند. مکانیزم قفل‌شوندگی از عقب‌رفتن پیچ‌ها جلوگیری می‌کند و حتی در صورت جابجایی استخوان اطراف، تثبیت پایدار را حفظ می‌کند؛ این امر به‌ویژه در شرایطی که کیفیت استخوان به خطر می‌افتد مفید است.", "model": "assets/models/tubular_locking_plate.stl"}];
+  const PRODUCTS = [{"page": 77, "cat": "ilizarov", "title": "Foot Ring", "material": "آلومینیوم", "img": "assets/thumbs/p077.jpg", "color": "#2d30aa", "desc_fa": "الیزاروف (فوت رینگ): یکی از اجزای تشکیل‌دهنده‌ی ست ایلیزاروف، فوت رینگ است. فوت رینگ در قسمت کف پا استفاده می‌شود. با استفاده از فوت رینگ می‌توان قسمت مچ پا که دچار آسیب‌دیدگی یا شکستگی شده را ثابت نگه داشت. فوت رینگ در سایزهای مختلف، تولید شرکت آذین طب سلامت رازی می‌باشد.\n\nسایزهای موجود (میلی‌متر): ۱۲۰-۱۴۰، ۱۴۰-۱۶۰، ۱۶۰-۱۸۰، ۱۸۰-۲۰۰، ۲۰۰-۲۲۰", "colorVariants": [{"hex": "#2d30aa", "name": "آبی"}, {"hex": "#ca9608", "name": "طلایی"}, {"hex": "#5a0b62", "name": "بنفش"}], "model": "assets/models/foot_ring.stl", "material_en": "Aluminium", "desc_en": "Foot Ring: One of the components of the Ilizarov set, used on the sole of the foot. It stabilizes an injured or fractured ankle. Manufactured by AzinTeb Salamat Razi in various sizes.\n\nAvailable sizes (mm): 120-140, 140-160, 160-180, 180-200, 200-220", "title_en": "Foot Ring"}, {"page": 73, "cat": "ilizarov", "title": "فول رینگ (Full Ring)", "material": "آلومینیوم", "img": "assets/thumbs/p073.jpg", "color": "#f0b335", "desc_fa": "فول رینگ: با تجهیزات الیزاروف ۲۰ سانتی‌متر بلندتر شوید. یکی از قطعات الیزاروف، فول رینگ است. جراحی افزایش قد با الیزاروف تا ۲۰ سانتی‌متر. روش الیزاروف اولین روش افزایش قد با جراحی در دنیاست که الهام‌گرفته از تجهیزات الیزاروف است و یکی از چندین روش اصلی جراحی افزایش قد به‌شمار می‌رود. تجهیزات الیزاروف نامی آشنا برای کسانی‌ست که به‌دنبال مشاوره‌ی جراحی افزایش قد هستند و امروزه در اختیار متخصصین ارتوپد در راستای جراحی استخوان و افزایش و بازسازی طول استخوان قرار گرفته است. با استفاده از تجهیزات الیزاروف و جراحی افزایش قد به روش اسلایدینگ می‌توان از ناحیه‌ی ران و ساق پا تا ماکزیمم ۲۰ سانتی‌متر افزایش قد را، بسته به وضعیت جسمانی مراجعه‌کننده، تجربه کرد.\n\nاطلاعات اضافی:\nسایز (میلی‌متر): ۱۴۰-۱۵۰، ۱۶۰-۱۸۰، ۱۹۰-۲۰۰، ۲۱۰، ۲۲۰-۲۳۰، ۲۴۰-۲۵۰، ۲۶۰-۲۸۰، ۸۰-۱۳۰\nجنس تیغه: استیل\nحوزه‌ی عملکرد: ارتوپدی", "colorVariants": [{"hex": "#f0b335", "name": "طلایی"}, {"hex": "#b30003", "name": "قرمز"}, {"hex": "#530799", "name": "بنفش"}], "model": "assets/models/full_ring.stl", "material_en": "Aluminium", "desc_en": "Full Ring: One of the core components of the Ilizarov limb-lengthening and bone-repair system. Used in the Ilizarov method, the first surgical limb-lengthening technique in the world, now used by orthopedic specialists for bone surgery, lengthening and reconstruction.\n\nAdditional info:\nSize (mm): 140-150, 160-180, 190-200, 210, 220-230, 240-250, 260-280, 80-130\nBlade material: Steel\nField of use: Orthopedics", "title_en": "Full Ring"}, {"page": 74, "cat": "ilizarov", "title": "هالف رینگ (Half Ring)", "material": "آلومینیوم", "img": "assets/thumbs/p074.jpg", "color": "#ba0000", "desc_fa": "با تجهیزات الیزاروف ۲۰ سانتی‌متر بلندتر شوید. یکی از قطعات الیزاروف، هالف رینگ است. تجهیزات الیزاروف امروز در اختیار متخصصین ارتوپد در راستای جراحی استخوان و افزایش و بازسازی طول استخوان قرار گرفته است.\n\nفیکساتورهای خارجی هالف‌رینگ برای سیستم‌های ثابت ارتوپدی خارجی ساخته شده‌اند تا استخوان‌های شکسته (به‌جز ستون فقرات) را تثبیت کنند. دو هالف‌رینگ با قطر یکسان و با پله‌هایی مرحله‌ای به‌هم متصل می‌شوند و یک رینگ کامل را تشکیل می‌دهند. برای تثبیت هالف‌رینگ‌ها به یکدیگر از دو پیچ و مهره استفاده می‌شود. هالف‌رینگ را می‌توان روی ساعد، بازو، درشت‌نی، یک‌سوم میانی یا دیستال ران نصب کرد. با استفاده از پلیت رابط، هالف‌رینگ‌ها را می‌توان به شکل بیضی، نعل‌اسبی یا رینگ ۵/۸ درآورد. برای ترمیم شکستگی درشت‌نی، چهار رینگ (هشت هالف‌رینگ) مورد نیاز است.\n\nاطلاعات اضافی:\nسایز (میلی‌متر): ۸۰-۱۳۰، ۱۴۰-۱۶۰، ۱۷۰-۱۹۰، ۲۰۰-۲۲۰، ۲۳۰-۲۵۰، ۲۶۰\nجنس تیغه: استیل\nحوزه‌ی عملکرد: ارتوپدی", "colorVariants": [{"hex": "#ba0000", "name": "قرمز"}, {"hex": "#f2bd30", "name": "طلایی"}, {"hex": "#019e73", "name": "سبز"}], "model": "assets/models/half_ring.stl", "material_en": "Aluminium", "desc_en": "Half Ring: An Ilizarov component used to stabilize fractured bones (except the spine) as part of an external fixation frame. Two half rings of equal diameter connect via two bolts and nuts to form a complete ring, allowing placement around a limb. Can be used on the forearm, upper arm, tibia, or distal/mid-thigh, alone or combined with a full ring using a connector plate to form oval, horseshoe, or 5/8 ring shapes.\n\nAdditional info:\nSize (mm): 80-130, 140-160, 170-190, 200-220, 230-250, 260\nBlade material: Steel\nField of use: Orthopedics", "title_en": "Half Ring"}, {"page": 75, "cat": "ilizarov", "title": "رینگ ۳/۴ ، ۵/۸", "material": "آلومینیوم", "img": "assets/thumbs/p075.jpg", "color": "#940202", "desc_fa": "جهت افزایش و ترمیم استخوان خردشده، تولید شرکت آذین طب سلامت رازی. از قطعات الیزاروف می‌توان به رینگ‌ها اشاره کرد که پایه‌ی اساسیِ تشکیل‌دهنده‌ی الیزاروف هستند. رینگ ۳/۴ و ۵/۸ از رینگ‌های کاربردی هستند که در سایزهای مختلف تولید می‌شوند. الیزاروف در دسته‌ی فیکساتورهای خارجی بدن محسوب می‌شود.\n\nاطلاعات اضافی:\nسایز (میلی‌متر): ۱۴۰، ۱۶۰، ۱۸۰، ۲۰۰، ۲۲۰", "colorVariants": [{"hex": "#940202", "name": "قرمز"}, {"hex": "#ebb13d", "name": "طلایی"}, {"hex": "#008892", "name": "فیروزه‌ای"}], "model": "assets/models/ring_3_4_5_8.stl", "material_en": "Aluminium", "desc_en": "Ilizarov Ring 3/4, 5/8: Used for lengthening and repairing fractured bone, manufactured by AzinTeb Salamat Razi. Rings are the fundamental building blocks of the Ilizarov system; the 3/4 and 5/8 variants are commonly used and produced in multiple sizes.\n\nAdditional info:\nSize (mm): 140, 160, 180, 200, 220", "title_en": "Ring 3/4, 5/8"}, {"page": 76, "cat": "ilizarov", "title": "آرک رینگ (Arc Ring)", "material": "آلومینیوم", "img": "assets/thumbs/p076.jpg", "color": "#d59100", "desc_fa": "یکی از قطعات ست الیزاروف، آرک رینگ است که جزء اکسترنال‌های فیکس‌کننده‌ی خارج بدن محسوب می‌شود. تولید شرکت آذین طب سلامت رازی.\n\nاطلاعات اضافی:\nسایز (میلی‌متر): ۱۶۰، ۲۲۰", "colorVariants": [{"hex": "#d59100", "name": "طلایی"}, {"hex": "#ad014f", "name": "صورتی"}], "model": "assets/models/arc_ring.stl", "material_en": "Aluminium", "desc_en": "Arc Ring: One of the components of the Ilizarov set, classified as an external bone-fixation device. Manufactured by AzinTeb Salamat Razi.\n\nAdditional info:\nSize (mm): 160, 220", "title_en": "Arc Ring"}, {"page": 78, "cat": "ilizarov", "title": "پست نری (Male Post)", "material": "استیل ضدزنگ", "img": "assets/thumbs/p078.jpg", "color": "#c8ccd4", "desc_fa": "پست نری از قطعات ست الیزاروف است و برای اتصال و تنظیم فاصله‌ی بین رینگ‌ها در قاب الیزاروف استفاده می‌شود. تولید شرکت آذین طب سلامت رازی.\n\nاطلاعات اضافی:\nسوراخ: ۱، ۲، ۳، ۴ (بر اساس طول)", "model": "assets/models/male_post.stl", "modelRotation": [1.5707963, 0, 0], "material_en": "Stainless Steel", "desc_en": "Male Post: An Ilizarov component used to connect and adjust the spacing between rings in the Ilizarov frame. Manufactured by AzinTeb Salamat Razi.\n\nAdditional info:\nHoles: 1, 2, 3, 4 (depending on length)", "title_en": "Male Post"}, {"page": 79, "cat": "ilizarov", "title": "پست مادگی (Female Post)", "material": "استیل ضدزنگ", "img": "assets/thumbs/p079.jpg", "color": "#c8ccd4", "desc_fa": "پست مادگی مکمل پست نری از قطعات ست الیزاروف است و برای اتصال و تنظیم فاصله‌ی بین رینگ‌ها در قاب الیزاروف استفاده می‌شود. تولید شرکت آذین طب سلامت رازی.\n\nاطلاعات اضافی:\nسوراخ: ۱، ۲، ۳، ۴ (بر اساس طول)", "model": "assets/models/female_post.stl", "modelRotation": [1.5707963, 0, 0], "material_en": "Stainless Steel", "desc_en": "Female Post: Complementary to the male post, an Ilizarov component used to connect and adjust the spacing between rings in the frame. Manufactured by AzinTeb Salamat Razi.\n\nAdditional info:\nHoles: 1, 2, 3, 4 (depending on length)", "title_en": "Female Post"}, {"page": 80, "cat": "ilizarov", "title": "هینج نری (Male Hinge)", "material": "استیل ضدزنگ", "img": "assets/thumbs/p080a.jpg", "color": "#c8ccd4", "desc_fa": "هینج نری از قطعات ست الیزاروف است.\n\nاطلاعات اضافی:\nسوراخ: ۱", "model": "assets/models/male_hinge.stl", "modelRotation": [1.5707963, 0, 0], "material_en": "Stainless Steel", "desc_en": "Male Hinge: An Ilizarov set component.\n\nAdditional info:\nHoles: 1", "title_en": "Male Hinge"}, {"page": 200, "cat": "ilizarov", "title": "هینج مادگی (Female Hinge)", "material": "استیل ضدزنگ", "img": "assets/thumbs/p080b.jpg", "color": "#c8ccd4", "desc_fa": "هینج مادگی از قطعات ست الیزاروف است.\n\nاطلاعات اضافی:\nسوراخ: ۱", "model": "assets/models/female_hinge.stl", "modelRotation": [1.5707963, 0, 0], "material_en": "Stainless Steel", "desc_en": "Female Hinge: An Ilizarov set component.\n\nAdditional info:\nHoles: 1", "title_en": "Female Hinge"}, {"page": 81, "cat": "ilizarov", "title": "کانکشن پلیت (Connection Plate)", "material": "استیل", "img": "assets/thumbs/p081.jpg", "color": "#c8ccd4", "desc_fa": "جهت اتصال هالف‌رینگ‌ها به یکدیگر است و با استفاده از کانکشن پلیت‌ها می‌توان سایز دلخواه جراح را به‌دست آورد. تولید شرکت دانش‌بنیان تجهیزات پزشکی آذین طب سلامت رازی، در سایزهای مختلف.\n\nاطلاعات اضافی:\nسوراخ: ۲-۵، ۶-۱۰", "model": "assets/models/connection_plate.stl", "material_en": "Steel", "desc_en": "Connection Plate: Used to connect half rings together; connection plates allow the surgeon to achieve the desired size. Manufactured by AzinTeb Salamat Razi's knowledge-based medical devices company, in various sizes.\n\nAdditional info:\nHoles: 2-5, 6-10", "title_en": "Connection Plate"}, {"page": 83, "cat": "ilizarov", "title": "ابلیک (Oblique Connection)", "material": "استیل", "img": "assets/thumbs/p083.jpg", "color": "#c3b28e", "desc_fa": "ابلیک از قطعات ست الیزاروف است و برای اتصال مایل بین اجزای مختلف قاب الیزاروف استفاده می‌شود. تولید شرکت آذین طب سلامت رازی.", "material_en": "Steel", "desc_en": "Oblique Connection: An Ilizarov set component used for an angled connection between different parts of the Ilizarov frame. Manufactured by AzinTeb Salamat Razi.", "title_en": "Oblique Connection"}, {"page": 85, "cat": "ilizarov", "title": "کوپلینگ (Coupling)", "material": "استیل", "img": "assets/thumbs/p085.jpg", "color": "#c8ccd4", "desc_fa": "کوپلینگ از قطعات ست الیزاروف است و برای اتصال دو میله‌ی رزوه‌دار به یکدیگر در طول مسیر قاب الیزاروف استفاده می‌شود.", "model": "assets/models/coupling.stl", "modelRotation": [1.5707963, 0, 0], "material_en": "Steel", "desc_en": "Coupling: An Ilizarov set component used to connect two threaded rods along the length of the Ilizarov frame.", "title_en": "Coupling"}, {"page": 86, "cat": "ilizarov", "title": "بوشینگ (Bushing)", "material": "استیل", "img": "assets/thumbs/p086.jpg", "color": "#c8ccd4", "desc_fa": "بوشینگ از قطعات ست الیزاروف است و به‌عنوان واسط اتصال میان قطعات مختلف قاب الیزاروف استفاده می‌شود.", "model": "assets/models/bushing.stl", "modelRotation": [1.5707963, 0, 0], "material_en": "Steel", "desc_en": "Bushing: An Ilizarov set component used as a connecting interface between different parts of the Ilizarov frame.", "title_en": "Bushing"}, {"page": 89, "cat": "ilizarov", "title": "راد رزوه‌دار (Threaded Rod)", "material": "استیل", "img": "assets/thumbs/p089.jpg", "color": "#c8ccd4", "desc_fa": "برای متصل‌کردن رینگ‌ها به یکدیگر از راد رزوه‌دار استفاده می‌شود و فاصله‌ی رینگ‌ها با یکدیگر به‌وسیله‌ی راد رزوه‌دار قابل تنظیم است. یکی از قطعات مهم ست الیزاروف است، تولید شرکت آذین طب سلامت رازی.\n\nاطلاعات اضافی:\nسایز (میلی‌متر): ۱۵۰، ۲۰۰، ۲۵۰، ۳۰۰، ۳۵۰، ۴۰۰، ۴۵۰، ۵۰۰، ۵۵۰، ۶۰۰", "material_en": "Steel", "desc_en": "Threaded Rod: Used to connect rings together; the spacing between rings can be adjusted with the threaded rod. One of the essential Ilizarov set components, manufactured by AzinTeb Salamat Razi.\n\nAdditional info:\nSize (mm): 150, 200, 250, 300, 350, 400, 450, 500, 550, 600", "title_en": "Threaded Rod"}, {"page": 15, "cat": "plates_general", "title": "۱/۳ توبولار (3.5mm 1/3 Tubular Plate)", "material": "تیتانیوم", "img": "assets/thumbs/p015.jpg", "color": "#658968", "desc_fa": "پلیت تیوبولار یک‌سوم برای تثبیت شکستگی‌های استخوان‌های کوچک و نازک مانند فیبولا یا نواحی با پوشش نرم بافتی کم استفاده می‌شود.", "model": "assets/models/tubular_plate.stl", "material_en": "Titanium", "desc_en": "3.5mm 1/3 Tubular Plate: Used to stabilize fractures of small, thin bones such as the fibula, or in areas with limited soft-tissue coverage.", "title_en": "3.5mm 1/3 Tubular Plate"}, {"page": 16, "cat": "plates_general", "title": "لاکینگ ۱/۳ توبولار (3.5mm 1/3 Tubular Locking Plate)", "material": "تیتانیوم", "img": "assets/thumbs/p016.jpg", "color": "#615d71", "desc_fa": "مشابه پلیت لوله‌ای استاندارد ۱/۳، این نسخه‌ی قفل‌شونده دارای سوراخ‌های پیچ است که امکان مکانیزم قفل‌شدن را فراهم می‌کند و پایداری بیشتری ارائه می‌دهد. ضخامت ۳.۵ میلی‌متری، تعادلی بین استحکام و سازگاری با انواع مختلف شکستگی ایجاد می‌کند. مکانیزم قفل‌شوندگی از عقب‌رفتن پیچ‌ها جلوگیری می‌کند و حتی در صورت جابجایی استخوان اطراف، تثبیت پایدار را حفظ می‌کند؛ این امر به‌ویژه در شرایطی که کیفیت استخوان به خطر می‌افتد مفید است.", "model": "assets/models/tubular_locking_plate.stl", "material_en": "Titanium", "desc_en": "3.5mm 1/3 Tubular Locking Plate: Similar to the standard 1/3 tubular plate, this locking version has threaded screw holes that create a fixed-angle locking mechanism for greater stability. The 3.5mm thickness balances strength with adaptability across various fracture types. The locking mechanism prevents screw back-out and maintains stable fixation even if the surrounding bone shifts — particularly useful when bone quality is compromised.", "title_en": "3.5mm 1/3 Tubular Locking Plate"}];
 
   const CATEGORIES = [
-    { key:"all",              label:"همه‌ی قطعات" },
-    { key:"nailing",          label:"سیستم‌های میخ داخل استخوانی" },
-    { key:"plates_general",   label:"پلیت‌های عمومی" },
-    { key:"plates_anatomical",label:"پلیت‌های آناتومیک" },
-    { key:"screws",           label:"پیچ‌ها" },
-    { key:"fixators",         label:"فیکساتور خارجی" },
-    { key:"rods",             label:"راد" },
-    { key:"ilizarov",         label:"الیزاروف" },
+    { key:"all",              label:"همه‌ی قطعات", label_en:"All Parts" },
+    { key:"nailing",          label:"سیستم‌های میخ داخل استخوانی", label_en:"Intramedullary Nailing Systems" },
+    { key:"plates_general",   label:"پلیت‌های عمومی", label_en:"General Plates" },
+    { key:"plates_anatomical",label:"پلیت‌های آناتومیک", label_en:"Anatomical Plates" },
+    { key:"screws",           label:"پیچ‌ها", label_en:"Screws" },
+    { key:"fixators",         label:"فیکساتور خارجی", label_en:"External Fixators" },
+    { key:"rods",             label:"راد", label_en:"Rods" },
+    { key:"ilizarov",         label:"الیزاروف", label_en:"Ilizarov" },
   ];
-  const CAT_LABEL = Object.fromEntries(CATEGORIES.map(c=>[c.key,c.label]));
+  let currentLang = localStorage.getItem('medazinco_lang') || 'fa';
+  function catLabel(c){ return currentLang === 'en' ? c.label_en : c.label; }
+  const CAT_LABEL = Object.fromEntries(CATEGORIES.map(c=>[c.key, c.label]));
+  const CAT_LABEL_EN = Object.fromEntries(CATEGORIES.map(c=>[c.key, c.label_en]));
+  function catLabelFor(key){ return currentLang === 'en' ? (CAT_LABEL_EN[key]||'') : (CAT_LABEL[key]||''); }
 
   /* ---------- category bar ---------- */
   let activeCat = 'all';
@@ -425,7 +460,7 @@
     CATEGORIES.forEach(c=>{
       const btn = document.createElement('button');
       btn.className = 'pill' + (c.key===activeCat ? ' active' : '');
-      btn.innerHTML = `${c.label} <span class="cnt">${countFor(c.key)}</span>`;
+      btn.innerHTML = `${catLabel(c)} <span class="cnt">${countFor(c.key)}</span>`;
       btn.addEventListener('click', ()=>{ activeCat = c.key; render(); });
       bar.appendChild(btn);
     });
@@ -434,9 +469,14 @@
   /* ---------- grid render ---------- */
   let currentList = [];
 
+  function pTitle(p){ return currentLang==='en' ? (p.title_en || p.title) : p.title; }
+  function pMaterial(p){ return currentLang==='en' ? (p.material_en || p.material) : p.material; }
+  function pDesc(p){ return currentLang==='en' ? (p.desc_en || p.desc_fa || '') : (p.desc_fa || ''); }
+
   function matches(p){
     const okCat = activeCat==='all' || p.cat===activeCat;
-    const okSearch = !searchTerm || p.title.toLowerCase().includes(searchTerm) || p.material.toLowerCase().includes(searchTerm);
+    const okSearch = !searchTerm || p.title.toLowerCase().includes(searchTerm) || p.material.toLowerCase().includes(searchTerm)
+      || (p.title_en||'').toLowerCase().includes(searchTerm) || (p.material_en||'').toLowerCase().includes(searchTerm);
     return okCat && okSearch;
   }
 
@@ -452,19 +492,19 @@
       // catalog structure is live, product photos are being added one by one
       const sections = CATEGORIES.slice(1).map(c=>`
         <div class="empty-cat">
-          <div class="empty-cat-title">${c.label}</div>
-          <div class="empty-cat-sub">قطعات این بخش به‌زودی با عکس واقعی اضافه می‌شوند</div>
+          <div class="empty-cat-title">${catLabel(c)}</div>
+          <div class="empty-cat-sub" data-fa="قطعات این بخش به‌زودی با عکس واقعی اضافه می‌شوند" data-en="Parts in this section will be added soon with real photos">${currentLang==='en' ? 'Parts in this section will be added soon with real photos' : 'قطعات این بخش به‌زودی با عکس واقعی اضافه می‌شوند'}</div>
         </div>`).join('');
       wrap.innerHTML = `<div class="empty-hero">
-        <div class="empty-hero-title">کاتالوگ در حال تکمیل است</div>
-        <div class="empty-hero-sub">قطعات به‌مرور و با عکس واقعی هرکدام اضافه می‌شوند.</div>
+        <div class="empty-hero-title">${currentLang==='en' ? 'Catalog under construction' : 'کاتالوگ در حال تکمیل است'}</div>
+        <div class="empty-hero-sub">${currentLang==='en' ? 'Parts are being added gradually with real photos.' : 'قطعات به‌مرور و با عکس واقعی هرکدام اضافه می‌شوند.'}</div>
       </div>
       <div class="empty-cat-grid">${sections}</div>`;
       return;
     }
 
     if(filtered.length===0){
-      wrap.innerHTML = '<div class="empty">قطعه‌ای با این مشخصات پیدا نشد.</div>';
+      wrap.innerHTML = `<div class="empty">${currentLang==='en' ? 'No parts match this search.' : 'قطعه‌ای با این مشخصات پیدا نشد.'}</div>`;
       return;
     }
 
@@ -479,7 +519,8 @@
       if(items.length===0) return;
       const title = document.createElement('div');
       title.className = 'section-title';
-      title.innerHTML = `<span class="bar"></span>${c.label} <span class="cnt">(${items.length} قطعه)</span>`;
+      const cntWord = currentLang==='en' ? `(${items.length} parts)` : `(${items.length} قطعه)`;
+      title.innerHTML = `<span class="bar"></span>${catLabel(c)} <span class="cnt">${cntWord}</span>`;
       wrap.appendChild(title);
       wrap.appendChild(buildGrid(items));
     });
@@ -491,13 +532,16 @@
     items.forEach(p=>{
       const card = document.createElement('div');
       card.className = 'prod-card';
+      const materialLbl = currentLang==='en' ? 'Material' : 'جنس';
+      const pageLbl = currentLang==='en' ? `Page ${p.page} of catalog` : `صفحه ${p.page} کاتالوگ`;
+      const btn3dLbl = currentLang==='en' ? '3D View' : 'نمایش سه‌بعدی';
       card.innerHTML = `
-        <div class="thumb"><img src="${p.img}" alt="${p.title}" loading="lazy"></div>
+        <div class="thumb"><img src="${p.img}" alt="${pTitle(p)}" loading="lazy"></div>
         <div class="info">
-          <div class="title">${p.title}</div>
-          <div class="material">جنس: ${p.material}</div>
-          <div class="pageno">صفحه ${p.page} کاتالوگ</div>
-          <button class="btn3d" data-page="${p.page}">&#9723; نمایش سه‌بعدی</button>
+          <div class="title">${pTitle(p)}</div>
+          <div class="material">${materialLbl}: ${pMaterial(p)}</div>
+          <div class="pageno">${pageLbl}</div>
+          <button class="btn3d" data-page="${p.page}">&#9723; ${btn3dLbl}</button>
         </div>`;
       card.querySelector('.thumb').addEventListener('click', ()=> openLightbox(p));
       card.querySelector('.title').addEventListener('click', ()=> openLightbox(p));
@@ -539,14 +583,46 @@
   function paintLightbox(p){
     lbCurrentProduct = p;
     lbImg.src = fullImgFor(p);
-    lbImg.alt = p.title;
-    lbTitle.textContent = p.title;
-    lbMaterial.textContent = 'جنس: ' + p.material;
-    lbDesc.textContent = p.desc_fa || '';
-    lbPage.textContent = 'صفحه ' + p.page + ' کاتالوگ';
+    lbImg.alt = pTitle(p);
+    lbTitle.textContent = pTitle(p);
+    lbMaterial.textContent = (currentLang==='en' ? 'Material: ' : 'جنس: ') + pMaterial(p);
+    lbDesc.textContent = pDesc(p);
+    lbPage.textContent = currentLang==='en' ? `Page ${p.page} of catalog` : `صفحه ${p.page} کاتالوگ`;
+    document.getElementById('lbBtn3dLabel').textContent = currentLang==='en' ? '3D View' : 'نمایش سه‌بعدی این قطعه';
+    document.getElementById('lbBtnPriceLabel').textContent = currentLang==='en' ? 'Request Price' : 'درخواست قیمت';
+    document.getElementById('lbQrBox').classList.remove('show');
+    document.getElementById('lbQrBox').innerHTML = '';
   }
   document.getElementById('lbBtn3d').addEventListener('click', ()=>{
     if(lbCurrentProduct) window.location.href = 'viewer.html?id=' + lbCurrentProduct.page;
+  });
+  document.getElementById('lbBtnPrice').addEventListener('click', ()=>{
+    if(!lbCurrentProduct) return;
+    const p = lbCurrentProduct;
+    const subject = currentLang==='en'
+      ? `Price request - ${pTitle(p)}`
+      : `درخواست قیمت - ${pTitle(p)}`;
+    const body = currentLang==='en'
+      ? `Hello,\n\nPlease send me pricing information for: ${pTitle(p)} (catalog page ${p.page}).\n\nThank you.`
+      : `با سلام،\n\nلطفاً قیمت قطعه‌ی «${pTitle(p)}» (صفحه‌ی ${p.page} کاتالوگ) را برایم ارسال کنید.\n\nبا تشکر.`;
+    window.location.href = `mailto:info@azintebsalamat.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  });
+  document.getElementById('lbBtnQr').addEventListener('click', ()=>{
+    if(!lbCurrentProduct) return;
+    const box = document.getElementById('lbQrBox');
+    if(box.classList.contains('show')){ box.classList.remove('show'); return; }
+    box.innerHTML = '';
+    const url = window.location.origin + window.location.pathname.replace('catalog.html','') + 'viewer.html?id=' + lbCurrentProduct.page;
+    if(typeof QRCode !== 'undefined'){
+      new QRCode(box, { text:url, width:150, height:150, colorDark:'#0e1a4d', colorLight:'#ffffff' });
+    } else {
+      box.textContent = url;
+    }
+    const hint = document.createElement('div');
+    hint.className = 'lb-qr-hint';
+    hint.textContent = currentLang==='en' ? 'Scan to view this part in 3D on your phone' : 'اسکن کن تا این قطعه رو با گوشی خودت سه‌بعدی ببینی';
+    box.appendChild(hint);
+    box.classList.add('show');
   });
   function closeLightbox(){
     document.getElementById('lightbox').classList.remove('open');
@@ -573,6 +649,13 @@
   });
 
   render();
+
+  // expose to the language-toggle script (separate IIFE below)
+  window.__mzRender = render;
+  window.__mzPaintLightbox = paintLightbox;
+  window.__mzGetLbProduct = () => lbCurrentProduct;
+  window.__mzSetLang = (l) => { currentLang = l; };
+  window.__mzIsLightboxOpen = () => document.getElementById('lightbox').classList.contains('open');
 </script>
 
 <script>
@@ -649,6 +732,36 @@
 
   window.addEventListener('resize', ()=>{ resize(); initParticles(); });
   resize(); initParticles(); step();
+})();
+</script>
+
+<script>
+(function(){
+  const langBtn = document.getElementById('langToggle');
+  const searchInput = document.getElementById('searchInput');
+  function applyLang(lang){
+    window.__mzSetLang(lang);
+    document.documentElement.lang = lang === 'en' ? 'en' : 'fa';
+    document.documentElement.dir = lang === 'en' ? 'ltr' : 'rtl';
+    langBtn.textContent = lang === 'en' ? 'EN' : 'FA';
+    document.querySelectorAll('[data-fa]').forEach(el=>{
+      el.textContent = lang === 'en' ? el.getAttribute('data-en') : el.getAttribute('data-fa');
+    });
+    searchInput.placeholder = lang === 'en'
+      ? 'Search part name… (e.g. Femur, Screw, Ring)'
+      : 'جستجوی نام قطعه… (مثلاً: Femur، Screw، Ring)';
+    window.__mzRender();
+    if(window.__mzIsLightboxOpen() && window.__mzGetLbProduct()){
+      window.__mzPaintLightbox(window.__mzGetLbProduct());
+    }
+  }
+  const saved = localStorage.getItem('medazinco_lang') || 'fa';
+  applyLang(saved);
+  langBtn.addEventListener('click', ()=>{
+    const next = document.documentElement.lang === 'en' ? 'fa' : 'en';
+    localStorage.setItem('medazinco_lang', next);
+    applyLang(next);
+  });
 })();
 </script>
 </body>
