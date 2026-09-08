@@ -141,29 +141,6 @@
   .is-desc{ font-size:14px; line-height:2.1; color:#c3cbe6; margin-top:22px; white-space:pre-line; }
   .info-block .material b{ color:#e8ecf8; }
 
-  .brand-watermark{
-    position:absolute; left:0; right:0; bottom:8px; z-index:8; pointer-events:none;
-    display:flex; flex-direction:column; align-items:center; gap:6px;
-  }
-  .brand-watermark .bw-line{
-    width:64px; height:1px; background:linear-gradient(90deg, transparent, var(--green), transparent);
-    opacity:0.6; animation: bwGlow 3s ease-in-out infinite;
-  }
-  .brand-watermark .bw-text{
-    font-size:11px; letter-spacing:4px; font-weight:700; color:rgba(200,215,240,0.55);
-    text-shadow:0 0 12px rgba(23,224,138,0.35);
-  }
-  .brand-watermark .bw-text b{ color:var(--green); }
-  @keyframes bwGlow{
-    0%,100%{ opacity:0.35; width:44px; }
-    50%{ opacity:0.85; width:84px; }
-  }
-
-  .hint{
-    position:absolute; bottom:26px; left:50%; transform:translateX(-50%);
-    font-size:10.5px; letter-spacing:1.5px; color:var(--muted);
-  }
-
   #gesturePanel{
     position:absolute; right:66px; bottom:26px; width:190px; pointer-events:auto;
     border:1px solid rgba(255,255,255,0.14); background:rgba(10,14,30,0.75);
@@ -194,7 +171,20 @@
     .topbar{ padding:16px 20px; }
     .info-block{ right:20px; top:78px; max-width:260px; }
     .info-block h1{ font-size:16px; }
-    #gesturePanel{ display:none; }
+
+    /* on mobile, keep only the camera preview canvas (no title/status/buttons),
+       shown just above the hand-toggle button, only while tracking is active */
+    #gesturePanel{
+      display:none;
+      position:fixed; right:auto; bottom:210px; left:50%; transform:translateX(-50%);
+      width:150px; padding:6px; background:rgba(10,14,30,0.8); border-radius:14px;
+    }
+    #gesturePanel.mobile-show{ display:block; }
+    #gesturePanel .gp-head,
+    #gesturePanel #gestureStatus,
+    #gesturePanel #gestureToggle,
+    #gesturePanel #gestureNote{ display:none; }
+    #gestureCanvas{ height:100px; border-radius:10px; }
   }
 
   /* ---------- mobile analog sticks ---------- */
@@ -301,13 +291,6 @@
     <h1 id="prodTitle">در حال بارگذاری…</h1>
     <div class="material" id="prodMaterial"></div>
     <div id="colorSwatches" style="display:none; margin-top:14px; gap:10px; justify-content:flex-end;"></div>
-  </div>
-
-  <div class="hint" id="hintText" data-fa="درگ برای چرخش · اسکرول برای زوم — یا کف دست باز برای چرخش · مشت‌کردن برای زوم" data-en="Drag to rotate · Scroll to zoom — or open palm to rotate · fist to zoom">درگ برای چرخش · اسکرول برای زوم — یا کف دست باز برای چرخش · مشت‌کردن برای زوم</div>
-
-  <div class="brand-watermark">
-    <div class="bw-line"></div>
-    <div class="bw-text">MEDAZINCO · <b>آذین طب سلامت رازی</b></div>
   </div>
 
   <button class="info-fab" id="infoFab" title="اطلاعات کامل قطعه">
@@ -1472,6 +1455,7 @@
     requestAnimationFrame(gestureLoop);
   }
   const handToggleMobile = document.getElementById('handToggleMobile');
+  const gpEl = document.getElementById('gesturePanel');
 
   async function enableGestureControl(){
     gpNote.classList.remove('show');
@@ -1495,6 +1479,7 @@
     gpToggle.textContent = 'غیرفعال‌سازی کنترل با دست'; gpToggle.classList.add('active');
     gpHandState.textContent = 'آماده'; gpStatus.textContent = 'کف دست خود را نشان دهید';
     handToggleMobile.classList.add('active');
+    gpEl.classList.add('mobile-show');
     gestureLoop();
   }
   function disableGestureControl(){
@@ -1505,6 +1490,7 @@
     gpToggle.textContent = 'فعال‌سازی کنترل با دست'; gpToggle.classList.remove('active');
     gpHandState.textContent = 'خاموش'; gpStatus.textContent = 'آماده به کار';
     handToggleMobile.classList.remove('active');
+    gpEl.classList.remove('mobile-show');
     smoothedPinchRatio=null; lastPinchRatio=null; smoothedPalm=null; lastPalm=null;
   }
   gpToggle.addEventListener('click', ()=>{ gestureActive ? disableGestureControl() : enableGestureControl(); });
