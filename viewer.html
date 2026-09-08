@@ -247,6 +247,34 @@
   @media (max-width:760px), (hover:none) and (pointer:coarse){
     .joystick{ display:block; }
   }
+
+  /* ---------- mobile hand-sensor toggle, centered between the two analog sticks ---------- */
+  .hand-toggle-mobile{
+    display:none;
+    position:fixed; bottom:130px; left:50%; transform:translateX(-50%);
+    width:64px; height:64px; border-radius:50%; z-index:21;
+    background:radial-gradient(circle at 50% 38%, rgba(20,32,70,0.92), rgba(6,10,22,0.96));
+    border:1.5px solid rgba(15,169,104,0.5);
+    align-items:center; justify-content:center;
+    box-shadow:0 8px 24px rgba(0,0,0,0.5), 0 0 20px rgba(15,169,104,0.22);
+    cursor:pointer; pointer-events:auto; touch-action:none;
+  }
+  .hand-toggle-mobile svg{ width:30px; height:30px; stroke:var(--green); fill:none; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; transition:stroke .2s; }
+  .hand-toggle-mobile .ht-dot{
+    position:absolute; top:6px; right:6px; width:9px; height:9px; border-radius:50%;
+    background:#4a5570; box-shadow:0 0 0 2px rgba(6,10,22,0.9);
+  }
+  .hand-toggle-mobile.active{ border-color:var(--green); animation:fabPulse 2.2s ease-out infinite; }
+  .hand-toggle-mobile.active svg{ stroke:#dfffef; }
+  .hand-toggle-mobile.active .ht-dot{ background:var(--green); box-shadow:0 0 8px var(--green), 0 0 0 2px rgba(6,10,22,0.9); }
+  .hand-toggle-mobile .ht-label{
+    position:absolute; bottom:-20px; left:0; right:0; text-align:center;
+    font-size:9px; letter-spacing:1px; color:var(--muted); font-weight:600; white-space:nowrap;
+  }
+
+  @media (max-width:760px), (hover:none) and (pointer:coarse){
+    .hand-toggle-mobile{ display:flex; }
+  }
 </style>
 </head>
 <body>
@@ -304,6 +332,12 @@
     <div class="joy-knob" id="joyZoomKnob"></div>
     <div class="joy-label" data-fa="زوم" data-en="Zoom">زوم</div>
   </div>
+
+  <button class="hand-toggle-mobile" id="handToggleMobile" title="کنترل با دست">
+    <svg viewBox="0 0 24 24"><path d="M8 13V6.5a1.5 1.5 0 0 1 3 0V12"/><path d="M11 12V4.5a1.5 1.5 0 0 1 3 0V12"/><path d="M14 12.5V6a1.5 1.5 0 0 1 3 0v7"/><path d="M17 12.5v2a1.5 1.5 0 0 1 3 0v3a6 6 0 0 1-6 6h-2a6 6 0 0 1-5-2.7L5 16.5a1.4 1.4 0 0 1 2.2-1.7L8 15.8"/></svg>
+    <span class="ht-dot"></span>
+    <div class="ht-label" data-fa="کنترل با دست" data-en="Hand Control">کنترل با دست</div>
+  </button>
 </div>
 
 <div id="infoScreen">
@@ -1437,6 +1471,8 @@
     if(videoEl && videoEl.readyState>=2) await handsModel.send({ image: videoEl });
     requestAnimationFrame(gestureLoop);
   }
+  const handToggleMobile = document.getElementById('handToggleMobile');
+
   async function enableGestureControl(){
     gpNote.classList.remove('show');
     gpStatus.textContent = 'در حال درخواست دسترسی دوربین…';
@@ -1458,6 +1494,7 @@
     gestureActive = true;
     gpToggle.textContent = 'غیرفعال‌سازی کنترل با دست'; gpToggle.classList.add('active');
     gpHandState.textContent = 'آماده'; gpStatus.textContent = 'کف دست خود را نشان دهید';
+    handToggleMobile.classList.add('active');
     gestureLoop();
   }
   function disableGestureControl(){
@@ -1467,9 +1504,11 @@
     gCtx.clearRect(0,0,gCanvas.width,gCanvas.height);
     gpToggle.textContent = 'فعال‌سازی کنترل با دست'; gpToggle.classList.remove('active');
     gpHandState.textContent = 'خاموش'; gpStatus.textContent = 'آماده به کار';
+    handToggleMobile.classList.remove('active');
     smoothedPinchRatio=null; lastPinchRatio=null; smoothedPalm=null; lastPalm=null;
   }
   gpToggle.addEventListener('click', ()=>{ gestureActive ? disableGestureControl() : enableGestureControl(); });
+  handToggleMobile.addEventListener('click', ()=>{ gestureActive ? disableGestureControl() : enableGestureControl(); });
 
   /* ============================================================
      RENDER LOOP
