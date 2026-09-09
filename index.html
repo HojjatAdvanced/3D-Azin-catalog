@@ -125,6 +125,8 @@
   }
 
   .founder-card img{ width:100%; filter:saturate(1.05); }
+  .founder-photo-wrap{ position:relative; width:100%; aspect-ratio:1400/717; background:#0a0e1e; overflow:hidden; }
+  .founder-photo-wrap canvas{ width:100%; height:100%; display:block; }
   .founder-body{ padding:24px 26px 28px; text-align:right; }
   .founder-name{ font-size:17px; font-weight:800; color:var(--ink); }
   .founder-role{ font-size:12px; color:var(--green); font-weight:700; margin-top:5px; letter-spacing:.2px; }
@@ -308,7 +310,10 @@
 
   <div class="section-title"><span class="bar"></span><span data-fa="مدیریت" data-en="Management">مدیریت</span></div>
   <div class="card founder-card">
-    <img src="assets/about/founder.jpg" alt="مهندس رضا عبداللهی">
+    <div class="founder-photo-wrap">
+      <canvas id="founderCanvas"></canvas>
+      <img id="founderImgSrc" src="assets/about/founder.jpg" alt="مهندس رضا عبداللهی" style="display:none;">
+    </div>
     <div class="founder-body">
       <div class="founder-name">Reza Abdollahi</div>
       <div class="founder-role" data-fa="بنیان‌گذار شرکت آذین طب سلامت رازی" data-en="Founder of AzinTeb Salamat Razi">بنیان‌گذار شرکت آذین طب سلامت رازی</div>
@@ -554,6 +559,130 @@
   iosSheet.addEventListener('click', (e)=>{ if(e.target === iosSheet) iosSheet.classList.remove('show'); });
 
   window.addEventListener('appinstalled', ()=>{ btn.classList.remove('show'); });
+})();
+</script>
+
+<script>
+(function(){
+  const canvas = document.getElementById('founderCanvas');
+  const img = document.getElementById('founderImgSrc');
+  const ctx = canvas.getContext('2d');
+
+  const GRID_W = 130; // sample resolution — detail vs. particle count
+  let particles = [];
+  let dispW = 0, dispH = 0, dpr = 1;
+  let started = false;
+
+  function buildParticles(){
+    const gridH = Math.round(GRID_W * (img.naturalHeight / img.naturalWidth));
+    const off = document.createElement('canvas');
+    off.width = GRID_W; off.height = gridH;
+    const octx = off.getContext('2d');
+    octx.drawImage(img, 0, 0, GRID_W, gridH);
+    const data = octx.getImageData(0, 0, GRID_W, gridH).data;
+
+    particles = [];
+    const cellW = dispW / GRID_W, cellH = dispH / gridH;
+    for(let gy=0; gy<gridH; gy++){
+      for(let gx=0; gx<GRID_W; gx++){
+        const idx = (gy*GRID_W + gx) * 4;
+        const r = data[idx], g = data[idx+1], b = data[idx+2];
+        const tx = gx*cellW + cellW/2, ty = gy*cellH + cellH/2;
+        // scattered start point: burst outward from the frame center, with jitter
+        const cx = dispW/2, cy = dispH/2;
+        const ang = Math.random()*Math.PI*2;
+        const dist = 260 + Math.random()*340;
+        const sx = cx + Math.cos(ang)*dist + (Math.random()-0.5)*60;
+        const sy = cy + Math.sin(ang)*dist*0.6 + (Math.random()-0.5)*60;
+        particles.push({
+          sx, sy, tx, ty,
+          r, g, b,
+          delay: Math.random()*0.32,
+          size: Math.max(cellW, cellH) * 1.05
+        });
+      }
+    }
+  }
+
+  function resize(){
+    const rect = canvas.getBoundingClientRect();
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    dispW = rect.width; dispH = rect.height;
+    canvas.width = dispW * dpr; canvas.height = dispH * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+
+  function easeOutCubic(x){ return 1 - Math.pow(1-x, 3); }
+
+  const DURATION = 2100;
+  let startTime = null;
+
+  function draw(now){
+    if(startTime === null) startTime = now;
+    const elapsed = now - startTime;
+    const globalT = Math.min(1, elapsed / DURATION);
+
+    ctx.clearRect(0, 0, dispW, dispH);
+
+    let stillAnimating = false;
+    for(const p of particles){
+      let t = (globalT - p.delay) / (1 - p.delay);
+      t = Math.max(0, Math.min(1, t));
+      const et = easeOutCubic(t);
+      if(t < 1) stillAnimating = true;
+
+      const x = p.sx + (p.tx - p.sx) * et;
+      const y = p.sy + (p.ty - p.sy) * et;
+
+      // early in flight: hot scarlet energy; settles into the true photo colour on arrival
+      const heat = 1 - et; // 1 = just launched, 0 = arrived
+      const cr = Math.min(255, p.r + heat*(255-p.r)*0.9 + heat*80);
+      const cg = p.g * (1-heat) + heat*32;
+      const cb = p.b * (1-heat) + heat*40;
+
+      if(heat > 0.08){
+        // short scarlet motion trail while still moving fast
+        const tx2 = p.sx + (p.tx - p.sx) * Math.max(0, et-0.05);
+        const ty2 = p.sy + (p.ty - p.sy) * Math.max(0, et-0.05);
+        ctx.strokeStyle = `rgba(224,32,43,${heat*0.35})`;
+        ctx.lineWidth = p.size*0.6;
+        ctx.beginPath(); ctx.moveTo(tx2,ty2); ctx.lineTo(x,y); ctx.stroke();
+      }
+
+      ctx.fillStyle = `rgb(${cr|0},${cg|0},${cb|0})`;
+      ctx.fillRect(x - p.size/2, y - p.size/2, p.size, p.size);
+    }
+
+    if(stillAnimating){
+      requestAnimationFrame(draw);
+    } else {
+      // crossfade to the crisp real photo for full sharpness
+      img.style.display = 'block';
+      img.style.position = 'absolute';
+      img.style.inset = '0';
+      img.style.width = '100%';
+      img.style.height = '100%';
+      img.style.objectFit = 'cover';
+      img.style.opacity = '0';
+      img.style.transition = 'opacity .5s ease';
+      requestAnimationFrame(()=>{ img.style.opacity = '1'; });
+    }
+  }
+
+  function start(){
+    if(started) return;
+    started = true;
+    resize();
+    buildParticles();
+    requestAnimationFrame(draw);
+  }
+
+  if(img.complete && img.naturalWidth){
+    start();
+  } else {
+    img.addEventListener('load', start);
+  }
+  window.addEventListener('resize', ()=>{ if(!started) return; resize(); });
 })();
 </script>
 
