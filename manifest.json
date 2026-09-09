@@ -1,0 +1,19 @@
+{
+  "name": "آذین طب سلامت رازی - MEDAZINCO",
+  "short_name": "MEDAZINCO",
+  "description": "کاتالوگ دیجیتال محصولات ارتوپدی آذین طب سلامت رازی با نمایش سه‌بعدی تعاملی",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#050b18",
+  "theme_color": "#0e1a4d",
+  "dir": "rtl",
+  "lang": "fa",
+  "icons": [
+    { "src": "assets/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "assets/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "assets/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "assets/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
