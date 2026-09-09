@@ -73,6 +73,15 @@
   }
   .info-fab svg{ width:24px; height:24px; stroke:#04140c; fill:none; stroke-width:2.2; stroke-linecap:round; stroke-linejoin:round; }
 
+  .install-fab{
+    position:absolute; left:88px; bottom:26px; z-index:15; pointer-events:auto;
+    width:52px; height:52px; border-radius:50%; border:1.5px solid rgba(15,169,104,0.5); cursor:pointer;
+    background:rgba(10,14,30,0.85);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .install-fab svg{ width:22px; height:22px; stroke:var(--green); fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
+  .install-fab:hover{ background:rgba(23,224,138,0.15); }
+
   .lang-toggle{
     width:40px; height:32px; border-radius:10px; border:1px solid rgba(15,169,104,0.35);
     background:rgba(23,224,138,0.08); color:var(--green); cursor:pointer;
@@ -123,6 +132,12 @@
   }
   #infoScreen.open{ display:block; }
   #infoBgCanvas{ position:absolute; inset:0; z-index:0; }
+  #installScreen{
+    display:none; position:fixed; inset:0; z-index:200;
+    background:radial-gradient(ellipse at 50% 0%, #0a1730 0%, #050b18 55%, #030710 100%);
+  }
+  #installScreen.open{ display:block; }
+  #installBgCanvas{ position:absolute; inset:0; z-index:0; }
   .info-screen-inner{
     position:relative; z-index:1; max-width:640px; margin:0 auto;
     padding:90px 26px 60px; text-align:right; min-height:100vh;
@@ -243,6 +258,10 @@
     <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><line x1="12" y1="11" x2="12" y2="16.5"/><circle cx="12" cy="7.6" r="0.9" fill="#04140c" stroke="none"/></svg>
   </button>
 
+  <button class="install-fab" id="installFab" title="طریقه نصب">
+    <svg viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 1 1.4 0l1.6 1.6a1 1 0 0 1 0 1.4L9.5 17.5 5 19l1.5-4.5 8.2-8.2Z"/><path d="M13 8l3 3"/></svg>
+  </button>
+
   <div id="gesturePanel">
     <div class="gp-head"><span data-fa="سنسور دست" data-en="Hand Sensor">سنسور دست</span><b id="gpHandState" data-fa="خاموش" data-en="Off">خاموش</b></div>
     <canvas id="gestureCanvas" width="200" height="120"></canvas>
@@ -270,6 +289,16 @@
       <button class="is-btn-qr" id="isBtnQr">▦ <span id="isBtnQrLabel">کد QR</span></button>
     </div>
     <div class="is-qr-box" id="isQrBox"></div>
+  </div>
+</div>
+
+<div id="installScreen">
+  <canvas id="installBgCanvas"></canvas>
+  <div class="info-screen-inner">
+    <button class="is-close" id="installClose" data-fa="&times; بازگشت به نمایش سه‌بعدی" data-en="&times; Back to 3D View">&times; بازگشت به نمایش سه‌بعدی</button>
+    <div class="is-cat" data-fa="طریقه نصب و کاربرد بالینی" data-en="Installation & Clinical Use">طریقه نصب و کاربرد بالینی</div>
+    <div class="is-title" id="installTitle"></div>
+    <div class="is-desc" id="installDesc"></div>
   </div>
 </div>
 
@@ -433,6 +462,108 @@
       startInfoBg();
     });
     document.getElementById('isClose').addEventListener('click', ()=>{
+      screen.classList.remove('open');
+    });
+  })();
+
+  /* installation / clinical-use guidance, per category */
+  const INSTALL_GUIDE = {
+    nailing: {
+      fa: "میخ‌های داخل‌استخوانی (Intramedullary Nail) در داخل کانال مدولاری استخوان (نه روی سطح آن) جای‌گذاری می‌شوند و برای شکستگی‌های تنه (دیافیز) و برخی شکستگی‌های نزدیک به مفصل استخوان‌های بلند (فمور، تیبیا، هیومروس) به‌کار می‌روند. روش کارگذاری می‌تواند از بالا به پایین (آنته‌گرید) یا از پایین به بالا (رتروگرید) باشد. برای کنترل چرخش، طول و راستای استخوان، از پیچ‌های قفلی (Locking Screw) در دو انتهای میخ استفاده می‌شود. نسبت به پلیت‌گذاری، این روش کمتر به بافت نرم اطراف آسیب می‌رساند.\n\n⚠️ زاویه‌ی دقیق ورود میخ، محل نقطه‌ی شروع (entry point)، و طول/قطر دقیق میخ باید بر اساس دستورالعمل استفاده (IFU) رسمی این محصول و صلاحدید جراح تعیین شود.",
+      en: "Intramedullary nails are inserted inside the bone's medullary canal (not on its surface) and are used for diaphyseal fractures and some periarticular fractures of long bones (femur, tibia, humerus). Insertion may be antegrade (top-down) or retrograde (bottom-up). Locking screws at both ends control rotation, length, and alignment. Compared to plating, this technique causes less soft-tissue disruption.\n\n⚠️ The exact nail entry angle, entry point, and precise length/diameter must be determined per this product's official Instructions for Use (IFU) and the surgeon's judgment."
+    },
+    plates_general: {
+      fa: "پلیت‌ها روی سطح خارجی استخوان (اکستامدولاری) قرار می‌گیرند و با پیچ از میان سوراخ‌های پلیت به استخوان ثابت می‌شوند. برای شکستگی‌های متافیزیال، نواحی نزدیک مفصل، یا جایی که میخ داخل‌استخوانی مناسب نیست به‌کار می‌روند. پلیت‌های قفلی (Locking Plate) با پیچ‌های زاویه‌ثابت، پایداری بیشتری به‌خصوص در استخوان با کیفیت پایین‌تر فراهم می‌کنند.\n\n⚠️ تعداد و محل دقیق پیچ‌ها، خم‌کردن احتمالی پلیت متناسب با آناتومی بیمار، و طول پلیت باید توسط جراح و بر اساس IFU رسمی محصول تعیین شود.",
+      en: "Plates sit on the outer (extramedullary) surface of the bone and are fixed with screws through the plate holes. They are used for metaphyseal fractures, periarticular regions, or where an intramedullary nail is not suitable. Locking plates provide angle-stable fixation, which is especially helpful in lower-quality bone.\n\n⚠️ The exact number and position of screws, any intraoperative plate contouring, and plate length must be determined by the surgeon per the product's official IFU."
+    },
+    plates_anatomical: {
+      fa: "پلیت‌های آناتومیک از قبل متناسب با انحنای طبیعی یک ناحیه‌ی خاص از بدن (مثل دیستال فمور، پروگزیمال تیبیا، ترقوه) شکل‌دهی شده‌اند، بنابراین نیاز به خم‌کردن حین عمل را کاهش می‌دهند. کاربرد اصلی آن‌ها شکستگی‌های نزدیک مفصل (پری‌آرتیکولار) و مناطقی با آناتومی پیچیده است که تطابق دقیق پلیت با سطح استخوان اهمیت زیادی دارد.\n\n⚠️ انتخاب سایز و سمت (راست/چپ) صحیح پلیت، و محل دقیق پیچ‌ها باید بر اساس IFU رسمی و ارزیابی جراح از تصویربرداری بیمار انجام شود.",
+      en: "Anatomical plates are pre-contoured to match the natural curvature of a specific body region (e.g. distal femur, proximal tibia, clavicle), reducing the need for intraoperative bending. They are mainly used for periarticular fractures and areas with complex anatomy where precise plate-to-bone fit matters.\n\n⚠️ Correct plate size and side (left/right) selection, and exact screw placement, must be based on the official IFU and the surgeon's assessment of patient imaging."
+    },
+    screws: {
+      fa: "پیچ‌های ارتوپدی یا به‌تنهایی (تکنیک پیچ کششی/Lag Screw برای شکستگی‌های ساده) و یا همراه با پلیت برای تثبیت داخلی استفاده می‌شوند. پیچ کورتیکال هر دو لایه‌ی سخت استخوان را درگیر می‌کند، پیچ اسفنجی (کنسلوس) برای بافت نرم‌تر متافیز/اپی‌فیز مناسب است، و پیچ‌های قفلی مستقیماً درون رزوه‌ی پلیت قفل می‌شوند تا تثبیت زاویه‌ثابت ایجاد کنند.\n\n⚠️ قطر سوراخ راهنما (پایلوت)، عمق و طول دقیق پیچ باید متناسب با سایز پیچ و بر اساس IFU رسمی تعیین شود.",
+      en: "Orthopedic screws are used either alone (lag-screw technique for simple fractures) or together with a plate for internal fixation. Cortical screws engage both cortices of the bone, cancellous screws suit softer metaphyseal/epiphyseal bone, and locking screws thread directly into the plate to create angle-stable fixation.\n\n⚠️ Pilot hole diameter and exact screw depth/length must match the screw size per the official IFU."
+    },
+    fixators: {
+      fa: "فیکساتورهای خارجی از طریق پین یا سیم‌هایی که از پوست عبور کرده و به استخوان متصل می‌شوند، و یک قاب یا میله‌ی خارجی که این پین‌ها را به هم متصل می‌کند، کار می‌کنند — بدون تماس مستقیم ایمپلنت با محل شکستگی. این روش به‌ویژه برای شکستگی‌های باز، آسیب‌های شدید بافت نرم، عفونت، یا به‌عنوان تثبیت موقت پیش از جراحی نهایی به‌کار می‌رود.\n\n⚠️ محل دقیق ورود پین‌ها (دور از عروق و اعصاب)، زاویه‌ی ورود، و پیکربندی قاب باید توسط جراح و بر اساس IFU رسمی تعیین شود.",
+      en: "External fixators work via pins or wires that pass through the skin into the bone, connected by an external frame or rod — without the implant directly contacting the fracture site. This approach is especially used for open fractures, severe soft-tissue injury, infection, or as temporary stabilization before definitive surgery.\n\n⚠️ The exact pin entry sites (away from vessels and nerves), entry angle, and frame configuration must be determined by the surgeon per the official IFU."
+    },
+    rods: {
+      fa: "رادها به‌عنوان اجزای اتصال‌دهنده در سیستم‌های فیکساتور خارجی به‌کار می‌روند و کلمپ‌ها یا پین‌های متصل به استخوان را به یکدیگر وصل می‌کنند تا یک قاب پایدار تشکیل شود.\n\n⚠️ طول و پیکربندی دقیق راد باید متناسب با آناتومی بیمار و بر اساس IFU رسمی تعیین شود.",
+      en: "Rods serve as connecting components in external fixator systems, linking clamps or bone-mounted pins together to form a stable frame.\n\n⚠️ The exact rod length and configuration must be matched to patient anatomy per the official IFU."
+    },
+    ilizarov: {
+      fa: "سیستم الیزاروف یک فیکساتور خارجی حلقوی است: رینگ‌ها دور اندام قرار می‌گیرند و توسط پست/راد رزوه‌دار به هم متصل می‌شوند، و با سیم‌های کریشنر یا پین‌های شانتز تحت کشش به استخوان ثابت می‌شوند. این روش امکان اصلاح تدریجی دفورمیتی، افزایش طول استخوان (دیستراکشن استئوژنز)، و تثبیت شکستگی‌های پیچیده را فراهم می‌کند؛ به‌ویژه در مواردی که نیاز به تنظیم مرحله‌به‌مرحله بعد از جراحی وجود دارد.\n\n⚠️ تعداد رینگ‌ها، فاصله‌ی بین آن‌ها، زاویه و محل عبور سیم/پین، و برنامه‌ی تنظیم تدریجی باید کاملاً بر اساس IFU رسمی و نظر جراح متخصص تعیین شود.",
+      en: "The Ilizarov system is a circular external fixator: rings are placed around the limb and connected by threaded posts/rods, fixed to the bone with tensioned Kirschner wires or Schanz pins. This method allows gradual deformity correction, limb lengthening (distraction osteogenesis), and stabilization of complex fractures — particularly where staged postoperative adjustment is needed.\n\n⚠️ The number of rings, spacing between them, wire/pin entry angle and site, and the gradual adjustment schedule must be fully determined per the official IFU and the treating surgeon's judgment."
+    }
+  };
+
+  /* floating install button -> full-screen installation-guidance mode */
+  (function(){
+    const fab = document.getElementById('installFab');
+    const screen = document.getElementById('installScreen');
+    const guide = INSTALL_GUIDE[product.cat];
+
+    document.getElementById('installTitle').textContent = pTitle(product);
+    document.getElementById('installDesc').textContent = guide
+      ? (currentLang==='en' ? guide.en : guide.fa)
+      : (currentLang==='en' ? 'Installation guidance for this part has not been added yet.' : 'راهنمای نصب برای این قطعه هنوز اضافه نشده است.');
+
+    let bgStarted = false;
+    function startBg(){
+      if(bgStarted) return;
+      bgStarted = true;
+      const canvas = document.getElementById('installBgCanvas');
+      const ctx = canvas.getContext('2d');
+      let w, h, dpr, particles = [];
+      const COUNT = 60, LINK_DIST = 120;
+      function resize(){
+        dpr = Math.min(window.devicePixelRatio||1, 2);
+        w = window.innerWidth; h = window.innerHeight;
+        canvas.width = w*dpr; canvas.height = h*dpr;
+        canvas.style.width = w+'px'; canvas.style.height = h+'px';
+        ctx.setTransform(dpr,0,0,dpr,0,0);
+      }
+      function init(){
+        particles = [];
+        const count = Math.min(COUNT, Math.floor((w*h)/20000));
+        for(let i=0;i<count;i++){
+          particles.push({ x:Math.random()*w, y:Math.random()*h, vx:(Math.random()-0.5)*0.22, vy:(Math.random()-0.5)*0.22, r:1.2+Math.random()*1.6, pulse:Math.random()*Math.PI*2 });
+        }
+      }
+      function step(){
+        if(!screen.classList.contains('open')){ requestAnimationFrame(step); return; }
+        ctx.clearRect(0,0,w,h);
+        for(const p of particles){
+          p.x+=p.vx; p.y+=p.vy; p.pulse+=0.02;
+          if(p.x<-20)p.x=w+20; if(p.x>w+20)p.x=-20;
+          if(p.y<-20)p.y=h+20; if(p.y>h+20)p.y=-20;
+        }
+        for(let i=0;i<particles.length;i++) for(let j=i+1;j<particles.length;j++){
+          const a=particles[i], b=particles[j];
+          const dx=a.x-b.x, dy=a.y-b.y, dist=Math.sqrt(dx*dx+dy*dy);
+          if(dist<LINK_DIST){
+            ctx.strokeStyle = `rgba(23,224,138,${(1-dist/LINK_DIST)*0.32})`;
+            ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke();
+          }
+        }
+        for(const p of particles){
+          const glow = 0.5+Math.sin(p.pulse)*0.3;
+          ctx.beginPath(); ctx.fillStyle=`rgba(23,224,138,${glow})`;
+          ctx.shadowColor='rgba(23,224,138,0.9)'; ctx.shadowBlur=6;
+          ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fill(); ctx.shadowBlur=0;
+        }
+        requestAnimationFrame(step);
+      }
+      window.addEventListener('resize', ()=>{ resize(); init(); });
+      resize(); init(); step();
+    }
+
+    fab.addEventListener('click', ()=>{
+      screen.classList.add('open');
+      startBg();
+    });
+    document.getElementById('installClose').addEventListener('click', ()=>{
       screen.classList.remove('open');
     });
   })();
