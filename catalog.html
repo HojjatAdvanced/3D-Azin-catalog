@@ -342,6 +342,21 @@
     .rf-bottom-phones{ text-align:center; }
   }
 
+  /* ---------- clients section ---------- */
+  .clients-section{ position:relative; z-index:1; max-width:1100px; margin:0 auto; padding:10px 22px 46px; }
+  .clients-title{ font-size:15px; font-weight:800; color:var(--ink); text-align:center; margin-bottom:26px; }
+  .clients-grid{
+    display:grid; grid-template-columns:repeat(6, 1fr); gap:12px;
+  }
+  .clients-grid .client-tile{
+    background:#fff; border-radius:14px; padding:14px 10px;
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 6px 18px rgba(0,0,0,0.15);
+  }
+  .clients-grid .client-tile img{ max-width:100%; max-height:56px; object-fit:contain; }
+  @media (max-width:760px){
+    .clients-grid{ grid-template-columns:repeat(3, 1fr); }
+  }
 </style>
 </head>
 <body>
@@ -382,6 +397,24 @@
 <main>
   <div id="resultsWrap"></div>
 </main>
+
+<section class="clients-section">
+  <div class="clients-title" data-fa="برخی از مشتریان ما" data-en="Some of Our Clients">برخی از مشتریان ما</div>
+  <div class="clients-grid">
+    <div class="client-tile"><img src="assets/clients/ibn_sina.png" alt="بیمارستان ابن سینا"></div>
+    <div class="client-tile"><img src="assets/clients/jam_hospital.png" alt="بیمارستان جم"></div>
+    <div class="client-tile"><img src="assets/clients/kerman_medsci.png" alt="دانشگاه علوم پزشکی کرمان"></div>
+    <div class="client-tile"><img src="assets/clients/imam_reza.png" alt="بیمارستان امام رضا (ع)"></div>
+    <div class="client-tile"><img src="assets/clients/shariati.png" alt="بیمارستان شریعتی"></div>
+    <div class="client-tile"><img src="assets/clients/mohtame_towanbakhshi.png" alt="مجتمع توان‌بخشی و مراقبتی رعد و کرم"></div>
+    <div class="client-tile"><img src="assets/clients/akhtar.png" alt="مرکز آموزشی درمانی و تحقیقاتی اختر"></div>
+    <div class="client-tile"><img src="assets/clients/baharloo_gold.png" alt="بیمارستان بهارلو"></div>
+    <div class="client-tile"><img src="assets/clients/tehran_medsci.png" alt="دانشگاه علوم پزشکی تهران"></div>
+    <div class="client-tile"><img src="assets/clients/hasheminejad.png" alt="مرکز آموزشی و درمانی شهید هاشمی‌نژاد"></div>
+    <div class="client-tile"><img src="assets/clients/loghman_hakim.png" alt="مرکز آموزشی درمانی لقمان حکیم"></div>
+    <div class="client-tile"><img src="assets/clients/tajrish_shohada.png" alt="مرکز آموزشی درمانی شهدای تجریش"></div>
+  </div>
+</section>
 
 <footer class="rich-footer">
   <div class="rf-top">
