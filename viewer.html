@@ -24,6 +24,47 @@
   }
 
   #stage{ position:fixed; inset:0; cursor:grab; touch-action:none; }
+
+  /* ---------- branded loading screen (shown while the 3D model loads) ---------- */
+  #viewerLoading{
+    position:fixed; inset:0; z-index:500;
+    background:radial-gradient(ellipse at 50% 0%, #0a1730 0%, #050b18 55%, #030710 100%);
+    display:flex; align-items:center; justify-content:center;
+    transition:opacity .5s ease, visibility .5s;
+  }
+  #viewerLoading.hide{ opacity:0; visibility:hidden; pointer-events:none; }
+  .vl-inner{ position:relative; z-index:1; display:flex; flex-direction:column; align-items:center; gap:18px; padding:20px; }
+  .vl-logo{ width:64px; height:64px; border-radius:16px; object-fit:cover; box-shadow:0 0 30px rgba(23,224,138,0.25); }
+  .vl-spinner{ position:relative; width:96px; height:96px; }
+  .vl-spinner svg.vl-ring-parent, .vl-spinner > svg{ position:absolute; inset:0; width:100%; height:100%; transform:rotate(-90deg); }
+  .vl-ring{
+    fill:none; stroke:rgba(23,224,138,0.15); stroke-width:5;
+  }
+  .vl-ring-fill{
+    stroke:var(--green); stroke-linecap:round;
+    stroke-dasharray:264; stroke-dashoffset:264;
+    filter:drop-shadow(0 0 6px rgba(23,224,138,0.7));
+    animation:vlSpin 1.3s ease-in-out infinite;
+  }
+  @keyframes vlSpin{
+    0%{ stroke-dashoffset:264; transform-origin:50% 50%; }
+    50%{ stroke-dashoffset:70; }
+    100%{ stroke-dashoffset:264; }
+  }
+  .vl-spinner.has-progress .vl-ring-fill{ animation:none; }
+  .vl-cross{
+    position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    animation:vlPulse 1.6s ease-in-out infinite;
+  }
+  .vl-cross svg{ width:26px; height:26px; fill:var(--green); }
+  @keyframes vlPulse{
+    0%,100%{ opacity:0.55; transform:scale(0.92); }
+    50%{ opacity:1; transform:scale(1.05); }
+  }
+  .vl-text{ font-size:13px; color:#cfd8f5; font-weight:600; letter-spacing:.2px; }
+  .vl-pct{ font-size:11px; color:var(--green); font-weight:700; min-height:14px; letter-spacing:.5px; }
+  .vl-brand{ font-size:10px; letter-spacing:2px; color:rgba(200,215,240,0.4); margin-top:6px; }
+  .vl-brand b{ color:var(--green); }
   #stage.dragging{ cursor:grabbing; }
   #stage canvas{ display:block; }
 
@@ -231,6 +272,24 @@
 <body>
 
 <div id="stage"></div>
+
+<div id="viewerLoading">
+  <div class="vl-inner">
+    <img class="vl-logo" src="assets/logo.jpg" alt="MEDAZINCO">
+    <div class="vl-spinner">
+      <svg viewBox="0 0 100 100">
+        <circle class="vl-ring" cx="50" cy="50" r="42"/>
+        <circle class="vl-ring vl-ring-fill" cx="50" cy="50" r="42" id="vlProgressRing"/>
+      </svg>
+      <div class="vl-cross">
+        <svg viewBox="0 0 24 24"><path d="M10 3h4v7h7v4h-7v7h-4v-7H3v-4h7V3Z"/></svg>
+      </div>
+    </div>
+    <div class="vl-text" data-fa="در حال بارگذاری مدل سه‌بعدی…" data-en="Loading 3D model…">در حال بارگذاری مدل سه‌بعدی…</div>
+    <div class="vl-pct" id="vlPct"></div>
+    <div class="vl-brand">MEDAZINCO · <b>آذین طب سلامت رازی</b></div>
+  </div>
+</div>
 
 <div class="hud">
   <div class="bracket tl"></div>
@@ -1256,11 +1315,21 @@
     introStart = performance.now();
     introActive = true;
     applyColorSwatches();
+    hideLoadingScreen();
+  }
+
+  function hideLoadingScreen(){
+    const el = document.getElementById('viewerLoading');
+    if(el) el.classList.add('hide');
   }
 
   if(product.model){
     /* real CAD-exported STL model — exact geometry, no approximation */
     const stlLoader = new THREE.STLLoader();
+    const vlPct = document.getElementById('vlPct');
+    const vlSpinner = document.querySelector('.vl-spinner');
+    const vlProgressRing = document.getElementById('vlProgressRing');
+    const RING_CIRC = 264;
     stlLoader.load(product.model, function(geometry){
       geometry.center();
       geometry.computeVertexNormals();
@@ -1269,7 +1338,14 @@
         partMesh.rotation.set(product.modelRotation[0], product.modelRotation[1], product.modelRotation[2]);
       }
       finishSetup();
-    }, undefined, function(err){
+    }, function(xhr){
+      if(xhr.lengthComputable && xhr.total > 0){
+        const pct = Math.min(100, Math.round((xhr.loaded/xhr.total)*100));
+        vlSpinner.classList.add('has-progress');
+        vlProgressRing.style.strokeDashoffset = RING_CIRC - (RING_CIRC*pct/100);
+        vlPct.textContent = pct + '%';
+      }
+    }, function(err){
       console.error('STL load failed, falling back to procedural shape', err);
       partMesh = (BUILDERS[archetype] || buildBlock)();
       finishSetup();
