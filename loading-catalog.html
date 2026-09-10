@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>در حال بارگذاری کاتالوگ</title>
+<style>
+  @font-face {
+    font-family: 'Vazirmatn';
+    src: url('https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/fonts/webfonts/Vazirmatn-Regular.woff2') format('woff2');
+    font-weight: 400;
+  }
+  @font-face {
+    font-family: 'Vazirmatn';
+    src: url('https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/fonts/webfonts/Vazirmatn-SemiBold.woff2') format('woff2');
+    font-weight: 600;
+  }
+
+  :root{
+    --bg: #0a0e14;
+    --panel: #12181f;
+    --line: #1e2732;
+    --text: #e7edf3;
+    --muted: #6d7c8c;
+    --accent: #2dd4bf;
+    --accent-dim: rgba(45,212,191,0.16);
+  }
+
+  *{ box-sizing:border-box; }
+
+  html,body{
+    margin:0; padding:0; height:100%;
+    background: var(--bg);
+    font-family:'Vazirmatn', Tahoma, sans-serif;
+    color: var(--text);
+  }
+
+  .screen{
+    height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:28px;
+    position:relative;
+    overflow:hidden;
+  }
+
+  /* subtle blueprint grid — evokes CAD/technical drawing, not decoration for its own sake */
+  .screen::before{
+    content:"";
+    position:absolute; inset:0;
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size: 42px 42px;
+    opacity:0.35;
+    mask-image: radial-gradient(ellipse 60% 50% at 50% 45%, black 20%, transparent 75%);
+  }
+
+  .rig{
+    position:relative;
+    width:168px; height:168px;
+    z-index:1;
+  }
+
+  svg{ transform: rotate(-90deg); }
+
+  .track{
+    fill:none;
+    stroke: var(--line);
+    stroke-width: 3;
+  }
+
+  .arc{
+    fill:none;
+    stroke: var(--accent);
+    stroke-width: 3;
+    stroke-linecap: round;
+    stroke-dasharray: 465.6; /* 2*pi*74 */
+    stroke-dashoffset: 465.6;
+    transition: stroke-dashoffset 0.25s ease-out;
+    filter: drop-shadow(0 0 6px var(--accent-dim));
+  }
+
+  .core{
+    position:absolute; inset:0;
+    display:flex; flex-direction:column;
+    align-items:center; justify-content:center;
+    gap:2px;
+  }
+
+  .pct{
+    font-size:30px;
+    font-weight:600;
+    font-variant-numeric: tabular-nums;
+    letter-spacing:0.5px;
+  }
+
+  .pct::after{ content:"٪"; font-size:18px; color:var(--muted); margin-inline-start:2px; }
+
+  .unit{
+    font-size:11px;
+    color: var(--muted);
+    letter-spacing: 0.3px;
+  }
+
+  .status{
+    z-index:1;
+    text-align:center;
+    display:flex; flex-direction:column; gap:8px;
+    min-height: 44px;
+  }
+
+  .status .label{
+    font-size:15px; font-weight:600; color:var(--text);
+  }
+
+  .status .file{
+    font-size:12.5px; color:var(--muted);
+    direction:ltr; /* filenames stay LTR */
+    unicode-bidi: plaindirection: ltr;
+    max-width: 260px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+  }
+
+  .brand{
+    position:absolute;
+    bottom:34px;
+    z-index:1;
+    font-size:12px;
+    color:var(--muted);
+    letter-spacing:0.4px;
+  }
+
+  .brand b{ color:var(--text); font-weight:600; }
+
+  @media (prefers-reduced-motion: reduce){
+    .arc{ transition:none; }
+  }
+</style>
+</head>
+<body>
+
+  <div class="screen" id="screen">
+    <div class="rig">
+      <svg width="168" height="168" viewBox="0 0 168 168">
+        <circle class="track" cx="84" cy="84" r="74"></circle>
+        <circle class="arc" id="arc" cx="84" cy="84" r="74"></circle>
+      </svg>
+      <div class="core">
+        <div class="pct" id="pct">0</div>
+        <div class="unit" id="unit">مدل سه‌بعدی</div>
+      </div>
+    </div>
+
+    <div class="status">
+      <div class="label" id="label">در حال دریافت فایل‌های سه‌بعدی…</div>
+      <div class="file" id="file">&nbsp;</div>
+    </div>
+
+    <div class="brand">کاتالوگ سه‌بعدی <b>MEDAZINCO</b></div>
+  </div>
+
+<script>
+/*
+  API واقعی برای اتصال به لودر STL:
+
+  1) قبل از شروع دانلود مدل‌ها، تعداد کل فایل‌ها رو اعلام کن:
+       CatalogLoader.setTotal(count)
+
+  2) هر بار که یک فایل کامل شد یا پیشرفت دانلودش تغییر کرد:
+       CatalogLoader.update(doneBytesOrFiles, totalBytesOrFiles, currentFileName)
+
+     یا اگه فقط تعداد فایل کامل‌شده مهمه:
+       CatalogLoader.setFileDone(index, totalFiles, fileName)
+
+  3) وقتی همه چیز لود شد:
+       CatalogLoader.finish()   // صفحه رو محو می‌کنه
+
+  نمونه‌ی اتصال به fetch با XHR برای گرفتن درصد واقعی دانلود یک STL:
+
+    function loadSTL(url, onProgress){
+      return new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', url);
+        xhr.responseType = 'arraybuffer';
+        xhr.onprogress = (e) => {
+          if (e.lengthComputable) onProgress(e.loaded / e.total * 100);
+        };
+        xhr.onload = () => resolve(xhr.response);
+        xhr.onerror = reject;
+        xhr.send();
+      });
+    }
+*/
+
+const CIRC = 465.6;
+const arc = document.getElementById('arc');
+const pctEl = document.getElementById('pct');
+const fileEl = document.getElementById('file');
+const labelEl = document.getElementById('label');
+const screenEl = document.getElementById('screen');
+
+const CatalogLoader = {
+  _pct: 0,
+  setTotal(n){ this._total = n; this._done = 0; },
+  setFileDone(index, total, fileName){
+    const pct = Math.round((index / total) * 100);
+    this.render(pct, fileName);
+  },
+  update(loaded, total, fileName){
+    const pct = Math.round((loaded / total) * 100);
+    this.render(pct, fileName);
+  },
+  render(pct, fileName){
+    pct = Math.max(0, Math.min(100, pct));
+    this._pct = pct;
+    arc.style.strokeDashoffset = CIRC - (CIRC * pct / 100);
+    pctEl.textContent = pct;
+    if (fileName) fileEl.textContent = fileName;
+    if (pct >= 100){
+      labelEl.textContent = 'آماده‌سازی نمایش سه‌بعدی…';
+    }
+  },
+  finish(){
+    screenEl.style.transition = 'opacity 0.5s ease';
+    screenEl.style.opacity = '0';
+    setTimeout(() => { screenEl.style.display = 'none'; }, 500);
+  }
+};
+
+window.CatalogLoader = CatalogLoader;
+
+/* ---- دمو: شبیه‌سازی لود شدن ۵ فایل STL برای نمایش —
+       این بخش رو حذف کن و به‌جاش کد واقعی لودر خودت رو وصل کن ---- */
+(function demo(){
+  const files = ['plate_screw_M4.stl', 'ilizarov_ring_120mm.stl', 'k_wire_2mm.stl', 'fixator_clamp.stl', 'ilizarov_rod.stl'];
+  let i = 0, sub = 0;
+  const timer = setInterval(() => {
+    sub += 6 + Math.random() * 10;
+    if (sub >= 100){ sub = 0; i++; }
+    if (i >= files.length){
+      CatalogLoader.render(100);
+      clearInterval(timer);
+      setTimeout(() => CatalogLoader.finish(), 600);
+      return;
+    }
+    const overallPct = ((i + sub / 100) / files.length) * 100;
+    CatalogLoader.render(Math.round(overallPct), files[i]);
+  }, 160);
+})();
+</script>
+
+</body>
+</html>
