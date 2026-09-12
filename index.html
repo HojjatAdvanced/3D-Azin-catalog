@@ -258,6 +258,27 @@
     .hero h1{ font-size:26px; }
   }
   /* ---------- clients section ---------- */
+  /* ---------- product categories ---------- */
+  .categories-section{ position:relative; z-index:1; max-width:1100px; margin:0 auto; padding:20px 22px 10px; }
+  .cs-title{ font-size:17px; font-weight:800; color:var(--ink); text-align:center; margin-bottom:26px; }
+  .cs-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+  .cs-card{
+    display:block; text-decoration:none; background:var(--panel); backdrop-filter:blur(14px);
+    border:1px solid var(--border); border-radius:16px; overflow:hidden;
+    transition:transform .2s, box-shadow .2s, border-color .2s;
+  }
+  .cs-card:hover{ transform:translateY(-4px); box-shadow:0 16px 34px rgba(0,0,0,0.35); border-color:var(--green); }
+  .cs-card img{ width:100%; aspect-ratio:4/3; object-fit:cover; display:block; }
+  .cs-name{
+    padding:16px 10px 18px; text-align:center; font-size:14px; font-weight:800; color:var(--ink);
+    position:relative;
+  }
+  .cs-name::after{
+    content:''; position:absolute; bottom:6px; left:50%; transform:translateX(-50%);
+    width:60%; height:1px; background:var(--border);
+  }
+  @media (max-width:700px){ .cs-grid{ grid-template-columns:1fr; } }
+
   /* ---------- products showcase carousel ---------- */
   .products-showcase{
     position:relative; z-index:1; margin-top:10px; padding:56px 22px 60px;
@@ -388,6 +409,24 @@
     <div class="cta-sub" data-fa="۸۷ قطعه ارتوپدی، دسته‌بندی‌شده با نمایش سه‌بعدی تعاملی" data-en="87 orthopedic parts, categorized with interactive 3D display">۸۷ قطعه ارتوپدی، دسته‌بندی‌شده با نمایش سه‌بعدی تعاملی</div>
   </div>
 </main>
+
+<section class="categories-section">
+  <div class="cs-title" data-fa="دسته‌بندی محصولات" data-en="Product Categories">دسته‌بندی محصولات</div>
+  <div class="cs-grid">
+    <a class="cs-card" href="catalog.html?cat=ilizarov">
+      <img src="assets/categories/ilizarov_photo.png" alt="الیزاروف">
+      <div class="cs-name" data-fa="الیزاروف" data-en="Ilizarov">الیزاروف</div>
+    </a>
+    <a class="cs-card" href="catalog.html?cat=implants">
+      <img src="assets/categories/implant_photo.png" alt="ایمپلنت">
+      <div class="cs-name" data-fa="ایمپلنت" data-en="Implant">ایمپلنت</div>
+    </a>
+    <a class="cs-card" href="catalog.html?cat=fixators">
+      <img src="assets/categories/external_fixator_photo.png" alt="اکسترنال فیکساتور">
+      <div class="cs-name" data-fa="اکسترنال فیکساتور" data-en="External Fixator">اکسترنال فیکساتور</div>
+    </a>
+  </div>
+</section>
 
 <section class="products-showcase">
   <div class="ps-title" data-fa="برخی از محصولات ما" data-en="Some of Our Products">برخی از محصولات ما</div>

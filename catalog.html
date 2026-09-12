@@ -538,7 +538,9 @@
   function catLabelFor(key){ return currentLang === 'en' ? (CAT_LABEL_EN[key]||'') : (CAT_LABEL[key]||''); }
 
   /* ---------- category bar ---------- */
-  let activeCat = 'all';
+  const urlParams = new URLSearchParams(window.location.search);
+  const urlCat = urlParams.get('cat');
+  let activeCat = urlCat ? urlCat : 'all';
   let searchTerm = '';
 
   function countFor(key){
@@ -565,8 +567,13 @@
   function pMaterial(p){ return currentLang==='en' ? (p.material_en || p.material) : p.material; }
   function pDesc(p){ return currentLang==='en' ? (p.desc_en || p.desc_fa || '') : (p.desc_fa || ''); }
 
+  const CATEGORY_GROUPS = {
+    implants: ['nailing','plates_general','plates_anatomical','screws','rods']
+  };
+
   function matches(p){
-    const okCat = activeCat==='all' || p.cat===activeCat;
+    const group = CATEGORY_GROUPS[activeCat];
+    const okCat = activeCat==='all' || (group ? group.includes(p.cat) : p.cat===activeCat);
     const okSearch = !searchTerm || p.title.toLowerCase().includes(searchTerm) || p.material.toLowerCase().includes(searchTerm)
       || (p.title_en||'').toLowerCase().includes(searchTerm) || (p.material_en||'').toLowerCase().includes(searchTerm);
     return okCat && okSearch;
