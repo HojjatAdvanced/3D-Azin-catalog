@@ -258,6 +258,46 @@
     .hero h1{ font-size:26px; }
   }
   /* ---------- clients section ---------- */
+  /* ---------- products showcase carousel ---------- */
+  .products-showcase{
+    position:relative; z-index:1; margin-top:10px; padding:56px 22px 60px;
+    background:linear-gradient(160deg, #0b2b2a 0%, #0f3634 55%, #0b2b2a 100%);
+    overflow:hidden;
+  }
+  .ps-title{ font-size:19px; font-weight:800; color:#fff; text-align:center; }
+  .ps-underline{
+    width:64px; height:3px; background:var(--green); border-radius:2px; margin:16px auto 20px;
+  }
+  .ps-sub{
+    max-width:680px; margin:0 auto 36px; text-align:center; font-size:12.5px;
+    color:#cfe8e4; line-height:2;
+  }
+  .ps-carousel{ display:flex; align-items:center; gap:10px; max-width:1080px; margin:0 auto; }
+  .ps-track-wrap{ flex:1; overflow:hidden; }
+  .ps-track{ display:flex; direction:ltr; transition:transform .5s cubic-bezier(.65,0,.35,1); }
+  .ps-slide{
+    flex:0 0 20%; padding:0 10px; box-sizing:border-box;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .ps-slide img{
+    width:100%; aspect-ratio:1/1; object-fit:contain; border-radius:12px;
+    background:rgba(255,255,255,0.03);
+  }
+  .ps-arrow{
+    flex:none; width:38px; height:38px; border-radius:50%; border:1px solid rgba(255,255,255,0.25);
+    background:rgba(255,255,255,0.06); color:#fff; font-size:20px; cursor:pointer;
+    display:flex; align-items:center; justify-content:center; transition:all .2s;
+  }
+  .ps-arrow:hover{ background:var(--green); border-color:transparent; color:#04140c; }
+  .ps-dots{ display:flex; justify-content:center; gap:8px; margin-top:30px; }
+  .ps-dots .dot{
+    width:7px; height:7px; border-radius:50%; background:rgba(255,255,255,0.3);
+    cursor:pointer; transition:all .2s;
+  }
+  .ps-dots .dot.active{ background:var(--green); width:20px; border-radius:4px; }
+  @media (max-width:900px){ .ps-slide{ flex:0 0 33.33%; } }
+  @media (max-width:600px){ .ps-slide{ flex:0 0 50%; } }
+
   .clients-section{ position:relative; z-index:1; max-width:1100px; margin:0 auto; padding:10px 22px 46px; }
   .clients-title{ font-size:15px; font-weight:800; color:var(--ink); text-align:center; margin-bottom:26px; }
   .clients-grid{
@@ -348,6 +388,31 @@
     <div class="cta-sub" data-fa="۸۷ قطعه ارتوپدی، دسته‌بندی‌شده با نمایش سه‌بعدی تعاملی" data-en="87 orthopedic parts, categorized with interactive 3D display">۸۷ قطعه ارتوپدی، دسته‌بندی‌شده با نمایش سه‌بعدی تعاملی</div>
   </div>
 </main>
+
+<section class="products-showcase">
+  <div class="ps-title" data-fa="برخی از محصولات ما" data-en="Some of Our Products">برخی از محصولات ما</div>
+  <div class="ps-underline"></div>
+  <div class="ps-sub" data-fa="تمرکز آذین طب سلامت رازی بر ارائه‌ی محصولات با کیفیت بالا، مقرون‌به‌صرفه، تدارکات سریع و پشتیبانی مداوم به پزشکان" data-en="AzinTeb Salamat Razi's focus is on delivering high-quality, affordable products with fast supply and continuous support for physicians">تمرکز آذین طب سلامت رازی بر ارائه‌ی محصولات با کیفیت بالا، مقرون‌به‌صرفه، تدارکات سریع و پشتیبانی مداوم به پزشکان</div>
+
+  <div class="ps-carousel">
+    <button class="ps-arrow ps-prev" id="psPrev" aria-label="prev">&lsaquo;</button>
+    <div class="ps-track-wrap">
+      <div class="ps-track" id="psTrack">
+        <div class="ps-slide"><img src="assets/showcase/product_1.png" alt="محصول ۱"></div>
+        <div class="ps-slide"><img src="assets/showcase/product_2.png" alt="محصول ۲"></div>
+        <div class="ps-slide"><img src="assets/showcase/product_3.png" alt="محصول ۳"></div>
+        <div class="ps-slide"><img src="assets/showcase/product_4.png" alt="محصول ۴"></div>
+        <div class="ps-slide"><img src="assets/showcase/product_5.png" alt="محصول ۵"></div>
+        <div class="ps-slide"><img src="assets/showcase/product_6.png" alt="محصول ۶"></div>
+        <div class="ps-slide"><img src="assets/showcase/product_7.png" alt="محصول ۷"></div>
+        <div class="ps-slide"><img src="assets/showcase/product_8.png" alt="محصول ۸"></div>
+        <div class="ps-slide"><img src="assets/showcase/product_9.png" alt="محصول ۹"></div>
+      </div>
+    </div>
+    <button class="ps-arrow ps-next" id="psNext" aria-label="next">&rsaquo;</button>
+  </div>
+  <div class="ps-dots" id="psDots"></div>
+</section>
 
 <section class="clients-section">
   <div class="clients-title" data-fa="برخی از مشتریان ما" data-en="Some of Our Clients">برخی از مشتریان ما</div>
@@ -590,6 +655,65 @@
 })();
 </script>
 
+
+<script>
+(function(){
+  const track = document.getElementById('psTrack');
+  const slides = Array.from(track.children);
+  const dotsWrap = document.getElementById('psDots');
+  const prevBtn = document.getElementById('psPrev');
+  const nextBtn = document.getElementById('psNext');
+
+  function perView(){
+    const w = window.innerWidth;
+    if(w <= 600) return 2;
+    if(w <= 900) return 3;
+    return 5;
+  }
+
+  let index = 0;
+  let timer = null;
+
+  function maxIndex(){ return Math.max(0, slides.length - perView()); }
+
+  function renderDots(){
+    dotsWrap.innerHTML = '';
+    const count = maxIndex() + 1;
+    for(let i=0;i<count;i++){
+      const d = document.createElement('div');
+      d.className = 'dot' + (i===index ? ' active' : '');
+      d.addEventListener('click', ()=>{ goTo(i); restart(); });
+      dotsWrap.appendChild(d);
+    }
+  }
+
+  function update(){
+    const slidePct = 100/perView();
+    track.style.transform = `translateX(${-index*slidePct}%)`;
+    renderDots();
+  }
+
+  function goTo(i){
+    index = Math.max(0, Math.min(maxIndex(), i));
+    update();
+  }
+
+  function next(){ goTo(index+1 > maxIndex() ? 0 : index+1); }
+  function prev(){ goTo(index-1 < 0 ? maxIndex() : index-1); }
+
+  function restart(){
+    if(timer) clearInterval(timer);
+    timer = setInterval(next, 3000);
+  }
+
+  nextBtn.addEventListener('click', ()=>{ next(); restart(); });
+  prevBtn.addEventListener('click', ()=>{ prev(); restart(); });
+  window.addEventListener('resize', ()=>{ index = Math.min(index, maxIndex()); update(); });
+
+  update();
+  restart();
+})();
+</script>
 
 </body>
 </html>
