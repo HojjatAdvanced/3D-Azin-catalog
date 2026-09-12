@@ -232,15 +232,16 @@
        shown just above the hand-toggle button, only while tracking is active */
     #gesturePanel{
       display:none;
-      position:fixed; right:16px; bottom:82px; left:auto; transform:none;
-      width:120px; padding:6px; background:rgba(10,14,30,0.85); border-radius:14px;
+      position:fixed; right:50%; bottom:90px; left:auto; transform:translateX(50%);
+      width:min(230px, 60vw); padding:8px; background:rgba(10,14,30,0.9); border-radius:16px;
+      border:1px solid rgba(15,169,104,0.3);
     }
     #gesturePanel.mobile-show{ display:block; }
     #gesturePanel .gp-head,
     #gesturePanel #gestureStatus,
     #gesturePanel #gestureToggle,
     #gesturePanel #gestureNote{ display:none; }
-    #gestureCanvas{ height:78px; border-radius:10px; }
+    #gestureCanvas{ width:100%; height:150px; border-radius:12px; }
   }
 
   /* ---------- mobile hand-sensor toggle ---------- */
@@ -263,10 +264,58 @@
   .hand-toggle-mobile.active svg{ stroke:#dfffef; }
   .hand-toggle-mobile.active .ht-dot{ background:var(--green); box-shadow:0 0 8px var(--green), 0 0 0 2px rgba(6,10,22,0.9); }
 
+  /* ---------- mobile gamepad toggle (next to hand icon) ---------- */
+  .gamepad-toggle{
+    display:none;
+    position:fixed; bottom:22px; right:78px; z-index:21;
+    width:52px; height:52px; border-radius:50%;
+    background:radial-gradient(circle at 50% 38%, rgba(20,32,70,0.92), rgba(6,10,22,0.96));
+    border:1.5px solid rgba(15,169,104,0.5);
+    align-items:center; justify-content:center;
+    box-shadow:0 8px 24px rgba(0,0,0,0.5), 0 0 20px rgba(15,169,104,0.22);
+    cursor:pointer; pointer-events:auto; touch-action:none; color:var(--green);
+  }
+  .gamepad-toggle svg{ width:24px; height:24px; stroke:var(--green); fill:none; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; }
+  .gamepad-toggle.active{ border-color:var(--green); animation:fabPulse 2.2s ease-out infinite; }
+  .gamepad-toggle.active svg{ stroke:#dfffef; }
 
   @media (max-width:760px), (hover:none) and (pointer:coarse){
     .hand-toggle-mobile{ display:flex; }
+    .gamepad-toggle{ display:flex; }
   }
+
+  /* ---------- PS4-style analog sticks (shown only via the gamepad toggle) ---------- */
+  .joystick{
+    display:none;
+    position:fixed; bottom:22px; width:78px; height:78px; z-index:22;
+    pointer-events:auto; touch-action:none;
+  }
+  .joystick.show{ display:block; }
+  .joy-rotate{ left:18px; }
+  .joy-zoom{ right:16px; }
+  .joy-ring{
+    position:absolute; inset:0; border-radius:50%;
+    background:radial-gradient(circle at 50% 40%, rgba(20,32,70,0.9), rgba(6,10,22,0.95));
+    border:1.5px solid rgba(15,169,104,0.5);
+    box-shadow:0 8px 24px rgba(0,0,0,0.5), 0 0 18px rgba(15,169,104,0.2);
+  }
+  .joy-ring::after{
+    content:''; position:absolute; inset:9px; border-radius:50%;
+    border:1px dashed rgba(15,169,104,0.3);
+  }
+  .joy-knob{
+    position:absolute; width:30px; height:30px; border-radius:50%;
+    top:50%; left:50%; margin:-15px 0 0 -15px;
+    background:radial-gradient(circle at 35% 30%, #1fd98a, #0c8a56 70%);
+    box-shadow:0 0 14px rgba(15,169,104,0.75), 0 4px 10px rgba(0,0,0,0.5), 0 0 0 2px rgba(255,255,255,0.12) inset;
+    transition:transform .18s cubic-bezier(.34,1.56,.64,1);
+  }
+  .joystick.active .joy-knob{ transition:none; }
+  .joy-label{
+    position:absolute; bottom:-19px; left:0; right:0; text-align:center;
+    font-size:9px; letter-spacing:1px; color:var(--muted); font-weight:600;
+  }
+
 </style>
 </head>
 <body>
@@ -333,6 +382,21 @@
     <svg viewBox="0 0 24 24"><path d="M8 13V6.5a1.5 1.5 0 0 1 3 0V12"/><path d="M11 12V4.5a1.5 1.5 0 0 1 3 0V12"/><path d="M14 12.5V6a1.5 1.5 0 0 1 3 0v7"/><path d="M17 12.5v2a1.5 1.5 0 0 1 3 0v3a6 6 0 0 1-6 6h-2a6 6 0 0 1-5-2.7L5 16.5a1.4 1.4 0 0 1 2.2-1.7L8 15.8"/></svg>
     <span class="ht-dot"></span>
   </button>
+
+  <button class="gamepad-toggle" id="gamepadToggle" title="کنترل با دسته">
+    <svg viewBox="0 0 24 24"><path d="M7 10v4M5 12h4"/><circle cx="16.2" cy="10.3" r="0.9" fill="currentColor" stroke="none"/><circle cx="18.2" cy="12.3" r="0.9" fill="currentColor" stroke="none"/><path d="M7.5 6h9a4.5 4.5 0 0 1 4.5 4.5v3A3.5 3.5 0 0 1 17.5 17c-.9 0-1.7-.4-2.3-1l-1-1a3 3 0 0 0-2.1-.9h-.2a3 3 0 0 0-2.1.9l-1 1c-.6.6-1.4 1-2.3 1A3.5 3.5 0 0 1 3 13.5v-3A4.5 4.5 0 0 1 7.5 6Z"/></svg>
+  </button>
+
+  <div class="joystick joy-rotate" id="joyRotate">
+    <div class="joy-ring"></div>
+    <div class="joy-knob" id="joyRotateKnob"></div>
+    <div class="joy-label" data-fa="چرخش" data-en="Rotate">چرخش</div>
+  </div>
+  <div class="joystick joy-zoom" id="joyZoom">
+    <div class="joy-ring"></div>
+    <div class="joy-knob" id="joyZoomKnob"></div>
+    <div class="joy-label" data-fa="زوم" data-en="Zoom">زوم</div>
+  </div>
 </div>
 
 <div id="infoScreen">
@@ -1567,6 +1631,101 @@
   handToggleMobile.addEventListener('click', ()=>{ gestureActive ? disableGestureControl() : enableGestureControl(); });
 
   /* ============================================================
+     MOBILE ICON ROW: mutually-exclusive "camera mode" / "controller mode"
+     — activating either one hides the other bottom icons, leaving only
+     the active toggle (to switch back) and its own panel.
+  ============================================================ */
+  const gamepadToggleBtn = document.getElementById('gamepadToggle');
+  const joyRotateEl = document.getElementById('joyRotate');
+  const joyZoomEl = document.getElementById('joyZoom');
+  let controllerActive = false;
+
+  function setIconsVisible(showInfo, showInstall, showHand, showGamepad){
+    document.getElementById('infoFab').style.display = showInfo ? 'flex' : 'none';
+    document.getElementById('installFab').style.display = showInstall ? 'flex' : 'none';
+    handToggleMobile.style.display = showHand ? 'flex' : 'none';
+    gamepadToggleBtn.style.display = showGamepad ? 'flex' : 'none';
+  }
+
+  function exitAllSubModes(){
+    if(gestureActive) disableGestureControl();
+    if(controllerActive) setControllerMode(false);
+    setIconsVisible(true, true, true, true);
+  }
+
+  function setControllerMode(on){
+    controllerActive = on;
+    gamepadToggleBtn.classList.toggle('active', on);
+    joyRotateEl.classList.toggle('show', on);
+    joyZoomEl.classList.toggle('show', on);
+    if(on){
+      setIconsVisible(false, false, false, true);
+    } else {
+      setIconsVisible(true, true, true, true);
+    }
+  }
+
+  gamepadToggleBtn.addEventListener('click', ()=>{
+    if(gestureActive) disableGestureControl();
+    setControllerMode(!controllerActive);
+  });
+
+  // hook into the existing hand-toggle click to also manage the icon row
+  handToggleMobile.addEventListener('click', ()=>{
+    if(controllerActive) setControllerMode(false);
+    // after enable/disableGestureControl runs (bound above), sync icon visibility
+    setTimeout(()=>{
+      if(gestureActive) setIconsVisible(false, false, true, false);
+      else setIconsVisible(true, true, true, true);
+    }, 0);
+  });
+
+  /* ---------- PS4-style analog sticks: rotate (left) & zoom (right) ---------- */
+  function setupJoystick(baseId, knobId){
+    const base = document.getElementById(baseId);
+    const knob = document.getElementById(knobId);
+    const maxR = 21;
+    const state = { x:0, y:0, active:false };
+    let touchId = null;
+
+    function setKnob(nx, ny){ knob.style.transform = `translate(${nx*maxR}px, ${ny*maxR}px)`; }
+    function reset(){ state.x=0; state.y=0; state.active=false; touchId=null; base.classList.remove('active'); setKnob(0,0); }
+    function handleAt(clientX, clientY){
+      const rect = base.getBoundingClientRect();
+      const cx = rect.left+rect.width/2, cy = rect.top+rect.height/2;
+      let dx = (clientX-cx)/maxR, dy = (clientY-cy)/maxR;
+      const mag = Math.hypot(dx,dy);
+      if(mag>1){ dx/=mag; dy/=mag; }
+      state.x=dx; state.y=dy; setKnob(dx,dy);
+    }
+    base.addEventListener('touchstart', (e)=>{
+      e.preventDefault(); e.stopPropagation();
+      const t = e.changedTouches[0]; touchId = t.identifier;
+      state.active = true; base.classList.add('active'); autoRotate = false;
+      handleAt(t.clientX, t.clientY);
+    }, {passive:false});
+    window.addEventListener('touchmove', (e)=>{
+      if(touchId===null) return;
+      for(const t of e.changedTouches){ if(t.identifier===touchId){ e.preventDefault(); handleAt(t.clientX, t.clientY); } }
+    }, {passive:false});
+    window.addEventListener('touchend', (e)=>{ if(touchId===null) return; for(const t of e.changedTouches){ if(t.identifier===touchId) reset(); } });
+    window.addEventListener('touchcancel', ()=>{ if(touchId!==null) reset(); });
+    base.addEventListener('mousedown', (e)=>{
+      e.preventDefault(); e.stopPropagation();
+      state.active = true; base.classList.add('active'); autoRotate = false;
+      handleAt(e.clientX, e.clientY);
+      function mv(ev){ handleAt(ev.clientX, ev.clientY); }
+      function up(){ reset(); window.removeEventListener('mousemove',mv); window.removeEventListener('mouseup',up); }
+      window.addEventListener('mousemove', mv); window.addEventListener('mouseup', up);
+    });
+    return state;
+  }
+  const rotateStick = setupJoystick('joyRotate','joyRotateKnob');
+  const zoomStick = setupJoystick('joyZoom','joyZoomKnob');
+  const ROTATE_STICK_SPEED = 0.045;
+  const ZOOM_STICK_SPEED = 9;
+
+  /* ============================================================
      RENDER LOOP
   ============================================================ */
   function easeOutCubic(x){ return 1-Math.pow(1-x,3); }
@@ -1585,7 +1744,17 @@
 
     if(gestureActive && !autoRotate && performance.now()-lastHandSeenAt>2500) autoRotate = true;
 
-    if(autoRotate && !isDragging) targetRotY += 0.0022;
+    if(rotateStick.active){
+      targetRotY += rotateStick.x * ROTATE_STICK_SPEED;
+      targetRotX += rotateStick.y * ROTATE_STICK_SPEED;
+      targetRotX = Math.max(-1.2, Math.min(1.2, targetRotX));
+    }
+    if(zoomStick.active){
+      targetZoom += zoomStick.y * ZOOM_STICK_SPEED;
+      targetZoom = Math.max(ZOOM_MIN, Math.min(ZOOM_MAX, targetZoom));
+    }
+
+    if(autoRotate && !isDragging && !rotateStick.active) targetRotY += 0.0022;
 
     core.rotation.y += (targetRotY - core.rotation.y)*ROT_DAMP;
     core.rotation.x += (targetRotX - core.rotation.x)*ROT_DAMP;
