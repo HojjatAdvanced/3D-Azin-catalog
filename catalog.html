@@ -1314,12 +1314,32 @@
     }, 500 + Math.random()*400);
   }
 
+  const ABOUT_US_FA = 'بنیان‌گذار شرکت آذین طب سلامت رازی\n\nمهندس رضا عبداللهی، بنیان‌گذار آینده‌نگر شرکت آذین طب سلامت رازی، یکی از تولیدکنندگان پیشرو ایمپلنت‌های ارتوپدی و سیستم‌های فیکساسیون خارجی است. با پیشینه‌ای در مهندسی، مدیریت کسب‌وکار و فناوری ارتوپدی، و بیش از ۲۵ سال تجربه در صنعت تجهیزات پزشکی، نقش کلیدی در ارتقای تولید ارتوپدی از نظر کیفیت و نوآوری داشته است.\n\nتحت مدیریت ایشان، شرکت آذین طب سلامت رازی از یک واحد تولیدی کوچک به نامی معتبر در راه‌حل‌های ارتوپدی تبدیل شده و ایمپلنت‌های دقیق خود را به بیمارستان‌ها، جراحان و توزیع‌کنندگان در سطح ملی و بین‌المللی عرضه می‌کند.';
+  const ABOUT_US_EN = 'Founder of AzinTeb Salamat Razi\n\nReza Abdollahi is the visionary founder of AzinTeb Salamat Razi, a leading manufacturer of orthopedic implants and external fixation systems. With a background in engineering, business management, and orthopedic technology, and more than 25 years of experience in the medical device industry, he has played a key role in advancing orthopedic manufacturing in terms of quality and innovation.\n\nUnder his leadership, AzinTeb Salamat Razi has grown from a small manufacturing unit into a trusted name in orthopedic solutions, supplying precision implants to hospitals, surgeons, and distributors both nationally and internationally.';
+
+  function showAboutUs(){
+    const lang = AZ_LANG();
+    addMessage('user', lang==='en' ? 'About Us' : 'درباره‌ی ما');
+    showTyping();
+    setTimeout(()=>{
+      hideTyping();
+      addMessage('bot', lang==='en' ? ABOUT_US_EN : ABOUT_US_FA);
+      playCharacterAudio('assets/azin/about.mp3');
+    }, 500 + Math.random()*400);
+  }
+
   function renderSuggestions(){
     const lang = AZ_LANG();
     const items = lang==='en'
       ? ['What do you have for a femur fracture?','What is Ilizarov?','Contact sales']
       : ['برای شکستگی فمور چی دارید؟','الیزاروف چیه؟','ارتباط با فروش'];
     suggestionsEl.innerHTML = '';
+
+    const aboutBtn = document.createElement('button');
+    aboutBtn.textContent = lang==='en' ? 'About Us' : 'درباره‌ی ما';
+    aboutBtn.addEventListener('click', showAboutUs);
+    suggestionsEl.appendChild(aboutBtn);
+
     items.forEach(txt=>{
       const b = document.createElement('button');
       b.textContent = txt;
@@ -1328,16 +1348,19 @@
     });
   }
 
-  function playIntroAudio(){
+  function playCharacterAudio(src){
     const audioEl = document.getElementById('azinIntroAudio');
     const wrapEl = document.getElementById('azinCharImgwrap');
     if(!audioEl || !wrapEl) return;
+    audioEl.pause();
+    audioEl.src = src;
     audioEl.currentTime = 0;
     wrapEl.classList.add('talking');
     audioEl.play().catch(()=>{ wrapEl.classList.remove('talking'); });
     audioEl.onended = ()=> wrapEl.classList.remove('talking');
     audioEl.onpause = ()=> wrapEl.classList.remove('talking');
   }
+  function playIntroAudio(){ playCharacterAudio('assets/azin/intro.mp3'); }
 
   function openPanel(){
     panel.classList.add('open');
