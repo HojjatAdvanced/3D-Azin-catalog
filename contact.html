@@ -273,7 +273,21 @@
     opacity:0; transform:translateY(20px); transition:opacity .35s ease, transform .35s ease;
   }
   .azin-character.show{ display:block; opacity:1; transform:translateY(0); }
-  .azin-character img{ width:100%; border-radius:20px; box-shadow:0 20px 50px rgba(0,0,0,0.5); }
+  .azin-character img{ width:100%; border-radius:20px; box-shadow:0 20px 50px rgba(0,0,0,0.5); display:block; }
+  .azin-char-imgwrap{ position:relative; }
+  .azin-blink{
+    position:absolute; background:#04120c; border-radius:50%;
+    width:7%; height:4.4%;
+    transform:scaleY(0); transform-origin:center;
+    animation:azinBlink 4.6s ease-in-out infinite;
+    pointer-events:none;
+  }
+  .azin-blink-l{ left:35.7%; top:18.6%; }
+  .azin-blink-r{ left:48.9%; top:19.1%; animation-delay:.02s; }
+  @keyframes azinBlink{
+    0%, 92%, 100%{ transform:scaleY(0); }
+    95%, 97%{ transform:scaleY(1); }
+  }
 
   .azin-panel{
     display:none; position:fixed; left:26px; bottom:26px; z-index:71;
@@ -665,7 +679,11 @@
 </button>
 
 <div class="azin-character" id="azinCharacter">
-  <img src="assets/azin/mascot.jpg" alt="آذین">
+  <div class="azin-char-imgwrap">
+    <img src="assets/azin/mascot.jpg" alt="آذین">
+    <span class="azin-blink azin-blink-l"></span>
+    <span class="azin-blink azin-blink-r"></span>
+  </div>
 </div>
 
 <div class="azin-panel" id="azinPanel">
