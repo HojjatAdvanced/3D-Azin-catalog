@@ -333,6 +333,74 @@
   @media (max-width:760px){
     .clients-grid{ grid-template-columns:repeat(3, 1fr); }
   }
+  /* ---------- Azin — smart assistant (lite) ---------- */
+  .azin-fab{
+    position:fixed; left:26px; bottom:26px; z-index:70;
+    width:58px; height:58px; border-radius:50%; border:none; cursor:pointer;
+    background:linear-gradient(135deg, var(--green), var(--green-2));
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 10px 30px rgba(0,0,0,0.4), 0 0 0 0 rgba(15,169,104,0.55);
+    animation:azinPulse 2.4s ease-out infinite;
+  }
+  @keyframes azinPulse{
+    0%{ box-shadow:0 10px 30px rgba(0,0,0,0.4), 0 0 0 0 rgba(15,169,104,0.55); }
+    70%{ box-shadow:0 10px 30px rgba(0,0,0,0.4), 0 0 0 14px rgba(15,169,104,0); }
+    100%{ box-shadow:0 10px 30px rgba(0,0,0,0.4), 0 0 0 0 rgba(15,169,104,0); }
+  }
+  .azin-fab svg{ width:28px; height:28px; stroke:#04140c; fill:none; stroke-width:1.9; stroke-linecap:round; stroke-linejoin:round; }
+
+  .azin-header-btn{
+    width:40px; height:32px; border-radius:10px; border:1px solid rgba(15,169,104,0.35);
+    background:rgba(23,224,138,0.08); cursor:pointer; display:flex; align-items:center; justify-content:center;
+    transition:all .2s;
+  }
+  .azin-header-btn:hover{ background:rgba(23,224,138,0.18); border-color:var(--green); }
+  .azin-header-btn svg{ width:18px; height:18px; stroke:var(--green); fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
+
+  .azin-siri-overlay{
+    display:none; position:fixed; inset:0; z-index:300;
+    background:rgba(2,5,12,0.9); backdrop-filter:blur(8px);
+    flex-direction:column; align-items:center; justify-content:center; gap:24px; padding:28px;
+  }
+  .azin-siri-overlay.show{ display:flex; }
+  .siri-close{
+    position:absolute; top:22px; left:22px; background:rgba(255,255,255,0.1); border:none;
+    color:#fff; width:36px; height:36px; border-radius:50%; font-size:18px; cursor:pointer;
+  }
+  .siri-orb{
+    position:relative; width:150px; height:150px; border-radius:50%; overflow:hidden;
+    box-shadow:0 0 60px rgba(23,224,138,0.45), 0 0 120px rgba(23,224,138,0.22);
+    background:#03150e;
+  }
+  .siri-orb .blob{
+    position:absolute; width:140%; height:140%; border-radius:44%;
+    filter:blur(16px); opacity:0.9; mix-blend-mode:screen;
+  }
+  .siri-orb .b1{ background:radial-gradient(circle, #17e08a, transparent 65%); top:-20%; left:-25%; animation:siriMove1 3.4s ease-in-out infinite; }
+  .siri-orb .b2{ background:radial-gradient(circle, #0fffc0, transparent 65%); bottom:-25%; right:-20%; animation:siriMove2 4.1s ease-in-out infinite; }
+  .siri-orb .b3{ background:radial-gradient(circle, #0c8a56, transparent 65%); top:5%; right:-30%; animation:siriMove3 3.8s ease-in-out infinite; }
+  .siri-orb .b4{ background:radial-gradient(circle, #7cffcb, transparent 60%); bottom:0; left:-25%; animation:siriMove4 4.6s ease-in-out infinite; }
+  @keyframes siriMove1{ 0%,100%{ transform:translate(0,0) scale(1); } 50%{ transform:translate(22%,26%) scale(1.3); } }
+  @keyframes siriMove2{ 0%,100%{ transform:translate(0,0) scale(1); } 50%{ transform:translate(-26%,-16%) scale(1.35); } }
+  @keyframes siriMove3{ 0%,100%{ transform:translate(0,0) scale(1); } 50%{ transform:translate(-16%,22%) scale(1.18); } }
+  @keyframes siriMove4{ 0%,100%{ transform:translate(0,0) scale(1); } 50%{ transform:translate(20%,-22%) scale(1.22); } }
+  .siri-orb.listening{ animation:siriPulseRing 1.5s ease-in-out infinite; }
+  @keyframes siriPulseRing{
+    0%,100%{ box-shadow:0 0 60px rgba(23,224,138,0.45), 0 0 120px rgba(23,224,138,0.22); }
+    50%{ box-shadow:0 0 95px rgba(23,224,138,0.8), 0 0 175px rgba(23,224,138,0.42); }
+  }
+  .siri-mic-icon{ position:absolute; inset:0; z-index:2; display:flex; align-items:center; justify-content:center; }
+  .siri-mic-icon svg{ width:40px; height:40px; stroke:#fff; fill:none; stroke-width:1.6; filter:drop-shadow(0 2px 8px rgba(0,0,0,0.5)); }
+  .siri-status{ font-size:12.5px; color:#9fe8cb; font-weight:700; letter-spacing:.3px; min-height:18px; text-align:center; }
+  .siri-transcript{ font-size:16px; color:#fff; font-weight:800; text-align:center; max-width:340px; min-height:24px; }
+  .siri-answer{ font-size:12.5px; color:#cfe8de; line-height:2.1; text-align:center; max-width:360px; }
+  .siri-answer a, .siri-answer a:visited{ color:var(--green); font-weight:800; }
+  .siri-type-link{ font-size:11px; color:#8fa0c8; text-decoration:underline; cursor:pointer; background:none; border:none; font-family:inherit; }
+  .siri-type-input{
+    width:min(300px, 80vw); padding:11px 14px; border-radius:12px; border:1px solid rgba(15,169,104,0.35);
+    background:rgba(255,255,255,0.06); color:#fff; font-family:inherit; font-size:12.5px; text-align:center;
+  }
+
 </style>
 </head>
 <body>
@@ -349,6 +417,9 @@
     <a href="catalog.html" data-fa="کاتالوگ" data-en="Catalog">کاتالوگ</a>
     <a href="contact.html" data-fa="تماس با ما" data-en="Contact Us">تماس با ما</a>
   </nav>
+  <button class="azin-header-btn" id="azinHeaderBtn" title="آذین - دستیار هوشمند">
+    <svg viewBox="0 0 24 24"><path d="M12 3a5 5 0 0 1 5 5v2a5 5 0 0 1-10 0V8a5 5 0 0 1 5-5Z"/><path d="M8 21v-1a4 4 0 0 1 4-4v0a4 4 0 0 1 4 4v1"/></svg>
+  </button>
   <button class="lang-toggle" id="langToggle" title="Switch language">FA</button>
   <button class="pwa-header-btn" id="pwaHeaderBtn" title="افزودن به صفحه‌اصلی گوشی">
     <svg viewBox="0 0 24 24"><rect x="6" y="2.5" width="12" height="19" rx="2.2"/><line x1="12" y1="17.3" x2="12" y2="17.32"/><path d="M12 8v4.5M9.8 10.2 12 12.5l2.2-2.3"/></svg>
@@ -754,5 +825,243 @@
 })();
 </script>
 
+<button class="azin-fab" id="azinFab" title="آذین - دستیار هوشمند">
+  <svg viewBox="0 0 24 24"><path d="M12 3a5 5 0 0 1 5 5v2a5 5 0 0 1-10 0V8a5 5 0 0 1 5-5Z"/><path d="M8 21v-1a4 4 0 0 1 4-4v0a4 4 0 0 1 4 4v1"/><circle cx="9.5" cy="9" r="0.8" fill="currentColor" stroke="none"/><circle cx="14.5" cy="9" r="0.8" fill="currentColor" stroke="none"/></svg>
+</button>
+
+<div class="azin-siri-overlay" id="azinSiriOverlay">
+  <button class="siri-close" id="siriClose">&times;</button>
+  <div class="siri-orb" id="siriOrb">
+    <div class="blob b1"></div>
+    <div class="blob b2"></div>
+    <div class="blob b3"></div>
+    <div class="blob b4"></div>
+    <div class="siri-mic-icon">
+      <svg viewBox="0 0 24 24"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>
+    </div>
+  </div>
+  <div class="siri-status" id="siriStatus">در حال شنیدن…</div>
+  <div class="siri-transcript" id="siriTranscript"></div>
+  <div class="siri-answer" id="siriAnswer"></div>
+  <button class="siri-type-link" id="siriTypeLink">ترجیح می‌دی تایپ کنی؟</button>
+  <input class="siri-type-input" id="siriTypeInput" type="text" placeholder="بنویس…" style="display:none;">
+</div>
+
+<script>
+(function(){
+  const AZIN_INDEX = [{"page": 1, "title": "Gamma Nail", "title_en": "Gamma Nail", "cat": "nailing"}, {"page": 2, "title": "Gamma Nail End Cap / Gamma Nail Blade", "title_en": "Gamma Nail End Cap / Gamma Nail Blade", "cat": "nailing"}, {"page": 3, "title": "Femoral Interlocking Nail", "title_en": "Femoral Interlocking Nail", "cat": "nailing"}, {"page": 4, "title": "Tibia Interlocking Nail", "title_en": "Tibia Interlocking Nail", "cat": "nailing"}, {"page": 5, "title": "Expert Tibia Nail", "title_en": "Expert Tibia Nail", "cat": "nailing"}, {"page": 6, "title": "Ankle Arthrodesis Nail (Ankle Fusion)", "title_en": "Ankle Arthrodesis Nail (Ankle Fusion)", "cat": "nailing"}, {"page": 7, "title": "Humerus Nail", "title_en": "Humerus Nail", "cat": "nailing"}, {"page": 8, "title": "TEN Nail (Titanium Elastic Nail)", "title_en": "TEN Nail (Titanium Elastic Nail)", "cat": "nailing"}, {"page": 10, "title": "4.5mm DCP Plate, Narrow", "title_en": "4.5mm DCP Plate, Narrow", "cat": "plates_general"}, {"page": 11, "title": "4.5mm DCP Plate, Broad", "title_en": "4.5mm DCP Plate, Broad", "cat": "plates_general"}, {"page": 12, "title": "3.5mm DCP Plate", "title_en": "3.5mm DCP Plate", "cat": "plates_general"}, {"page": 13, "title": "3.5mm Reconstruction Plate, Straight", "title_en": "3.5mm Reconstruction Plate, Straight", "cat": "plates_general"}, {"page": 14, "title": "3.5mm LCP Reconstruction Plate, Straight", "title_en": "3.5mm LCP Reconstruction Plate, Straight", "cat": "plates_general"}, {"page": 15, "title": "۱/۳ توبولار (3.5mm 1/3 Tubular Plate)", "title_en": "3.5mm 1/3 Tubular Plate", "cat": "plates_general"}, {"page": 16, "title": "لاکینگ ۱/۳ توبولار (3.5mm 1/3 Tubular Locking Plate)", "title_en": "3.5mm 1/3 Tubular Locking Plate", "cat": "plates_general"}, {"page": 17, "title": "3.5mm LCP Plate", "title_en": "3.5mm LCP Plate", "cat": "plates_general"}, {"page": 18, "title": "4.5mm LCP Narrow Plate", "title_en": "4.5mm LCP Narrow Plate", "cat": "plates_general"}, {"page": 19, "title": "4.5mm LCP Broad Plate", "title_en": "4.5mm LCP Broad Plate", "cat": "plates_general"}, {"page": 20, "title": "4.5mm Locking T Plate", "title_en": "4.5mm Locking T Plate", "cat": "plates_general"}, {"page": 21, "title": "3mm LCP Mini Straight Plate", "title_en": "3mm LCP Mini Straight Plate", "cat": "plates_general"}, {"page": 22, "title": "3mm Locking mini L Plate (Right/Left)", "title_en": "3mm Locking mini L Plate (Right/Left)", "cat": "plates_general"}, {"page": 24, "title": "4.5mm LCP Distal Femur Plate", "title_en": "4.5mm LCP Distal Femur Plate", "cat": "plates_anatomical"}, {"page": 25, "title": "3.5mm LCP Medial Distal Tibia Plate", "title_en": "3.5mm LCP Medial Distal Tibia Plate", "cat": "plates_anatomical"}, {"page": 26, "title": "3.5mm LCP Superior Anterior Clavicle Plate (Right/Left)", "title_en": "3.5mm LCP Superior Anterior Clavicle Plate (Right/Left)", "cat": "plates_anatomical"}, {"page": 27, "title": "4.5mm Locking Distal Femour Osteotomy Medial Plate (Right/Left)", "title_en": "4.5mm Locking Distal Femour Osteotomy Medial Plate (Right/Left)", "cat": "plates_anatomical"}, {"page": 28, "title": "3.5mm LCP Distal Fibula Plate", "title_en": "3.5mm LCP Distal Fibula Plate", "cat": "plates_anatomical"}, {"page": 29, "title": "4.5mm Locking Distal Femour Osteotomy Lateral Plate (Right/Left)", "title_en": "4.5mm Locking Distal Femour Osteotomy Lateral Plate (Right/Left)", "cat": "plates_anatomical"}, {"page": 30, "title": "DCP Medial High Tibia Osteotomy Plate (MHT)", "title_en": "DCP Medial High Tibia Osteotomy Plate (MHT)", "cat": "plates_anatomical"}, {"page": 31, "title": "3.5mm LCP Calcaneal Plate", "title_en": "3.5mm LCP Calcaneal Plate", "cat": "plates_anatomical"}, {"page": 32, "title": "3.5mm Calcaneal Plate", "title_en": "3.5mm Calcaneal Plate", "cat": "plates_anatomical"}, {"page": 33, "title": "4.5mm Locking High Tibial Osteotomy Plate, 3H in Head", "title_en": "4.5mm Locking High Tibial Osteotomy Plate, 3H in Head", "cat": "plates_anatomical"}, {"page": 34, "title": "HTO Plate", "title_en": "HTO Plate", "cat": "plates_anatomical"}, {"page": 35, "title": "3mm LCP Distal Radius Plate, 4H in Head (Right/Left)", "title_en": "3mm LCP Distal Radius Plate, 4H in Head (Right/Left)", "cat": "plates_anatomical"}, {"page": 36, "title": "3mm LCP Distal Radius Plate, 7H in Head (Right/Left)", "title_en": "3mm LCP Distal Radius Plate, 7H in Head (Right/Left)", "cat": "plates_anatomical"}, {"page": 37, "title": "4.5mm Locking MTP Plate (Right/Left)", "title_en": "4.5mm Locking MTP Plate (Right/Left)", "cat": "plates_anatomical"}, {"page": 38, "title": "19mm Locking U Universal Midfoot Plate", "title_en": "19mm Locking U Universal Midfoot Plate", "cat": "plates_anatomical"}, {"page": 39, "title": "DCP / LCP Dynamic Hip Screw (DHS) System", "title_en": "DCP / LCP Dynamic Hip Screw (DHS) System", "cat": "plates_anatomical"}, {"page": 41, "title": "4.9mm Interlocking Screw", "title_en": "4.9mm Interlocking Screw", "cat": "screws"}, {"page": 42, "title": "3.9mm Interlocking Screw", "title_en": "3.9mm Interlocking Screw", "cat": "screws"}, {"page": 43, "title": "4.5mm Cortex Screw, Self Tapping", "title_en": "4.5mm Cortex Screw, Self Tapping", "cat": "screws"}, {"page": 44, "title": "3.5mm Cortex Screw, Self Tapping", "title_en": "3.5mm Cortex Screw, Self Tapping", "cat": "screws"}, {"page": 45, "title": "5.0mm Locking Screw", "title_en": "5.0mm Locking Screw", "cat": "screws"}, {"page": 46, "title": "3.5mm Locking Screw", "title_en": "3.5mm Locking Screw", "cat": "screws"}, {"page": 47, "title": "4.0mm Cancellous Screw, Partial Threaded", "title_en": "4.0mm Cancellous Screw, Partial Threaded", "cat": "screws"}, {"page": 48, "title": "4.0mm Cancellous Screw, Threaded 1/3mm", "title_en": "4.0mm Cancellous Screw, Threaded 1/3mm", "cat": "screws"}, {"page": 49, "title": "4.0mm Cancellous Screw, Fully Threaded", "title_en": "4.0mm Cancellous Screw, Fully Threaded", "cat": "screws"}, {"page": 50, "title": "6.5mm Cancellous Screw, Threaded 16mm", "title_en": "6.5mm Cancellous Screw, Threaded 16mm", "cat": "screws"}, {"page": 51, "title": "6.5mm Cancellous Screw, Threaded 32mm", "title_en": "6.5mm Cancellous Screw, Threaded 32mm", "cat": "screws"}, {"page": 52, "title": "6.5mm Cancellous Screw, Fully Threaded", "title_en": "6.5mm Cancellous Screw, Fully Threaded", "cat": "screws"}, {"page": 53, "title": "4.0mm Cannulated Screw, Partial Threaded", "title_en": "4.0mm Cannulated Screw, Partial Threaded", "cat": "screws"}, {"page": 54, "title": "4.0mm Cannulated Screw, Threaded 1/3mm", "title_en": "4.0mm Cannulated Screw, Threaded 1/3mm", "cat": "screws"}, {"page": 55, "title": "4.0mm Cannulated Screw, Full Threaded", "title_en": "4.0mm Cannulated Screw, Full Threaded", "cat": "screws"}, {"page": 56, "title": "6.5mm Cannulated Screw, Threaded 16mm", "title_en": "6.5mm Cannulated Screw, Threaded 16mm", "cat": "screws"}, {"page": 57, "title": "6.5mm Cannulated Screw, Threaded 32mm", "title_en": "6.5mm Cannulated Screw, Threaded 32mm", "cat": "screws"}, {"page": 58, "title": "6.5mm Cannulated Screw, Fully Threaded", "title_en": "6.5mm Cannulated Screw, Fully Threaded", "cat": "screws"}, {"page": 61, "title": "Mini Fragment", "title_en": "Mini Fragment", "cat": "fixators"}, {"page": 62, "title": "Wrist Fixation", "title_en": "Wrist Fixation", "cat": "fixators"}, {"page": 63, "title": "Sliding (LRS)", "title_en": "Sliding (LRS)", "cat": "fixators"}, {"page": 64, "title": "Tubular (LRS)", "title_en": "Tubular (LRS)", "cat": "fixators"}, {"page": 65, "title": "Monotube", "title_en": "Monotube", "cat": "fixators"}, {"page": 66, "title": "CDU", "title_en": "CDU", "cat": "fixators"}, {"page": 67, "title": "Elbow Hinge Fixator", "title_en": "Elbow Hinge Fixator", "cat": "fixators"}, {"page": 68, "title": "Clamp (Square / Universal / Mini / Single)", "title_en": "Clamp (Square / Universal / Mini / Single)", "cat": "fixators"}, {"page": 69, "title": "Tubular Rod", "title_en": "Tubular Rod", "cat": "rods"}, {"page": 70, "title": "Mini Rod", "title_en": "Mini Rod", "cat": "rods"}, {"page": 73, "title": "فول رینگ (Full Ring)", "title_en": "Full Ring", "cat": "ilizarov"}, {"page": 74, "title": "هالف رینگ (Half Ring)", "title_en": "Half Ring", "cat": "ilizarov"}, {"page": 75, "title": "رینگ ۳/۴ ، ۵/۸", "title_en": "Ring 3/4, 5/8", "cat": "ilizarov"}, {"page": 76, "title": "آرک رینگ (Arc Ring)", "title_en": "Arc Ring", "cat": "ilizarov"}, {"page": 77, "title": "Foot Ring", "title_en": "Foot Ring", "cat": "ilizarov"}, {"page": 78, "title": "پست نری (Male Post)", "title_en": "Male Post", "cat": "ilizarov"}, {"page": 79, "title": "پست مادگی (Female Post)", "title_en": "Female Post", "cat": "ilizarov"}, {"page": 80, "title": "هینج نری (Male Hinge)", "title_en": "Male Hinge", "cat": "ilizarov"}, {"page": 81, "title": "کانکشن پلیت (Connection Plate)", "title_en": "Connection Plate", "cat": "ilizarov"}, {"page": 82, "title": "Twisted Plate", "title_en": "Twisted Plate", "cat": "ilizarov"}, {"page": 83, "title": "ابلیک (Oblique Connection)", "title_en": "Oblique Connection", "cat": "ilizarov"}, {"page": 84, "title": "Square Socket", "title_en": "Square Socket", "cat": "ilizarov"}, {"page": 85, "title": "کوپلینگ (Coupling)", "title_en": "Coupling", "cat": "ilizarov"}, {"page": 86, "title": "بوشینگ (Bushing)", "title_en": "Bushing", "cat": "ilizarov"}, {"page": 87, "title": "Schanz Holder / Foundation Clamp", "title_en": "Schanz Holder / Foundation Clamp", "cat": "ilizarov"}, {"page": 88, "title": "Bolt Slotted", "title_en": "Bolt Slotted", "cat": "ilizarov"}, {"page": 89, "title": "راد رزوه‌دار (Threaded Rod)", "title_en": "Threaded Rod", "cat": "ilizarov"}, {"page": 90, "title": "Schanz Screw", "title_en": "Schanz Screw", "cat": "ilizarov"}, {"page": 91, "title": "Ilizarov Wire / Olive Wire / Kirschner Wire", "title_en": "Ilizarov Wire / Olive Wire / Kirschner Wire", "cat": "ilizarov"}, {"page": 92, "title": "Washer / Slotted Washer / Spherical Washer / Oval Washer", "title_en": "Washer / Slotted Washer / Spherical Washer / Oval Washer", "cat": "ilizarov"}, {"page": 93, "title": "Simple Screw, Nut", "title_en": "Simple Screw, Nut", "cat": "ilizarov"}, {"page": 94, "title": "Tension Wrench", "title_en": "Tension Wrench", "cat": "ilizarov"}, {"page": 200, "title": "هینج مادگی (Female Hinge)", "title_en": "Female Hinge", "cat": "ilizarov"}];
+  const CAT_LABELS = {
+    nailing:{fa:'سیستم‌های میخ داخل استخوانی',en:'Intramedullary Nailing Systems'},
+    plates_general:{fa:'پلیت‌های عمومی',en:'General Plates'},
+    plates_anatomical:{fa:'پلیت‌های آناتومیک',en:'Anatomical Plates'},
+    screws:{fa:'پیچ‌ها',en:'Screws'},
+    fixators:{fa:'فیکساتور خارجی',en:'External Fixators'},
+    rods:{fa:'راد',en:'Rods'},
+    ilizarov:{fa:'الیزاروف',en:'Ilizarov'}
+  };
+  const CAT_EXPLAIN = {
+    nailing:{fa:'میخ‌های داخل‌استخوانی برای شکستگی‌های تنه‌ی استخوان‌های بلند (فمور، تیبیا، هیومروس) به‌کار می‌روند.',en:'Intramedullary nails are used for diaphyseal fractures of long bones (femur, tibia, humerus).'},
+    plates_general:{fa:'پلیت‌های عمومی روی سطح استخوان با پیچ ثابت می‌شوند.',en:'General plates are screwed onto the bone surface.'},
+    plates_anatomical:{fa:'پلیت‌های آناتومیک از قبل متناسب با شکل یک ناحیه‌ی خاص بدن طراحی شده‌اند.',en:'Anatomical plates are pre-shaped to match a specific body region.'},
+    screws:{fa:'پیچ‌های ارتوپدی برای تثبیت مستقیم استخوان یا همراه با پلیت استفاده می‌شوند.',en:'Orthopedic screws fix bone directly or with a plate.'},
+    fixators:{fa:'فیکساتورهای خارجی از بیرون بدن استخوان رو تثبیت می‌کنند — مناسب شکستگی‌های باز یا عفونی.',en:'External fixators stabilize bone from outside the body — suited to open or infected fractures.'},
+    rods:{fa:'رادها اجزای اتصال‌دهنده در سیستم‌های فیکساتور خارجی هستند.',en:'Rods are connecting components in external fixator systems.'},
+    ilizarov:{fa:'سیستم الیزاروف یک فیکساتور خارجی حلقوی برای اصلاح تدریجی دفورمیتی و افزایش طول استخوان است.',en:'The Ilizarov system is a circular external fixator for gradual deformity correction and limb lengthening.'}
+  };
+  const BODY_MAP = [
+    { keys:['فمور','ران'], cats:['nailing','plates_anatomical'] },
+    { keys:['تیبیا','ساق','درشت نی','درشت‌نی'], cats:['nailing','plates_anatomical'] },
+    { keys:['هیومروس','بازو'], cats:['nailing','plates_general'] },
+    { keys:['مچ دست','ساعد','رادیوس'], cats:['plates_anatomical','screws'] },
+    { keys:['ترقوه'], cats:['plates_anatomical'] },
+    { keys:['پاشنه'], cats:['plates_anatomical'] },
+    { keys:['مچ پا','فیبولا','قوزک'], cats:['plates_anatomical','nailing'] },
+    { keys:['زانو'], cats:['plates_anatomical'] },
+    { keys:['لگن','هیپ'], cats:['nailing','plates_anatomical'] },
+    { keys:['شکستگی باز','عفونت'], cats:['fixators'] },
+    { keys:['افزایش قد','دفورمیتی','اصلاح زاویه'], cats:['ilizarov'] },
+  ];
+
+  function AZ_LANG(){ return document.documentElement.lang==='en' ? 'en' : 'fa'; }
+  function norm(s){ return (s||'').toLowerCase().trim(); }
+
+  function findProductLite(text){
+    const nq = norm(text);
+    for(const p of AZIN_INDEX){
+      const t = norm(p.title), te = norm(p.title_en);
+      if((t && (nq.includes(t) || t.includes(nq))) || (te && (nq.includes(te) || te.includes(nq)))) return p;
+    }
+    return null;
+  }
+  function findCategoryDirect(q){
+    const nq = norm(q);
+    for(const key in CAT_LABELS){
+      if(nq.includes(norm(CAT_LABELS[key].fa)) || nq.includes(norm(CAT_LABELS[key].en))) return key;
+    }
+    if(nq.includes('الیزاروف')||nq.includes('ilizarov')) return 'ilizarov';
+    if(nq.includes('فیکساتور')||nq.includes('fixator')) return 'fixators';
+    return null;
+  }
+  function findCategoryFromBody(q){
+    const nq = norm(q);
+    for(const row of BODY_MAP){ if(row.keys.some(k=>nq.includes(k))) return row.cats; }
+    return null;
+  }
+
+  function parseNavigationIntent(text){
+    const nq = norm(text);
+    const lang = AZ_LANG();
+    if(/درباره\s*ما|صفحه\s*اصلی|خانه|about\s*us/.test(nq) && !findProductLite(text)){
+      return { url:'index.html', label: lang==='en'?'the About Us page':'صفحه‌ی درباره‌ما' };
+    }
+    if(/تماس(\s*با\s*ما)?|آدرس|contact/.test(nq)){
+      return { url:'contact.html', label: lang==='en'?'the Contact page':'صفحه‌ی تماس با ما' };
+    }
+    if(/^(برو\s*)?(به\s*)?(کاتالوگ|محصولات)$|^catalog$/.test(nq)){
+      return { url:'catalog.html', label: lang==='en'?'the catalog':'کاتالوگ' };
+    }
+    const p = findProductLite(text);
+    if(p){
+      const title = lang==='en' ? p.title_en : p.title;
+      return { url:'viewer.html?id='+p.page, label: title };
+    }
+    return null;
+  }
+
+  function answer(q){
+    const nq = norm(q);
+    const lang = AZ_LANG();
+    if(!nq) return lang==='en' ? "Sorry, I didn't get that." : 'متوجه نشدم، دوباره بگو.';
+    if(/^(سلام|درود|hi|hello|hey)/.test(nq)){
+      return lang==='en'
+        ? "Hello! I'm Azin, MEDAZINCO's smart assistant. Try saying a part name, or \"what do you have for a femur fracture?\""
+        : 'سلام! من آذینم، دستیار هوشمند مدازینکو. اسم یه قطعه رو بگو، یا بپرس «برای شکستگی فمور چی دارید؟»';
+    }
+    if(nq.includes('اسمت')||nq.includes('کی هستی')||nq.includes('who are you')){
+      return lang==='en' ? "I'm Azin — MEDAZINCO's smart assistant." : 'من آذینم — دستیار هوشمند مدازینکو.';
+    }
+    if(nq.includes('قیمت')||nq.includes('price')){
+      return `${lang==='en'?'For pricing, please':'برای قیمت، لطفاً از'} <a href="contact.html">${lang==='en'?'contact us':'صفحه‌ی تماس با ما'}</a>.`;
+    }
+    if(nq.includes('نمایندگی')||nq.includes('همکاری')||nq.includes('representation')){
+      return `${lang==='en'?'Please visit our':'به'} <a href="contact.html">${lang==='en'?'contact page':'صفحه‌ی تماس با ما'}</a> ${lang==='en'?'for representation requests.':'برای درخواست نمایندگی سر بزن.'}`;
+    }
+    const p = findProductLite(q);
+    if(p){
+      const title = lang==='en' ? p.title_en : p.title;
+      return `<a href="viewer.html?id=${p.page}">${title} — ${lang==='en'?'View in 3D →':'نمایش سه‌بعدی ←'}</a>`;
+    }
+    const directCat = findCategoryDirect(q);
+    if(directCat){
+      return `${CAT_EXPLAIN[directCat][lang]} <a href="catalog.html?cat=${directCat}">${lang==='en'?'View parts →':'مشاهده‌ی قطعات ←'}</a>`;
+    }
+    const catsFromBody = findCategoryFromBody(q);
+    if(catsFromBody && catsFromBody.length){
+      const c = catsFromBody[0];
+      const links = catsFromBody.map(k=>`<a href="catalog.html?cat=${k}">${CAT_LABELS[k][lang]}</a>`).join(' · ');
+      return `${CAT_EXPLAIN[c][lang]}\n${lang==='en'?'Related: ':'مرتبط: '}${links}`;
+    }
+    return lang==='en'
+      ? 'Try asking by body part, category name, or a part name.'
+      : 'می‌تونی بر اساس عضو بدن، اسم دسته، یا اسم قطعه بپرسی.';
+  }
+
+  function speak(text){
+    if(!('speechSynthesis' in window)) return;
+    const clean = text.replace(/<[^>]+>/g,'');
+    const utter = new SpeechSynthesisUtterance(clean);
+    utter.lang = AZ_LANG()==='en' ? 'en-US' : 'fa-IR';
+    utter.rate = 1.02;
+    window.speechSynthesis.cancel();
+    window.speechSynthesis.speak(utter);
+  }
+
+  const fab = document.getElementById('azinFab');
+  const headerBtn = document.getElementById('azinHeaderBtn');
+  const siriOverlay = document.getElementById('azinSiriOverlay');
+  const siriOrb = document.getElementById('siriOrb');
+  const siriStatus = document.getElementById('siriStatus');
+  const siriTranscript = document.getElementById('siriTranscript');
+  const siriAnswer = document.getElementById('siriAnswer');
+  const siriClose = document.getElementById('siriClose');
+  const siriTypeLink = document.getElementById('siriTypeLink');
+  const siriTypeInput = document.getElementById('siriTypeInput');
+
+  function siriSetStatus(t){ siriStatus.textContent = t; }
+
+  function openSiri(){
+    siriOverlay.classList.add('show');
+    siriTranscript.textContent = '';
+    siriAnswer.innerHTML = '';
+    siriTypeInput.style.display = 'none';
+    siriTypeInput.value = '';
+    const lang = AZ_LANG();
+    siriTypeLink.textContent = lang==='en' ? 'Prefer to type?' : 'ترجیح می‌دی تایپ کنی؟';
+    siriTypeLink.style.display = 'inline';
+    siriSetStatus(lang==='en' ? 'Listening…' : 'در حال شنیدن…');
+    startSiriListening();
+  }
+  function closeSiri(){
+    siriOverlay.classList.remove('show');
+    siriOrb.classList.remove('listening');
+    if(recognition){ try{ recognition.stop(); }catch(e){} }
+    window.speechSynthesis && window.speechSynthesis.cancel();
+  }
+  fab.addEventListener('click', openSiri);
+  if(headerBtn) headerBtn.addEventListener('click', openSiri);
+  siriClose.addEventListener('click', closeSiri);
+  siriTypeLink.addEventListener('click', ()=>{
+    siriTypeInput.style.display = 'block';
+    siriTypeLink.style.display = 'none';
+    siriTypeInput.focus();
+    siriSetStatus('');
+  });
+  siriTypeInput.addEventListener('keydown', (e)=>{
+    if(e.key==='Enter' && siriTypeInput.value.trim()) processVoiceCommand(siriTypeInput.value);
+  });
+
+  function processVoiceCommand(text){
+    const lang = AZ_LANG();
+    siriTranscript.textContent = text;
+    siriSetStatus(lang==='en' ? 'Got it…' : 'می‌فهمم…');
+    const nav = parseNavigationIntent(text);
+    if(nav){
+      const msg = lang==='en' ? `Okay, taking you to ${nav.label}…` : `باشه، می‌رم ${nav.label} رو نشونت بدم…`;
+      siriAnswer.innerHTML = msg;
+      speak(msg);
+      setTimeout(()=>{ window.location.href = nav.url; }, 1400);
+      return;
+    }
+    const reply = answer(text);
+    siriAnswer.innerHTML = reply;
+    siriSetStatus('');
+    speak(reply);
+  }
+
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  let recognition = null;
+  let listening = false;
+  function startSiriListening(){
+    if(!SR){
+      siriSetStatus(AZ_LANG()==='en' ? 'Voice input is not supported on this browser.' : 'این مرورگر از ورودی صوتی پشتیبانی نمی‌کنه.');
+      return;
+    }
+    if(!recognition){
+      recognition = new SR();
+      recognition.continuous = false;
+      recognition.interimResults = false;
+      recognition.addEventListener('start', ()=>{ listening = true; siriOrb.classList.add('listening'); });
+      recognition.addEventListener('end', ()=>{ listening = false; siriOrb.classList.remove('listening'); });
+      recognition.addEventListener('result', (e)=> processVoiceCommand(e.results[0][0].transcript));
+      recognition.addEventListener('error', ()=>{
+        listening = false; siriOrb.classList.remove('listening');
+        siriSetStatus(AZ_LANG()==='en' ? 'Could not hear you — try again or type.' : 'صدات رو نشنیدم — دوباره امتحان کن یا تایپ کن.');
+      });
+    }
+    recognition.lang = AZ_LANG()==='en' ? 'en-US' : 'fa-IR';
+    try{ recognition.start(); }catch(e){}
+  }
+})();
+</script>
 </body>
 </html>
