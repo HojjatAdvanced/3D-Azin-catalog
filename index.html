@@ -384,6 +384,42 @@
   }
   .azin-blink-l{ left:35.2%; top:13.6%; }
   .azin-blink-r{ left:50.2%; top:14.6%; animation-delay:.02s; }
+
+  /* talking animation — plays only while the intro audio is active */
+  .azin-char-imgwrap.talking{ animation:azinHeadBob 0.32s ease-in-out infinite; }
+  @keyframes azinHeadBob{
+    0%, 100%{ transform:translateY(0) rotate(0deg); }
+    50%{ transform:translateY(-3px) rotate(-0.6deg); }
+  }
+  .azin-talk-glow{
+    position:absolute; left:30%; top:8%; width:40%; height:28%;
+    border-radius:50%; background:radial-gradient(circle, rgba(23,224,138,0.45), transparent 70%);
+    opacity:0; filter:blur(10px); pointer-events:none;
+  }
+  .azin-char-imgwrap.talking .azin-talk-glow{
+    animation:azinGlowPulse 0.42s ease-in-out infinite;
+  }
+  @keyframes azinGlowPulse{
+    0%, 100%{ opacity:0.25; transform:scale(0.95); }
+    50%{ opacity:0.6; transform:scale(1.08); }
+  }
+  .azin-talk-wave{
+    display:none; position:absolute; left:50%; bottom:-26px; transform:translateX(-50%);
+    gap:3px; align-items:flex-end; height:16px;
+  }
+  .azin-char-imgwrap.talking .azin-talk-wave{ display:flex; }
+  .azin-talk-wave span{
+    width:3px; background:var(--green); border-radius:2px;
+    animation:azinWave 0.6s ease-in-out infinite;
+  }
+  .azin-talk-wave span:nth-child(1){ height:6px; animation-delay:0s; }
+  .azin-talk-wave span:nth-child(2){ height:14px; animation-delay:.12s; }
+  .azin-talk-wave span:nth-child(3){ height:9px; animation-delay:.24s; }
+  .azin-talk-wave span:nth-child(4){ height:16px; animation-delay:.36s; }
+  @keyframes azinWave{
+    0%, 100%{ transform:scaleY(0.4); }
+    50%{ transform:scaleY(1); }
+  }
   @keyframes azinBlink{
     0%, 92%, 100%{ transform:scaleY(0); }
     95%, 97%{ transform:scaleY(1); }
@@ -880,12 +916,17 @@
 </button>
 
 <div class="azin-character" id="azinCharacter">
-  <div class="azin-char-imgwrap">
+  <div class="azin-char-imgwrap" id="azinCharImgwrap">
     <img src="assets/azin/mascot.png" alt="آذین">
     <span class="azin-blink azin-blink-l"></span>
     <span class="azin-blink azin-blink-r"></span>
+    <div class="azin-talk-glow" id="azinTalkGlow"></div>
+    <div class="azin-talk-wave" id="azinTalkWave">
+      <span></span><span></span><span></span><span></span>
+    </div>
   </div>
 </div>
+<audio id="azinIntroAudio" src="assets/azin/intro.mp3" preload="auto"></audio>
 
 <div class="azin-panel" id="azinPanel">
   <div class="azin-head">
@@ -1093,11 +1134,23 @@
     });
   }
 
+  function playIntroAudio(){
+    const audioEl = document.getElementById('azinIntroAudio');
+    const wrapEl = document.getElementById('azinCharImgwrap');
+    if(!audioEl || !wrapEl) return;
+    audioEl.currentTime = 0;
+    wrapEl.classList.add('talking');
+    audioEl.play().catch(()=>{ wrapEl.classList.remove('talking'); });
+    audioEl.onended = ()=> wrapEl.classList.remove('talking');
+    audioEl.onpause = ()=> wrapEl.classList.remove('talking');
+  }
+
   function openPanel(){
     panel.classList.add('open');
     if(fab) fab.classList.add('open');
     if(badge) badge.classList.add('hide');
     if(characterEl) characterEl.classList.add('show');
+    playIntroAudio();
     if(!messagesEl.children.length){
       const lang = AZ_LANG();
       addMessage('bot', lang==='en'
@@ -1111,6 +1164,8 @@
     panel.classList.remove('open');
     if(fab) fab.classList.remove('open');
     if(characterEl) characterEl.classList.remove('show');
+    const audioEl = document.getElementById('azinIntroAudio');
+    if(audioEl) audioEl.pause();
   }
 
   if(fab) fab.addEventListener('click', openPanel);
