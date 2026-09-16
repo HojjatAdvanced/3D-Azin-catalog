@@ -441,79 +441,35 @@
   }
   .cert-translation.show{ display:block; }
 
-  .azin-character{
-    display:none; position:fixed; left:400px; bottom:0; z-index:69;
-    width:190px; pointer-events:none;
-    opacity:0; transform:translateY(30px); transition:opacity .35s ease, transform .35s ease;
-  }
-  .azin-character.show{ display:block; opacity:1; transform:translateY(0); }
-  .azin-character img, .azin-character video{
-    width:100%; display:block; border-radius:14px;
-    filter:drop-shadow(0 18px 26px rgba(0,0,0,0.55)) drop-shadow(0 0 24px rgba(23,224,138,0.18));
-  }
-  .azin-char-imgwrap{ position:relative; }
-  .azin-blink{
-    position:absolute; background:#04120c; border-radius:50%;
-    width:7%; height:5%;
-    transform:scaleY(0); transform-origin:center;
-    animation:azinBlink 4.6s ease-in-out infinite;
-    pointer-events:none;
-  }
-  .azin-blink-l{ left:35.6%; top:17.5%; }
-  .azin-blink-r{ left:49.5%; top:19%; animation-delay:.02s; }
-  @keyframes azinBlink{
-    0%, 92%, 100%{ transform:scaleY(0); }
-    95%, 97%{ transform:scaleY(1); }
-  }
-
-  /* talking animation — plays only while the intro audio is active */
-  .azin-char-imgwrap.talking{ }
-  @keyframes azinHeadBob{
-    0%, 100%{ transform:translateY(0) rotate(0deg); }
-    50%{ transform:translateY(-3px) rotate(-0.6deg); }
-  }
-  .azin-talk-glow{
-    position:absolute; left:30%; top:8%; width:40%; height:28%;
-    border-radius:50%; background:radial-gradient(circle, rgba(23,224,138,0.45), transparent 70%);
-    opacity:0; filter:blur(10px); pointer-events:none;
-  }
-  .azin-char-imgwrap.talking .azin-talk-glow{
-    animation:azinGlowPulse 0.42s ease-in-out infinite;
-  }
-  @keyframes azinGlowPulse{
-    0%, 100%{ opacity:0.25; transform:scale(0.95); }
-    50%{ opacity:0.6; transform:scale(1.08); }
-  }
-  .azin-talk-wave{
-    display:none; position:absolute; left:50%; bottom:-26px; transform:translateX(-50%);
-    gap:3px; align-items:flex-end; height:16px;
-  }
-  .azin-char-imgwrap.talking .azin-talk-wave{ display:flex; }
-  .azin-talk-wave span{
-    width:3px; background:var(--green); border-radius:2px;
-    animation:azinWave 0.6s ease-in-out infinite;
-  }
-  .azin-talk-wave span:nth-child(1){ height:6px; animation-delay:0s; }
-  .azin-talk-wave span:nth-child(2){ height:14px; animation-delay:.12s; }
-  .azin-talk-wave span:nth-child(3){ height:9px; animation-delay:.24s; }
-  .azin-talk-wave span:nth-child(4){ height:16px; animation-delay:.36s; }
-  @keyframes azinWave{
-    0%, 100%{ transform:scaleY(0.4); }
-    50%{ transform:scaleY(1); }
-  }
-  @keyframes azinBlink{
-    0%, 92%, 100%{ transform:scaleY(0); }
-    95%, 97%{ transform:scaleY(1); }
-  }
-
   .azin-panel{
     display:none; position:fixed; left:26px; bottom:26px; z-index:71;
-    width:min(370px, calc(100vw - 40px)); height:min(560px, calc(100vh - 100px));
-    background:#0b1226; border:1px solid rgba(15,169,104,0.3); border-radius:20px;
+    width:min(370px, calc(100vw - 40px)); height:min(600px, calc(100vh - 80px));
+    background:#0b1226; border:1px solid rgba(15,169,104,0.3); border-radius:26px;
     box-shadow:0 30px 80px rgba(0,0,0,0.6);
     flex-direction:column; overflow:hidden;
   }
   .azin-panel.open{ display:flex; }
+
+  .azin-hero{
+    position:relative; display:flex; align-items:center; justify-content:center;
+    flex:none; padding:18px 0 14px;
+    background:radial-gradient(circle at 50% 30%, rgba(23,224,138,0.08), transparent 70%);
+  }
+  .azin-hero video{
+    width:112px; height:112px; border-radius:50%; object-fit:cover;
+    box-shadow:0 10px 30px rgba(0,0,0,0.55), 0 0 0 3px rgba(11,18,38,1);
+    position:relative; z-index:2;
+  }
+  .azin-hero-ring{
+    position:absolute; width:112px; height:112px; border-radius:50%;
+    box-shadow:0 0 0 0 rgba(23,224,138,0.55); z-index:1;
+  }
+  .azin-hero.talking .azin-hero-ring{ animation:azinHeroPulse 1.4s ease-out infinite; }
+  @keyframes azinHeroPulse{
+    0%{ box-shadow:0 0 0 0 rgba(23,224,138,0.55); }
+    70%{ box-shadow:0 0 0 22px rgba(23,224,138,0); }
+    100%{ box-shadow:0 0 0 0 rgba(23,224,138,0); }
+  }
   .azin-head{
     display:flex; align-items:center; gap:12px; padding:16px 18px;
     background:linear-gradient(135deg, #0e1a4d, #182a72); flex:none;
@@ -523,6 +479,11 @@
     border:2px solid var(--green);
   }
   .azin-avatar img{ width:100%; height:100%; object-fit:cover; }
+  .azin-avatar.talking{ animation:azinAvatarPulse 0.9s ease-in-out infinite; }
+  @keyframes azinAvatarPulse{
+    0%, 100%{ box-shadow:0 0 0 0 rgba(23,224,138,0.55); }
+    50%{ box-shadow:0 0 0 6px rgba(23,224,138,0); }
+  }
   .azin-head-txt{ flex:1; }
   .azin-name{ font-size:14.5px; font-weight:800; color:#fff; }
   .azin-sub{ font-size:10.5px; color:#c3cbef; margin-top:2px; }
@@ -559,16 +520,8 @@
   }
   .azin-send svg{ width:16px; height:16px; fill:#04140c; }
 
-  @media (max-width:900px){
-    .azin-character{
-      display:block; position:fixed; left:50%; top:14px; bottom:auto; z-index:72;
-      width:120px; transform:translateX(-50%) translateY(-14px);
-      opacity:0; transition:opacity .35s ease, transform .35s ease;
-    }
-    .azin-character.show{ transform:translateX(-50%) translateY(0); opacity:1; }
-  }
   @media (max-width:480px){
-    .azin-panel{ left:12px; top:130px; bottom:12px; width:calc(100vw - 24px); height:auto; }
+    .azin-panel{ left:12px; bottom:12px; width:calc(100vw - 24px); height:calc(100vh - 90px); }
     .azin-fab{ left:16px; bottom:16px; }
   }
 
@@ -1204,29 +1157,22 @@
   </div>
 </div>
 
-<div class="azin-character" id="azinCharacter">
-  <div class="azin-char-imgwrap" id="azinCharImgwrap">
-    <img src="assets/azin/mascot_static.png" alt="آذین" id="azinCharImg">
-    <span class="azin-blink azin-blink-l"></span>
-    <span class="azin-blink azin-blink-r"></span>
-    <div class="azin-talk-glow" id="azinTalkGlow"></div>
-    <div class="azin-talk-wave" id="azinTalkWave">
-      <span></span><span></span><span></span><span></span>
-    </div>
-  </div>
-</div>
 <audio id="azinIntroAudio" src="assets/azin/intro.mp3" preload="auto"></audio>
 
 <div class="azin-panel" id="azinPanel">
   <div class="azin-head">
-    <div class="azin-avatar">
-      <img src="assets/azin/avatar.jpg" alt="آذین">
+    <div class="azin-avatar" id="azinHeadAvatar">
+      <img src="assets/azin/hero_avatar.jpg" alt="آذین">
     </div>
     <div class="azin-head-txt">
       <div class="azin-name">آذین</div>
       <div class="azin-sub" data-fa="دستیار هوشمند مدازینکو" data-ar="مساعد ميدازينكو الذكي" data-en="MEDAZINCO Smart Assistant">دستیار هوشمند مدازینکو</div>
     </div>
     <button class="azin-close" id="azinClose">&times;</button>
+  </div>
+  <div class="azin-hero" id="azinHero">
+    <div class="azin-hero-ring"></div>
+    <video id="azinHeroVideo" src="assets/azin/hero_video.mp4" autoplay loop muted playsinline></video>
   </div>
   <div class="azin-messages" id="azinMessages"></div>
   <div class="azin-suggestions" id="azinSuggestions"></div>
@@ -1366,7 +1312,6 @@
   const inputEl = document.getElementById('azinInput');
   const sendBtn = document.getElementById('azinSend');
   const badge = document.getElementById('azinFabBadge');
-  const characterEl = document.getElementById('azinCharacter');
 
   function addMessage(role, html){
     const div = document.createElement('div');
@@ -1443,16 +1388,17 @@
 
   function playCharacterAudio(src){
     const audioEl = document.getElementById('azinIntroAudio');
-    const wrapEl = document.getElementById('azinCharImgwrap');
-    if(!audioEl || !wrapEl) return;
+    const avatarEl = document.getElementById('azinHeadAvatar');
+    const heroEl = document.getElementById('azinHero');
+    if(!audioEl) return;
     audioEl.pause();
     audioEl.src = src;
     audioEl.currentTime = 0;
-    wrapEl.classList.add('talking');
-    if(characterEl) characterEl.classList.add('show');
-    audioEl.play().catch(()=>{ wrapEl.classList.remove('talking'); if(characterEl) characterEl.classList.remove('show'); });
-    audioEl.onended = ()=>{ wrapEl.classList.remove('talking'); if(characterEl) characterEl.classList.remove('show'); };
-    audioEl.onpause = ()=>{ wrapEl.classList.remove('talking'); if(characterEl) characterEl.classList.remove('show'); };
+    if(avatarEl) avatarEl.classList.add('talking');
+    if(heroEl) heroEl.classList.add('talking');
+    audioEl.play().catch(()=>{ if(avatarEl) avatarEl.classList.remove('talking'); if(heroEl) heroEl.classList.remove('talking'); });
+    audioEl.onended = ()=>{ if(avatarEl) avatarEl.classList.remove('talking'); if(heroEl) heroEl.classList.remove('talking'); };
+    audioEl.onpause = ()=>{ if(avatarEl) avatarEl.classList.remove('talking'); if(heroEl) heroEl.classList.remove('talking'); };
   }
   function playIntroAudio(){ playCharacterAudio('assets/azin/intro.mp3'); }
 
@@ -1473,7 +1419,6 @@
   function closePanel(){
     panel.classList.remove('open');
     if(fab) fab.classList.remove('open');
-    if(characterEl) characterEl.classList.remove('show');
     const audioEl = document.getElementById('azinIntroAudio');
     if(audioEl) audioEl.pause();
   }
