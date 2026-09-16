@@ -136,6 +136,27 @@
   .lang-flag:hover{ border-color:var(--green); filter:none; }
   .lang-flag.active{ border-color:var(--green); box-shadow:0 0 0 2px rgba(23,224,138,0.28); filter:none; }
 
+  .lang-switch{
+    width:58px; height:32px; border-radius:16px; border:1px solid rgba(15,169,104,0.35);
+    background:rgba(255,255,255,0.06); cursor:pointer; position:relative; padding:0; margin-inline-end:10px;
+  }
+  .lang-switch:hover{ border-color:var(--green); }
+  .ls-track{ position:absolute; inset:0; border-radius:16px; }
+  .ls-knob{
+    position:absolute; top:3px; width:24px; height:24px; border-radius:50%;
+    background:linear-gradient(135deg,#cfd8f0,#8fa0c8);
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 2px 8px rgba(0,0,0,0.35);
+    transition:right .28s cubic-bezier(.34,1.4,.64,1), left .28s cubic-bezier(.34,1.4,.64,1);
+    right:3px; left:auto;
+  }
+  .lang-switch[data-state="ar"] .ls-knob{ right:17px; left:auto; }
+  .lang-switch[data-state="en"] .ls-knob{ right:auto; left:3px; }
+  .ls-flag{ display:none; font-size:13px; line-height:1; }
+  .lang-switch[data-state="fa"] .ls-flag-fa{ display:block; }
+  .lang-switch[data-state="ar"] .ls-flag-ar{ display:block; }
+  .lang-switch[data-state="en"] .ls-flag-en{ display:block; }
+
   .is-actions{ display:flex; gap:10px; margin-top:24px; flex-wrap:wrap; justify-content:flex-end; }
   .is-btn-price, .is-btn-qr{
     padding:11px 18px; border-radius:12px; border:1px solid rgba(15,169,104,0.35);
@@ -459,11 +480,15 @@
     <button class="azin-header-btn" id="azinHeaderBtn" title="آذین - دستیار هوشمند" style="pointer-events:auto;">
       <svg viewBox="0 0 24 24"><path d="M12 3a5 5 0 0 1 5 5v2a5 5 0 0 1-10 0V8a5 5 0 0 1 5-5Z"/><path d="M8 21v-1a4 4 0 0 1 4-4v0a4 4 0 0 1 4 4v1"/></svg>
     </button>
-    <div class="lang-flags" id="langFlags" style="pointer-events:auto;">
-      <button class="lang-flag" data-lang="fa" title="فارسی">🇮🇷</button>
-      <button class="lang-flag" data-lang="ar" title="العربية">🇸🇦</button>
-      <button class="lang-flag" data-lang="en" title="English">🇬🇧</button>
-    </div>
+    <button class="lang-switch" id="langSwitch" data-state="fa" title="تغییر زبان" style="pointer-events:auto;">
+      <span class="ls-track">
+        <span class="ls-knob">
+          <span class="ls-flag ls-flag-fa">🇮🇷</span>
+          <span class="ls-flag ls-flag-ar">🇸🇦</span>
+          <span class="ls-flag ls-flag-en">🇬🇧</span>
+        </span>
+      </span>
+    </button>
     <button class="backBtn" id="backBtn" data-fa="&rsaquo; بازگشت به کاتالوگ" data-ar="&rsaquo; العودة إلى الكتالوج" data-en="&rsaquo; Back to Catalog">&rsaquo; بازگشت به کاتالوگ</button>
   </div>
 
@@ -622,20 +647,24 @@
       currentLang = lang;
       document.documentElement.lang = lang;
       document.documentElement.dir = lang === 'en' ? 'ltr' : 'rtl';
-      document.querySelectorAll('.lang-flag').forEach(b=> b.classList.toggle('active', b.getAttribute('data-lang')===lang));
+      const switchBtn = document.getElementById('langSwitch');
+      if(switchBtn) switchBtn.setAttribute('data-state', lang);
       document.querySelectorAll('[data-fa]').forEach(el=>{
         el.innerHTML = el.getAttribute('data-'+lang) || el.getAttribute('data-fa');
       });
       paintHud();
     }
     applyLang(currentLang);
-    document.querySelectorAll('.lang-flag').forEach(btn=>{
-      btn.addEventListener('click', ()=>{
-        const lang = btn.getAttribute('data-lang');
-        localStorage.setItem('medazinco_lang', lang);
-        applyLang(lang);
+    const LANG_CYCLE = ['fa','ar','en'];
+    const langSwitchBtn = document.getElementById('langSwitch');
+    if(langSwitchBtn){
+      langSwitchBtn.addEventListener('click', ()=>{
+        const cur = document.documentElement.lang || 'fa';
+        const next = LANG_CYCLE[(LANG_CYCLE.indexOf(cur)+1) % LANG_CYCLE.length];
+        localStorage.setItem('medazinco_lang', next);
+        applyLang(next);
       });
-    });
+    }
   })();
 
   /* floating info button -> full-screen info mode (with its own animated dot background) */
