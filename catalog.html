@@ -292,8 +292,8 @@
   /* ---------- Azin — smart assistant ---------- */
   .azin-fab{
     position:fixed; left:26px; bottom:26px; z-index:70;
-    width:58px; height:58px; border-radius:50%; border:none; cursor:pointer;
-    background:linear-gradient(135deg, var(--green), var(--green-2));
+    width:62px; height:62px; border-radius:50%; border:2px solid var(--green);
+    background:#0b1226; cursor:pointer; padding:0; overflow:hidden;
     display:flex; align-items:center; justify-content:center;
     box-shadow:0 10px 30px rgba(0,0,0,0.4), 0 0 0 0 rgba(15,169,104,0.55);
     animation:azinPulse 2.4s ease-out infinite;
@@ -303,7 +303,7 @@
     70%{ box-shadow:0 10px 30px rgba(0,0,0,0.4), 0 0 0 14px rgba(15,169,104,0); }
     100%{ box-shadow:0 10px 30px rgba(0,0,0,0.4), 0 0 0 0 rgba(15,169,104,0); }
   }
-  .azin-fab svg{ width:28px; height:28px; stroke:#04140c; fill:none; stroke-width:1.9; stroke-linecap:round; stroke-linejoin:round; }
+  .azin-fab img{ width:100%; height:100%; object-fit:cover; }
   .azin-fab-badge{
     position:absolute; top:-2px; right:-2px; background:#e0202b; color:#fff;
     font-size:10px; font-weight:800; width:18px; height:18px; border-radius:50%;
@@ -320,46 +320,67 @@
   .azin-header-btn:hover{ background:rgba(23,224,138,0.18); border-color:var(--green); }
   .azin-header-btn svg{ width:18px; height:18px; stroke:var(--green); fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
 
-  /* ---------- Siri-style listening overlay ---------- */
-  .azin-siri-overlay{
-    display:none; position:fixed; inset:0; z-index:300;
-    background:rgba(2,5,12,0.9); backdrop-filter:blur(8px);
-    flex-direction:column; align-items:center; justify-content:center; gap:24px; padding:28px;
+  /* character illustration that appears beside the chat panel */
+  .azin-character{
+    display:none; position:fixed; left:400px; bottom:0; z-index:69;
+    width:190px; pointer-events:none;
+    opacity:0; transform:translateY(30px); transition:opacity .35s ease, transform .35s ease;
   }
-  .azin-siri-overlay.show{ display:flex; }
-  .siri-close{
-    position:absolute; top:22px; left:22px; background:rgba(255,255,255,0.1); border:none;
-    color:#fff; width:36px; height:36px; border-radius:50%; font-size:18px; cursor:pointer;
+  .azin-character.show{ display:block; opacity:1; transform:translateY(0); }
+  .azin-character img{
+    width:100%; display:block;
+    filter:drop-shadow(0 18px 26px rgba(0,0,0,0.55)) drop-shadow(0 0 24px rgba(23,224,138,0.18));
   }
-  .siri-orb{
-    position:relative; width:150px; height:150px; border-radius:50%; overflow:hidden;
-    box-shadow:0 0 60px rgba(23,224,138,0.45), 0 0 120px rgba(23,224,138,0.22);
-    background:#03150e;
+  .azin-char-imgwrap{ position:relative; }
+  .azin-blink{
+    position:absolute; background:#04120c; border-radius:50%;
+    width:6%; height:4%;
+    transform:scaleY(0); transform-origin:center;
+    animation:azinBlink 4.6s ease-in-out infinite;
+    pointer-events:none;
   }
-  .siri-orb .blob{
-    position:absolute; width:140%; height:140%; border-radius:44%;
-    filter:blur(16px); opacity:0.9; mix-blend-mode:screen;
+  .azin-blink-l{ left:35.2%; top:13.6%; }
+  .azin-blink-r{ left:50.2%; top:14.6%; animation-delay:.02s; }
+
+  /* talking animation — plays only while the intro audio is active */
+  .azin-char-imgwrap.talking{ animation:azinHeadBob 0.32s ease-in-out infinite; }
+  @keyframes azinHeadBob{
+    0%, 100%{ transform:translateY(0) rotate(0deg); }
+    50%{ transform:translateY(-3px) rotate(-0.6deg); }
   }
-  .siri-orb .b1{ background:radial-gradient(circle, #17e08a, transparent 65%); top:-20%; left:-25%; animation:siriMove1 3.4s ease-in-out infinite; }
-  .siri-orb .b2{ background:radial-gradient(circle, #0fffc0, transparent 65%); bottom:-25%; right:-20%; animation:siriMove2 4.1s ease-in-out infinite; }
-  .siri-orb .b3{ background:radial-gradient(circle, #0c8a56, transparent 65%); top:5%; right:-30%; animation:siriMove3 3.8s ease-in-out infinite; }
-  .siri-orb .b4{ background:radial-gradient(circle, #7cffcb, transparent 60%); bottom:0; left:-25%; animation:siriMove4 4.6s ease-in-out infinite; }
-  @keyframes siriMove1{ 0%,100%{ transform:translate(0,0) scale(1); } 50%{ transform:translate(22%,26%) scale(1.3); } }
-  @keyframes siriMove2{ 0%,100%{ transform:translate(0,0) scale(1); } 50%{ transform:translate(-26%,-16%) scale(1.35); } }
-  @keyframes siriMove3{ 0%,100%{ transform:translate(0,0) scale(1); } 50%{ transform:translate(-16%,22%) scale(1.18); } }
-  @keyframes siriMove4{ 0%,100%{ transform:translate(0,0) scale(1); } 50%{ transform:translate(20%,-22%) scale(1.22); } }
-  .siri-orb.listening{ animation:siriPulseRing 1.5s ease-in-out infinite; }
-  @keyframes siriPulseRing{
-    0%,100%{ box-shadow:0 0 60px rgba(23,224,138,0.45), 0 0 120px rgba(23,224,138,0.22); }
-    50%{ box-shadow:0 0 95px rgba(23,224,138,0.8), 0 0 175px rgba(23,224,138,0.42); }
+  .azin-talk-glow{
+    position:absolute; left:30%; top:8%; width:40%; height:28%;
+    border-radius:50%; background:radial-gradient(circle, rgba(23,224,138,0.45), transparent 70%);
+    opacity:0; filter:blur(10px); pointer-events:none;
   }
-  .siri-mic-icon{ position:absolute; inset:0; z-index:2; display:flex; align-items:center; justify-content:center; }
-  .siri-mic-icon svg{ width:40px; height:40px; stroke:#fff; fill:none; stroke-width:1.6; filter:drop-shadow(0 2px 8px rgba(0,0,0,0.5)); }
-  .siri-status{ font-size:12.5px; color:#9fe8cb; font-weight:700; letter-spacing:.3px; min-height:18px; text-align:center; }
-  .siri-transcript{ font-size:16px; color:#fff; font-weight:800; text-align:center; max-width:340px; min-height:24px; }
-  .siri-answer{ font-size:12.5px; color:#cfe8de; line-height:2.1; text-align:center; max-width:360px; }
-  .siri-answer a, .siri-answer a:visited{ color:var(--green); font-weight:800; }
-  .siri-type-link{ font-size:11px; color:#8fa0c8; text-decoration:underline; cursor:pointer; background:none; border:none; font-family:inherit; }
+  .azin-char-imgwrap.talking .azin-talk-glow{
+    animation:azinGlowPulse 0.42s ease-in-out infinite;
+  }
+  @keyframes azinGlowPulse{
+    0%, 100%{ opacity:0.25; transform:scale(0.95); }
+    50%{ opacity:0.6; transform:scale(1.08); }
+  }
+  .azin-talk-wave{
+    display:none; position:absolute; left:50%; bottom:-26px; transform:translateX(-50%);
+    gap:3px; align-items:flex-end; height:16px;
+  }
+  .azin-char-imgwrap.talking .azin-talk-wave{ display:flex; }
+  .azin-talk-wave span{
+    width:3px; background:var(--green); border-radius:2px;
+    animation:azinWave 0.6s ease-in-out infinite;
+  }
+  .azin-talk-wave span:nth-child(1){ height:6px; animation-delay:0s; }
+  .azin-talk-wave span:nth-child(2){ height:14px; animation-delay:.12s; }
+  .azin-talk-wave span:nth-child(3){ height:9px; animation-delay:.24s; }
+  .azin-talk-wave span:nth-child(4){ height:16px; animation-delay:.36s; }
+  @keyframes azinWave{
+    0%, 100%{ transform:scaleY(0.4); }
+    50%{ transform:scaleY(1); }
+  }
+  @keyframes azinBlink{
+    0%, 92%, 100%{ transform:scaleY(0); }
+    95%, 97%{ transform:scaleY(1); }
+  }
 
   .azin-panel{
     display:none; position:fixed; left:26px; bottom:26px; z-index:71;
@@ -374,11 +395,10 @@
     background:linear-gradient(135deg, #0e1a4d, #182a72); flex:none;
   }
   .azin-avatar{
-    width:40px; height:40px; border-radius:50%; flex:none;
-    background:linear-gradient(135deg, var(--green), var(--green-2));
-    display:flex; align-items:center; justify-content:center;
+    width:42px; height:42px; border-radius:50%; flex:none; overflow:hidden;
+    border:2px solid var(--green);
   }
-  .azin-avatar svg{ width:22px; height:22px; stroke:#04140c; fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
+  .azin-avatar img{ width:100%; height:100%; object-fit:cover; }
   .azin-head-txt{ flex:1; }
   .azin-name{ font-size:14.5px; font-weight:800; color:#fff; }
   .azin-sub{ font-size:10.5px; color:#c3cbef; margin-top:2px; }
@@ -386,7 +406,7 @@
 
   .azin-messages{ flex:1; overflow-y:auto; padding:16px; display:flex; flex-direction:column; gap:10px; }
   .azin-msg{ max-width:85%; padding:10px 13px; border-radius:14px; font-size:12.5px; line-height:1.9; }
-  .azin-msg.bot{ align-self:flex-start; background:rgba(23,224,138,0.1); border:1px solid rgba(15,169,104,0.25); color:#e8ecf8; border-bottom-left-radius:4px; }
+  .azin-msg.bot{ align-self:flex-start; background:rgba(23,224,138,0.1); border:1px solid rgba(15,169,104,0.25); color:#e8ecf8; border-bottom-left-radius:4px; white-space:pre-line; }
   .azin-msg.user{ align-self:flex-end; background:rgba(255,255,255,0.08); color:#fff; border-bottom-right-radius:4px; }
   .azin-msg a{ color:var(--green); font-weight:700; }
   .azin-msg .azin-prod-card{
@@ -414,16 +434,16 @@
     padding:11px 14px; color:#fff; font-family:inherit; font-size:12.5px;
   }
   .azin-input-row input::placeholder{ color:#7c86a8; }
-  .azin-mic, .azin-send{
+  .azin-send{
     width:38px; height:38px; border-radius:50%; border:none; cursor:pointer; flex:none;
     display:flex; align-items:center; justify-content:center;
+    background:linear-gradient(135deg, var(--green), var(--green-2));
   }
-  .azin-mic{ background:rgba(255,255,255,0.08); color:#cfd8f5; }
-  .azin-mic svg{ width:17px; height:17px; stroke:currentColor; fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
-  .azin-mic.listening{ background:#e0202b; animation:azinPulse 1s ease-out infinite; }
-  .azin-send{ background:linear-gradient(135deg, var(--green), var(--green-2)); }
   .azin-send svg{ width:16px; height:16px; fill:#04140c; }
 
+  @media (max-width:900px){
+    .azin-character{ display:none !important; }
+  }
   @media (max-width:480px){
     .azin-panel{ left:12px; bottom:12px; width:calc(100vw - 24px); height:calc(100vh - 90px); }
     .azin-fab{ left:16px; bottom:16px; }
@@ -628,14 +648,27 @@
 </div>
 
 <button class="azin-fab" id="azinFab" title="آذین - دستیار هوشمند">
-  <svg viewBox="0 0 24 24"><path d="M12 3a5 5 0 0 1 5 5v2a5 5 0 0 1-10 0V8a5 5 0 0 1 5-5Z"/><path d="M8 21v-1a4 4 0 0 1 4-4v0a4 4 0 0 1 4 4v1"/><circle cx="9.5" cy="9" r="0.8" fill="currentColor" stroke="none"/><circle cx="14.5" cy="9" r="0.8" fill="currentColor" stroke="none"/></svg>
+  <img src="assets/azin/avatar.jpg" alt="آذین">
   <span class="azin-fab-badge" id="azinFabBadge">۱</span>
 </button>
+
+<div class="azin-character" id="azinCharacter">
+  <div class="azin-char-imgwrap" id="azinCharImgwrap">
+    <img src="assets/azin/mascot.png" alt="آذین">
+    <span class="azin-blink azin-blink-l"></span>
+    <span class="azin-blink azin-blink-r"></span>
+    <div class="azin-talk-glow" id="azinTalkGlow"></div>
+    <div class="azin-talk-wave" id="azinTalkWave">
+      <span></span><span></span><span></span><span></span>
+    </div>
+  </div>
+</div>
+<audio id="azinIntroAudio" src="assets/azin/intro.mp3" preload="auto"></audio>
 
 <div class="azin-panel" id="azinPanel">
   <div class="azin-head">
     <div class="azin-avatar">
-      <svg viewBox="0 0 24 24"><path d="M12 3a5 5 0 0 1 5 5v2a5 5 0 0 1-10 0V8a5 5 0 0 1 5-5Z"/><path d="M8 21v-1a4 4 0 0 1 4-4v0a4 4 0 0 1 4 4v1"/></svg>
+      <img src="assets/azin/avatar.jpg" alt="آذین">
     </div>
     <div class="azin-head-txt">
       <div class="azin-name">آذین</div>
@@ -646,31 +679,11 @@
   <div class="azin-messages" id="azinMessages"></div>
   <div class="azin-suggestions" id="azinSuggestions"></div>
   <div class="azin-input-row">
-    <button class="azin-mic" id="azinMic" title="صحبت کن">
-      <svg viewBox="0 0 24 24"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>
-    </button>
-    <input id="azinInput" type="text" placeholder="سؤالتو بپرس یا میکروفون رو بزن…" data-fa-placeholder="سؤالتو بپرس یا میکروفون رو بزن…" data-en-placeholder="Ask a question or tap the mic…">
+    <input id="azinInput" type="text" placeholder="سؤالتو بپرس…" data-fa-placeholder="سؤالتو بپرس…" data-en-placeholder="Ask a question…">
     <button class="azin-send" id="azinSend" title="ارسال">
       <svg viewBox="0 0 24 24"><path d="m5 12 14-7-4 14-3-5-5-2Z"/></svg>
     </button>
   </div>
-</div>
-
-<div class="azin-siri-overlay" id="azinSiriOverlay">
-  <button class="siri-close" id="siriClose">&times;</button>
-  <div class="siri-orb" id="siriOrb">
-    <div class="blob b1"></div>
-    <div class="blob b2"></div>
-    <div class="blob b3"></div>
-    <div class="blob b4"></div>
-    <div class="siri-mic-icon">
-      <svg viewBox="0 0 24 24"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>
-    </div>
-  </div>
-  <div class="siri-status" id="siriStatus">در حال شنیدن…</div>
-  <div class="siri-transcript" id="siriTranscript"></div>
-  <div class="siri-answer" id="siriAnswer"></div>
-  <button class="siri-type-link" id="siriTypeLink">ترجیح می‌دی تایپ کنی؟</button>
 </div>
 
 <div class="lightbox" id="lightbox">
@@ -1102,7 +1115,7 @@
   const suggestionsEl = document.getElementById('azinSuggestions');
   const inputEl = document.getElementById('azinInput');
   const sendBtn = document.getElementById('azinSend');
-  const micBtn = document.getElementById('azinMic');
+  const characterEl = document.getElementById('azinCharacter');
 
   const AZ_LANG = () => (document.documentElement.lang === 'en' ? 'en' : 'fa');
 
@@ -1281,16 +1294,6 @@
     if(el) el.remove();
   }
 
-  function speak(text){
-    if(!('speechSynthesis' in window)) return;
-    const clean = text.replace(/<[^>]+>/g, '');
-    const utter = new SpeechSynthesisUtterance(clean);
-    utter.lang = AZ_LANG()==='en' ? 'en-US' : 'fa-IR';
-    utter.rate = 1.02;
-    window.speechSynthesis.cancel();
-    window.speechSynthesis.speak(utter);
-  }
-
   function handleUserText(text){
     if(!text.trim()) return;
     addMessage('user', text.replace(/</g,'&lt;'));
@@ -1298,9 +1301,30 @@
     showTyping();
     setTimeout(()=>{
       hideTyping();
+      const lang = AZ_LANG();
+      const nav = parseNavigationIntent(text);
+      if(nav){
+        const msg = lang==='en' ? `Okay, taking you to ${nav.label}…` : `باشه، می‌رم ${nav.label} رو نشونت بدم…`;
+        addMessage('bot', msg);
+        setTimeout(()=>{ window.location.href = nav.url; }, 1200);
+        return;
+      }
       const reply = answer(text);
       addMessage('bot', reply);
-      speak(reply);
+    }, 500 + Math.random()*400);
+  }
+
+  const ABOUT_US_FA = 'بنیان‌گذار شرکت آذین طب سلامت رازی\n\nمهندس رضا عبداللهی، بنیان‌گذار آینده‌نگر شرکت آذین طب سلامت رازی، یکی از تولیدکنندگان پیشرو ایمپلنت‌های ارتوپدی و سیستم‌های فیکساسیون خارجی است. با پیشینه‌ای در مهندسی، مدیریت کسب‌وکار و فناوری ارتوپدی، و بیش از ۲۵ سال تجربه در صنعت تجهیزات پزشکی، نقش کلیدی در ارتقای تولید ارتوپدی از نظر کیفیت و نوآوری داشته است.\n\nتحت مدیریت ایشان، شرکت آذین طب سلامت رازی از یک واحد تولیدی کوچک به نامی معتبر در راه‌حل‌های ارتوپدی تبدیل شده و ایمپلنت‌های دقیق خود را به بیمارستان‌ها، جراحان و توزیع‌کنندگان در سطح ملی و بین‌المللی عرضه می‌کند.';
+  const ABOUT_US_EN = 'Founder of AzinTeb Salamat Razi\n\nReza Abdollahi is the visionary founder of AzinTeb Salamat Razi, a leading manufacturer of orthopedic implants and external fixation systems. With a background in engineering, business management, and orthopedic technology, and more than 25 years of experience in the medical device industry, he has played a key role in advancing orthopedic manufacturing in terms of quality and innovation.\n\nUnder his leadership, AzinTeb Salamat Razi has grown from a small manufacturing unit into a trusted name in orthopedic solutions, supplying precision implants to hospitals, surgeons, and distributors both nationally and internationally.';
+
+  function showAboutUs(){
+    const lang = AZ_LANG();
+    addMessage('user', lang==='en' ? 'About Us' : 'درباره‌ی ما');
+    showTyping();
+    setTimeout(()=>{
+      hideTyping();
+      addMessage('bot', lang==='en' ? ABOUT_US_EN : ABOUT_US_FA);
+      playCharacterAudio('assets/azin/about.mp3');
     }, 500 + Math.random()*400);
   }
 
@@ -1310,6 +1334,12 @@
       ? ['What do you have for a femur fracture?','What is Ilizarov?','Contact sales']
       : ['برای شکستگی فمور چی دارید؟','الیزاروف چیه؟','ارتباط با فروش'];
     suggestionsEl.innerHTML = '';
+
+    const aboutBtn = document.createElement('button');
+    aboutBtn.textContent = lang==='en' ? 'About Us' : 'درباره‌ی ما';
+    aboutBtn.addEventListener('click', showAboutUs);
+    suggestionsEl.appendChild(aboutBtn);
+
     items.forEach(txt=>{
       const b = document.createElement('button');
       b.textContent = txt;
@@ -1318,10 +1348,26 @@
     });
   }
 
+  function playCharacterAudio(src){
+    const audioEl = document.getElementById('azinIntroAudio');
+    const wrapEl = document.getElementById('azinCharImgwrap');
+    if(!audioEl || !wrapEl) return;
+    audioEl.pause();
+    audioEl.src = src;
+    audioEl.currentTime = 0;
+    wrapEl.classList.add('talking');
+    audioEl.play().catch(()=>{ wrapEl.classList.remove('talking'); });
+    audioEl.onended = ()=> wrapEl.classList.remove('talking');
+    audioEl.onpause = ()=> wrapEl.classList.remove('talking');
+  }
+  function playIntroAudio(){ playCharacterAudio('assets/azin/intro.mp3'); }
+
   function openPanel(){
     panel.classList.add('open');
     fab.classList.add('open');
     badge.classList.add('hide');
+    characterEl.classList.add('show');
+    playIntroAudio();
     if(!messagesEl.children.length){
       const lang = AZ_LANG();
       addMessage('bot', lang==='en'
@@ -1334,104 +1380,16 @@
   function closePanel(){
     panel.classList.remove('open');
     fab.classList.remove('open');
+    characterEl.classList.remove('show');
+    const audioEl = document.getElementById('azinIntroAudio');
+    if(audioEl) audioEl.pause();
   }
 
-  fab.addEventListener('click', openSiri);
-  document.getElementById('azinHeaderBtn').addEventListener('click', openSiri);
+  fab.addEventListener('click', openPanel);
+  document.getElementById('azinHeaderBtn').addEventListener('click', openPanel);
   closeBtn.addEventListener('click', closePanel);
   sendBtn.addEventListener('click', ()=> handleUserText(inputEl.value));
   inputEl.addEventListener('keydown', (e)=>{ if(e.key==='Enter') handleUserText(inputEl.value); });
-
-  /* ---------- Siri-style voice overlay ---------- */
-  const siriOverlay = document.getElementById('azinSiriOverlay');
-  const siriOrb = document.getElementById('siriOrb');
-  const siriStatus = document.getElementById('siriStatus');
-  const siriTranscript = document.getElementById('siriTranscript');
-  const siriAnswer = document.getElementById('siriAnswer');
-  const siriClose = document.getElementById('siriClose');
-  const siriTypeLink = document.getElementById('siriTypeLink');
-
-  function siriSetStatus(text){ siriStatus.textContent = text; }
-  function openSiri(){
-    badge.classList.add('hide');
-    siriOverlay.classList.add('show');
-    siriTranscript.textContent = '';
-    siriAnswer.innerHTML = '';
-    const lang = AZ_LANG();
-    siriTypeLink.textContent = lang==='en' ? 'Prefer to type?' : 'ترجیح می‌دی تایپ کنی؟';
-    siriSetStatus(lang==='en' ? 'Listening…' : 'در حال شنیدن…');
-    startSiriListening();
-  }
-  function closeSiri(){
-    siriOverlay.classList.remove('show');
-    siriOrb.classList.remove('listening');
-    if(typeof recognition !== 'undefined' && recognition){ try{ recognition.stop(); }catch(e){} }
-    window.speechSynthesis && window.speechSynthesis.cancel();
-  }
-  siriClose.addEventListener('click', closeSiri);
-  siriTypeLink.addEventListener('click', ()=>{ closeSiri(); openPanel(); });
-
-  function processVoiceCommand(text){
-    const lang = AZ_LANG();
-    siriTranscript.textContent = text;
-    siriSetStatus(lang==='en' ? 'Got it…' : 'می‌فهمم…');
-
-    const nav = parseNavigationIntent(text);
-    if(nav){
-      const msg = lang==='en' ? `Okay, taking you to ${nav.label}…` : `باشه، می‌رم ${nav.label} رو نشونت بدم…`;
-      siriAnswer.innerHTML = msg;
-      speak(msg);
-      setTimeout(()=>{ window.location.href = nav.url; }, 1400);
-      return;
-    }
-
-    const reply = answer(text);
-    siriAnswer.innerHTML = reply;
-    siriSetStatus(lang==='en' ? '' : '');
-    speak(reply);
-  }
-
-  /* ---------- voice input ---------- */
-  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-  let recognition = null;
-  if(SR){
-    recognition = new SR();
-    recognition.continuous = false;
-    recognition.interimResults = false;
-    let listening = false;
-    function startSiriListening(){
-      recognition.lang = AZ_LANG()==='en' ? 'en-US' : 'fa-IR';
-      try{ recognition.start(); } catch(e){}
-    }
-    micBtn.addEventListener('click', ()=>{
-      if(listening){ recognition.stop(); return; }
-      recognition.lang = AZ_LANG()==='en' ? 'en-US' : 'fa-IR';
-      try{ recognition.start(); } catch(e){}
-    });
-    recognition.addEventListener('start', ()=>{
-      listening = true; micBtn.classList.add('listening'); siriOrb.classList.add('listening');
-    });
-    recognition.addEventListener('end', ()=>{
-      listening = false; micBtn.classList.remove('listening'); siriOrb.classList.remove('listening');
-    });
-    recognition.addEventListener('result', (e)=>{
-      const text = e.results[0][0].transcript;
-      if(siriOverlay.classList.contains('show')) processVoiceCommand(text);
-      else handleUserText(text);
-    });
-    recognition.addEventListener('error', ()=>{
-      listening = false; micBtn.classList.remove('listening'); siriOrb.classList.remove('listening');
-      const lang = AZ_LANG();
-      if(siriOverlay.classList.contains('show')){
-        siriSetStatus(lang==='en' ? 'Could not hear you — try again or type.' : 'صدات رو نشنیدم — دوباره امتحان کن یا تایپ کن.');
-      }
-    });
-  } else {
-    micBtn.style.display = 'none';
-    function startSiriListening(){
-      siriSetStatus(AZ_LANG()==='en' ? 'Voice input is not supported on this browser.' : 'این مرورگر از ورودی صوتی پشتیبانی نمی‌کنه.');
-    }
-  }
 })();
 </script>
 </body>
