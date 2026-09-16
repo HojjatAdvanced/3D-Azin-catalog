@@ -369,6 +369,54 @@
   .azin-header-btn:hover{ background:rgba(23,224,138,0.18); border-color:var(--green); }
   .azin-header-btn svg{ width:18px; height:18px; stroke:var(--green); fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
 
+  .cert-header-btn{
+    width:40px; height:32px; border-radius:10px; border:1px solid rgba(15,169,104,0.35);
+    background:rgba(23,224,138,0.08); cursor:pointer; display:flex; align-items:center; justify-content:center;
+    transition:all .2s;
+  }
+  .cert-header-btn:hover{ background:rgba(23,224,138,0.18); border-color:var(--green); }
+  .cert-header-btn svg{ width:18px; height:18px; stroke:var(--green); fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
+
+  /* ---------- certificates overlay ---------- */
+  .cert-overlay{
+    display:none; position:fixed; inset:0; z-index:220;
+    background:rgba(2,5,12,0.94); backdrop-filter:blur(10px);
+    overflow-y:auto; padding:70px 20px 60px;
+  }
+  .cert-overlay.show{ display:block; }
+  .cert-close{
+    position:fixed; top:20px; left:20px; z-index:2;
+    background:rgba(255,255,255,0.1); border:none; color:#fff;
+    width:38px; height:38px; border-radius:50%; font-size:18px; cursor:pointer;
+  }
+  .cert-overlay-title{ text-align:center; font-size:19px; font-weight:800; color:#fff; margin-bottom:8px; }
+  .cert-overlay-sub{ text-align:center; font-size:12px; color:var(--muted); margin-bottom:36px; }
+  .cert-grid{
+    max-width:1000px; margin:0 auto; display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:26px;
+  }
+  .cert-card{
+    background:var(--panel); border:1px solid var(--border); border-radius:16px; overflow:hidden;
+  }
+  .cert-card img{ width:100%; display:block; cursor:zoom-in; }
+  .cert-card-body{ padding:14px 16px 18px; }
+  .cert-card-name{ font-size:12.5px; font-weight:700; color:var(--ink); margin-bottom:10px; }
+  .cert-flag-btn{
+    display:flex; align-items:center; gap:8px; width:100%; padding:9px 12px; border-radius:10px;
+    border:1px solid rgba(15,169,104,0.35); background:rgba(23,224,138,0.08); color:#cfe8de;
+    font-family:inherit; font-size:11.5px; font-weight:700; cursor:pointer;
+  }
+  .cert-flag-btn:hover{ background:rgba(23,224,138,0.18); }
+  .cert-flag-btn .flag-icon{ width:20px; height:14px; border-radius:2px; flex:none; overflow:hidden; display:flex; flex-direction:column; box-shadow:0 0 0 1px rgba(255,255,255,0.15); }
+  .cert-flag-btn .flag-icon span{ flex:1; }
+  .cert-flag-btn .flag-icon span:nth-child(1){ background:#239f40; }
+  .cert-flag-btn .flag-icon span:nth-child(2){ background:#fff; }
+  .cert-flag-btn .flag-icon span:nth-child(3){ background:#da0000; }
+  .cert-translation{
+    display:none; margin-top:12px; padding:12px 14px; border-radius:10px;
+    background:rgba(255,255,255,0.04); font-size:12px; line-height:2; color:#d7dcef; white-space:pre-line;
+  }
+  .cert-translation.show{ display:block; }
+
   .azin-character{
     display:none; position:fixed; left:400px; bottom:0; z-index:69;
     width:190px; pointer-events:none;
@@ -507,6 +555,9 @@
     <a href="catalog.html" data-fa="کاتالوگ" data-en="Catalog">کاتالوگ</a>
     <a href="contact.html" data-fa="تماس با ما" data-en="Contact Us">تماس با ما</a>
   </nav>
+  <button class="cert-header-btn" id="certHeaderBtn" title="گواهینامه‌ها">
+    <svg viewBox="0 0 24 24"><path d="M12 2 4 5v6c0 5 3.4 8.4 8 11 4.6-2.6 8-6 8-11V5l-8-3Z"/><path d="m9 12 2 2 4-4"/></svg>
+  </button>
   <button class="azin-header-btn" id="azinHeaderBtn" title="آذین - دستیار هوشمند">
     <svg viewBox="0 0 24 24"><path d="M12 3a5 5 0 0 1 5 5v2a5 5 0 0 1-10 0V8a5 5 0 0 1 5-5Z"/><path d="M8 21v-1a4 4 0 0 1 4-4v0a4 4 0 0 1 4 4v1"/></svg>
   </button>
@@ -940,6 +991,164 @@
   <span class="azin-fab-badge" id="azinFabBadge">۱</span>
 </button>
 
+<div class="cert-overlay" id="certOverlay">
+  <button class="cert-close" id="certClose">&times;</button>
+  <div class="cert-overlay-title" data-fa="گواهینامه‌ها و استانداردها" data-en="Certificates & Standards">گواهینامه‌ها و استانداردها</div>
+  <div class="cert-overlay-sub" data-fa="گواهی فروش آزاد صادرشده توسط اداره‌کل تجهیزات و ملزومات پزشکی وزارت بهداشت" data-en="Free Sales Certificates issued by the Iranian Ministry of Health's Medical Device Directorate (IMED)">گواهی فروش آزاد صادرشده توسط اداره‌کل تجهیزات و ملزومات پزشکی وزارت بهداشت</div>
+
+  <div class="cert-grid">
+    <div class="cert-card">
+      <img src="assets/certificates/cert1.jpg" alt="گواهی فیکساتور خارجی اسلایدینگ">
+      <div class="cert-card-body">
+        <div class="cert-card-name" data-fa="فیکساتور خارجی اسلایدینگ — IRI002127" data-en="External Fixture Sliding — IRI002127">فیکساتور خارجی اسلایدینگ — IRI002127</div>
+        <button class="cert-flag-btn" data-target="tr1">
+          <span class="flag-icon"><span></span><span></span><span></span></span>
+          <span data-fa="ترجمه‌ی فارسی" data-en="Persian Translation">ترجمه‌ی فارسی</span>
+        </button>
+        <div class="cert-translation" id="tr1">جمهوری اسلامی ایران
+وزارت بهداشت، درمان و آموزش پزشکی
+اداره‌کل تجهیزات و ملزومات پزشکی (IMED)
+
+گواهی فروش آزاد — تجهیزات پزشکی
+
+شماره‌ی گواهی: IRI002127
+تاریخ صدور: 2021/10/18
+محصول: فیکساتور خارجی اسلایدینگ
+تولیدکننده: شرکت آذین طب سلامت رازی
+آدرس تولیدکننده: مشهد، فاز ۲ شهرک صنعتی توس، خیابان اندیشه، پلاک ۶۲۷
+
+این گواهی بر اساس ماده‌ی ۸۱ دفترچه‌ی مقررات تجهیزات پزشکی جمهوری اسلامی ایران صادر شده و تولیدکننده‌ی یادشده با الزامات تولید خوب (GMP) تجهیزات پزشکی (بر اساس استاندارد ISO 13485) مطابقت دارد.
+بر اساس قانون تجهیزات پزشکی جمهوری اسلامی ایران، این محصول ثبت شده و مجاز به تولید و فروش در ایران است و برای صادرات نیز تأیید شده است.
+
+این گواهی از تاریخ صدور به مدت یک سال اعتبار دارد.
+
+دکتر سعیدرضا شاهمرادی
+مدیرکل دفتر تجهیزات و ملزومات پزشکی</div>
+      </div>
+    </div>
+
+    <div class="cert-card">
+      <img src="assets/certificates/cert2.jpg" alt="گواهی راد لوله‌ای">
+      <div class="cert-card-body">
+        <div class="cert-card-name" data-fa="فیکساتور خارجی – راد لوله‌ای — IRI004001" data-en="External Fixture – Tubular Rod — IRI004001">فیکساتور خارجی – راد لوله‌ای — IRI004001</div>
+        <button class="cert-flag-btn" data-target="tr2">
+          <span class="flag-icon"><span></span><span></span><span></span></span>
+          <span data-fa="ترجمه‌ی فارسی" data-en="Persian Translation">ترجمه‌ی فارسی</span>
+        </button>
+        <div class="cert-translation" id="tr2">جمهوری اسلامی ایران
+وزارت بهداشت، درمان و آموزش پزشکی
+اداره‌کل تجهیزات و ملزومات پزشکی (IMED)
+
+گواهی فروش آزاد — تجهیزات پزشکی
+
+شماره‌ی گواهی: IRI004001
+تاریخ صدور: 2021/10/17
+محصول: فیکساتور خارجی – راد لوله‌ای
+تولیدکننده: شرکت آذین طب سلامت رازی
+آدرس تولیدکننده: مشهد، فاز ۲ شهرک صنعتی توس، خیابان اندیشه، پلاک ۶۲۷
+
+این گواهی بر اساس ماده‌ی ۸۱ دفترچه‌ی مقررات تجهیزات پزشکی جمهوری اسلامی ایران صادر شده و تولیدکننده‌ی یادشده با الزامات تولید خوب (GMP) تجهیزات پزشکی (بر اساس استاندارد ISO 13485) مطابقت دارد.
+بر اساس قانون تجهیزات پزشکی جمهوری اسلامی ایران، این محصول ثبت شده و مجاز به تولید و فروش در ایران است و برای صادرات نیز تأیید شده است.
+
+این گواهی از تاریخ صدور به مدت یک سال اعتبار دارد.
+
+دکتر سعیدرضا شاهمرادی
+مدیرکل دفتر تجهیزات و ملزومات پزشکی</div>
+      </div>
+    </div>
+
+    <div class="cert-card">
+      <img src="assets/certificates/cert3.jpg" alt="گواهی هالف رینگ">
+      <div class="cert-card-body">
+        <div class="cert-card-name" data-fa="فیکساتور خارجی – هالف رینگ (۵/۸) — IRI003728" data-en="External Fixture – Half Ring (5/8) — IRI003728">فیکساتور خارجی – هالف رینگ (۵/۸) — IRI003728</div>
+        <button class="cert-flag-btn" data-target="tr3">
+          <span class="flag-icon"><span></span><span></span><span></span></span>
+          <span data-fa="ترجمه‌ی فارسی" data-en="Persian Translation">ترجمه‌ی فارسی</span>
+        </button>
+        <div class="cert-translation" id="tr3">جمهوری اسلامی ایران
+وزارت بهداشت، درمان و آموزش پزشکی
+اداره‌کل تجهیزات و ملزومات پزشکی (IMED)
+
+گواهی فروش آزاد — تجهیزات پزشکی
+
+شماره‌ی گواهی: IRI003728
+تاریخ صدور: 2021/10/18
+محصول: فیکساتور خارجی – هالف رینگ (۵/۸)
+تولیدکننده: شرکت آذین طب سلامت رازی
+آدرس تولیدکننده: مشهد، فاز ۲ شهرک صنعتی توس، خیابان اندیشه، پلاک ۶۲۷
+
+این گواهی بر اساس ماده‌ی ۸۱ دفترچه‌ی مقررات تجهیزات پزشکی جمهوری اسلامی ایران صادر شده و تولیدکننده‌ی یادشده با الزامات تولید خوب (GMP) تجهیزات پزشکی (بر اساس استاندارد ISO 13485) مطابقت دارد.
+بر اساس قانون تجهیزات پزشکی جمهوری اسلامی ایران، این محصول ثبت شده و مجاز به تولید و فروش در ایران است و برای صادرات نیز تأیید شده است.
+
+این گواهی از تاریخ صدور به مدت یک سال اعتبار دارد.
+
+دکتر سعیدرضا شاهمرادی
+مدیرکل دفتر تجهیزات و ملزومات پزشکی</div>
+      </div>
+    </div>
+
+    <div class="cert-card">
+      <img src="assets/certificates/cert4.jpg" alt="گواهی آرک رینگ">
+      <div class="cert-card-body">
+        <div class="cert-card-name" data-fa="فیکساتور خارجی – آرک رینگ سوراخ‌دار — IRI009834" data-en="External Fixture – Arc Ring With Hole — IRI009834">فیکساتور خارجی – آرک رینگ سوراخ‌دار — IRI009834</div>
+        <button class="cert-flag-btn" data-target="tr4">
+          <span class="flag-icon"><span></span><span></span><span></span></span>
+          <span data-fa="ترجمه‌ی فارسی" data-en="Persian Translation">ترجمه‌ی فارسی</span>
+        </button>
+        <div class="cert-translation" id="tr4">جمهوری اسلامی ایران
+وزارت بهداشت، درمان و آموزش پزشکی
+اداره‌کل تجهیزات و ملزومات پزشکی (IMED)
+
+گواهی فروش آزاد — تجهیزات پزشکی
+
+شماره‌ی گواهی: IRI009834
+تاریخ صدور: 2021/10/17
+محصول: فیکساتور خارجی – آرک رینگ سوراخ‌دار
+تولیدکننده: شرکت آذین طب سلامت رازی
+آدرس تولیدکننده: مشهد، فاز ۲ شهرک صنعتی توس، خیابان اندیشه، پلاک ۶۲۷
+
+این گواهی بر اساس ماده‌ی ۸۱ دفترچه‌ی مقررات تجهیزات پزشکی جمهوری اسلامی ایران صادر شده و تولیدکننده‌ی یادشده با الزامات تولید خوب (GMP) تجهیزات پزشکی (بر اساس استاندارد ISO 13485) مطابقت دارد.
+بر اساس قانون تجهیزات پزشکی جمهوری اسلامی ایران، این محصول ثبت شده و مجاز به تولید و فروش در ایران است و برای صادرات نیز تأیید شده است.
+
+این گواهی از تاریخ صدور به مدت یک سال اعتبار دارد.
+
+دکتر سعیدرضا شاهمرادی
+مدیرکل دفتر تجهیزات و ملزومات پزشکی</div>
+      </div>
+    </div>
+
+    <div class="cert-card">
+      <img src="assets/certificates/cert5.jpg" alt="گواهی فیکساتور مچ دست">
+      <div class="cert-card-body">
+        <div class="cert-card-name" data-fa="فیکساتور خارجی (زند زبرین، زند زیرین، مچ دست) — IRI009604" data-en="External Fixator (Ulnar, Radius, Wrist) — IRI009604">فیکساتور خارجی (زند زبرین، زند زیرین، مچ دست) — IRI009604</div>
+        <button class="cert-flag-btn" data-target="tr5">
+          <span class="flag-icon"><span></span><span></span><span></span></span>
+          <span data-fa="ترجمه‌ی فارسی" data-en="Persian Translation">ترجمه‌ی فارسی</span>
+        </button>
+        <div class="cert-translation" id="tr5">جمهوری اسلامی ایران
+وزارت بهداشت، درمان و آموزش پزشکی
+اداره‌کل تجهیزات و ملزومات پزشکی (IMED)
+
+گواهی فروش آزاد — تجهیزات پزشکی
+
+شماره‌ی گواهی: IRI009604
+تاریخ صدور: 2021/10/17
+محصول: فیکساتور خارجی (زند زبرین، زند زیرین، مچ دست)
+تولیدکننده: شرکت آذین طب سلامت رازی
+آدرس تولیدکننده: مشهد، فاز ۲ شهرک صنعتی توس، خیابان اندیشه، پلاک ۶۲۷
+
+این گواهی بر اساس ماده‌ی ۸۱ دفترچه‌ی مقررات تجهیزات پزشکی جمهوری اسلامی ایران صادر شده و تولیدکننده‌ی یادشده با الزامات تولید خوب (GMP) تجهیزات پزشکی (بر اساس استاندارد ISO 13485) مطابقت دارد.
+بر اساس قانون تجهیزات پزشکی جمهوری اسلامی ایران، این محصول ثبت شده و مجاز به تولید و فروش در ایران است و برای صادرات نیز تأیید شده است.
+
+این گواهی از تاریخ صدور به مدت یک سال اعتبار دارد.
+
+دکتر سعیدرضا شاهمرادی
+مدیرکل دفتر تجهیزات و ملزومات پزشکی</div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="azin-character" id="azinCharacter">
   <div class="azin-char-imgwrap" id="azinCharImgwrap">
     <img src="assets/azin/mascot.png" alt="آذین">
@@ -1221,6 +1430,22 @@
   closeBtn.addEventListener('click', closePanel);
   sendBtn.addEventListener('click', ()=> handleUserText(inputEl.value));
   inputEl.addEventListener('keydown', (e)=>{ if(e.key==='Enter') handleUserText(inputEl.value); });
+})();
+</script>
+
+<script>
+(function(){
+  const overlay = document.getElementById('certOverlay');
+  const openBtn = document.getElementById('certHeaderBtn');
+  const closeBtn = document.getElementById('certClose');
+  openBtn.addEventListener('click', ()=> overlay.classList.add('show'));
+  closeBtn.addEventListener('click', ()=> overlay.classList.remove('show'));
+  document.querySelectorAll('.cert-flag-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const target = document.getElementById(btn.getAttribute('data-target'));
+      if(target) target.classList.toggle('show');
+    });
+  });
 })();
 </script>
 </body>
