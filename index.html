@@ -451,7 +451,7 @@
     width:100%; display:block; border-radius:14px;
     filter:drop-shadow(0 18px 26px rgba(0,0,0,0.55)) drop-shadow(0 0 24px rgba(23,224,138,0.18));
   }
-  .azin-char-imgwrap{ position:relative; }
+  .azin-char-imgwrap{ position:relative; background:#050b18; border-radius:14px; overflow:hidden; }
 
   /* talking animation — plays only while the intro audio is active */
   .azin-char-imgwrap.talking{ }
@@ -1188,7 +1188,7 @@
 
 <div class="azin-character" id="azinCharacter">
   <div class="azin-char-imgwrap" id="azinCharImgwrap">
-    <video src="assets/azin/mascot_video.mp4" autoplay loop muted playsinline></video>
+    <video src="assets/azin/mascot_video_nobg.mp4" autoplay loop muted playsinline></video>
     <div class="azin-talk-glow" id="azinTalkGlow"></div>
     <div class="azin-talk-wave" id="azinTalkWave">
       <span></span><span></span><span></span><span></span>
