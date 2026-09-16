@@ -824,12 +824,10 @@
     if(/^(برو\s*)?(به\s*)?(کاتالوگ|محصولات)$|^catalog$/.test(nq)){
       return { url:'catalog.html', label: lang==='en'?'the catalog':'کاتالوگ' };
     }
-    if(/بیار|نشون\s*بده|show\s*me|bring\s*me|باز\s*کن/.test(nq)){
-      const p = findProductLite(text);
-      if(p){
-        const title = lang==='en' ? p.title_en : p.title;
-        return { url:'viewer.html?id='+p.page, label: title };
-      }
+    const p = findProductLite(text);
+    if(p){
+      const title = lang==='en' ? p.title_en : p.title;
+      return { url:'viewer.html?id='+p.page, label: title };
     }
     return null;
   }
