@@ -68,13 +68,18 @@
   .theme-toggle .tt-side-icon.tt-sun-side{ left:8px; stroke:#ffb020; fill:none; stroke-width:2; }
   .theme-toggle .tt-side-icon.tt-moon-side{ right:8px; stroke:#8fa0c8; fill:none; stroke-width:1.8; }
 
-  .lang-toggle{
-    width:40px; height:32px; border-radius:10px; border:1px solid var(--border);
-    background:rgba(23,224,138,0.08); color:var(--green); cursor:pointer;
-    font-family:'Vazirmatn',Tahoma,sans-serif; font-size:12px; font-weight:800; flex:none;
-    transition:all .2s;
+  .lang-flags{
+    position:fixed; top:20px; left:20px; z-index:60;
+    display:flex; flex-direction:column; gap:6px;
   }
-  .lang-toggle:hover{ background:rgba(23,224,138,0.18); border-color:var(--green); }
+  .lang-flag{
+    width:34px; height:34px; border-radius:9px; border:1px solid var(--border);
+    background:rgba(23,224,138,0.08); cursor:pointer; font-size:17px; line-height:1;
+    display:flex; align-items:center; justify-content:center; padding:0;
+    transition:all .2s; filter:grayscale(0.4) opacity(0.7);
+  }
+  .lang-flag:hover{ border-color:var(--green); filter:none; }
+  .lang-flag.active{ border-color:var(--green); box-shadow:0 0 0 2px rgba(23,224,138,0.28); filter:none; }
   .theme-toggle .tt-knob{
     position:absolute; top:3px; right:3px; width:24px; height:24px; border-radius:50%;
     background:linear-gradient(135deg, #cfd8f0, #8fa0c8);
@@ -325,6 +330,14 @@
   @media (max-width:600px){ .ps-slide{ flex:0 0 50%; } }
 
   .clients-section{ position:relative; z-index:1; max-width:1100px; margin:0 auto; padding:10px 22px 46px; }
+
+  .anatomy-section{ position:relative; z-index:1; max-width:1100px; margin:0 auto; padding:0 22px 50px; }
+  .anatomy-grid{ display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+  .anatomy-grid img{
+    width:100%; border-radius:16px; border:1px solid var(--border);
+    background:#fff; box-shadow:0 16px 40px rgba(0,0,0,0.3);
+  }
+  @media (max-width:700px){ .anatomy-grid{ grid-template-columns:1fr; } }
   .clients-title{ font-size:15px; font-weight:800; color:var(--ink); text-align:center; margin-bottom:26px; }
   .clients-grid{
     display:grid; grid-template-columns:repeat(6, 1fr); gap:12px;
@@ -551,9 +564,9 @@
   <div class="txt"><b>MEDAZINCO</b><small>AzinTeb Salamat Razi</small></div>
   <div class="spacer"></div>
   <nav>
-    <a href="index.html" class="active" data-fa="درباره‌ما" data-en="About Us">درباره‌ما</a>
-    <a href="catalog.html" data-fa="کاتالوگ" data-en="Catalog">کاتالوگ</a>
-    <a href="contact.html" data-fa="تماس با ما" data-en="Contact Us">تماس با ما</a>
+    <a href="index.html" class="active" data-fa="درباره‌ما" data-ar="من نحن" data-en="About Us">درباره‌ما</a>
+    <a href="catalog.html" data-fa="کاتالوگ" data-ar="الكتالوج" data-en="Catalog">کاتالوگ</a>
+    <a href="contact.html" data-fa="تماس با ما" data-ar="اتصل بنا" data-en="Contact Us">تماس با ما</a>
   </nav>
   <button class="cert-header-btn" id="certHeaderBtn" title="گواهینامه‌ها">
     <svg viewBox="0 0 24 24"><path d="M12 2 4 5v6c0 5 3.4 8.4 8 11 4.6-2.6 8-6 8-11V5l-8-3Z"/><path d="m9 12 2 2 4-4"/></svg>
@@ -561,7 +574,11 @@
   <button class="azin-header-btn" id="azinHeaderBtn" title="آذین - دستیار هوشمند">
     <svg viewBox="0 0 24 24"><path d="M12 3a5 5 0 0 1 5 5v2a5 5 0 0 1-10 0V8a5 5 0 0 1 5-5Z"/><path d="M8 21v-1a4 4 0 0 1 4-4v0a4 4 0 0 1 4 4v1"/></svg>
   </button>
-  <button class="lang-toggle" id="langToggle" title="Switch language">FA</button>
+  <div class="lang-flags" id="langFlags">
+    <button class="lang-flag" data-lang="fa" title="فارسی">🇮🇷</button>
+    <button class="lang-flag" data-lang="ar" title="العربية">🇸🇦</button>
+    <button class="lang-flag" data-lang="en" title="English">🇬🇧</button>
+  </div>
   <button class="pwa-header-btn" id="pwaHeaderBtn" title="افزودن به صفحه‌اصلی گوشی">
     <svg viewBox="0 0 24 24"><rect x="6" y="2.5" width="12" height="19" rx="2.2"/><line x1="12" y1="17.3" x2="12" y2="17.32"/><path d="M12 8v4.5M9.8 10.2 12 12.5l2.2-2.3"/></svg>
   </button>
@@ -581,7 +598,7 @@
     <div class="overlay">
       <img class="logo" src="assets/logo.jpg" alt="MEDAZINCO">
       <div class="eyebrow">Advanced Orthopedic Technology</div>
-      <h1 data-fa="تولیدکننده‌ی ایمپلنت و فیکساتور خارجی ارتوپدی" data-en="Manufacturer of Orthopedic Implants and External Fixators">تولیدکننده‌ی ایمپلنت و فیکساتور خارجی ارتوپدی</h1>
+      <h1 data-fa="تولیدکننده‌ی ایمپلنت و فیکساتور خارجی ارتوپدی" data-ar="الشركة المصنعة لغرسات وتثبيتات العظام الخارجية لجراحة العظام" data-en="Manufacturer of Orthopedic Implants and External Fixators">تولیدکننده‌ی ایمپلنت و فیکساتور خارجی ارتوپدی</h1>
       <p>Production of Orthopedic External Fixators and Implants</p>
     </div>
   </div>
@@ -589,19 +606,19 @@
 
 <main>
   <div class="stats">
-    <div class="stat"><div class="n">۲۵+</div><div class="l" data-fa="سال تجربه" data-en="Years of Experience">سال تجربه</div></div>
-    <div class="stat"><div class="n">۸۷</div><div class="l" data-fa="قطعه در کاتالوگ" data-en="Parts in Catalog">قطعه در کاتالوگ</div></div>
-    <div class="stat"><div class="n">۴</div><div class="l" data-fa="فاز تولید" data-en="Production Phases">فاز تولید</div></div>
+    <div class="stat"><div class="n">۲۵+</div><div class="l" data-fa="سال تجربه" data-ar="سنوات الخبرة" data-en="Years of Experience">سال تجربه</div></div>
+    <div class="stat"><div class="n">۸۷</div><div class="l" data-fa="قطعه در کاتالوگ" data-ar="قطعة في الكتالوج" data-en="Parts in Catalog">قطعه در کاتالوگ</div></div>
+    <div class="stat"><div class="n">۴</div><div class="l" data-fa="فاز تولید" data-ar="مرحلة إنتاج" data-en="Production Phases">فاز تولید</div></div>
   </div>
 
-  <div class="section-title"><span class="bar"></span><span data-fa="مدیریت" data-en="Management">مدیریت</span></div>
+  <div class="section-title"><span class="bar"></span><span data-fa="مدیریت" data-ar="الإدارة" data-en="Management">مدیریت</span></div>
   <div class="card founder-card">
     <img src="assets/about/founder.jpg" alt="مهندس رضا عبداللهی">
     <div class="founder-body">
       <div class="founder-name">Reza Abdollahi</div>
-      <div class="founder-role" data-fa="بنیان‌گذار شرکت آذین طب سلامت رازی" data-en="Founder of AzinTeb Salamat Razi">بنیان‌گذار شرکت آذین طب سلامت رازی</div>
+      <div class="founder-role" data-fa="بنیان‌گذار شرکت آذین طب سلامت رازی" data-ar="مؤسس شركة آذین طب سلامت رازی" data-en="Founder of AzinTeb Salamat Razi">بنیان‌گذار شرکت آذین طب سلامت رازی</div>
       <div class="founder-bio" data-fa-html="1"
-        data-fa="مهندس رضا عبداللهی، بنیان‌گذار آینده‌نگر شرکت آذین طب سلامت رازی، یکی از تولیدکنندگان پیشرو ایمپلنت‌های ارتوپدی و سیستم‌های فیکساسیون خارجی است. با پیشینه‌ای در مهندسی، مدیریت کسب‌وکار و فناوری ارتوپدی، و بیش از ۲۵ سال تجربه در صنعت تجهیزات پزشکی، نقش کلیدی در ارتقای تولید ارتوپدی از نظر کیفیت و نوآوری داشته است.|||تحت مدیریت ایشان، شرکت آذین طب سلامت رازی از یک واحد تولیدی کوچک به نامی معتبر در راه‌حل‌های ارتوپدی تبدیل شده و ایمپلنت‌های دقیق خود را به بیمارستان‌ها، جراحان و توزیع‌کنندگان در سطح ملی و بین‌المللی عرضه می‌کند."
+        data-fa="مهندس رضا عبداللهی، بنیان‌گذار آینده‌نگر شرکت آذین طب سلامت رازی، یکی از تولیدکنندگان پیشرو ایمپلنت‌های ارتوپدی و سیستم‌های فیکساسیون خارجی است. با پیشینه‌ای در مهندسی، مدیریت کسب‌وکار و فناوری ارتوپدی، و بیش از ۲۵ سال تجربه در صنعت تجهیزات پزشکی، نقش کلیدی در ارتقای تولید ارتوپدی از نظر کیفیت و نوآوری داشته است.|||تحت مدیریت ایشان، شرکت آذین طب سلامت رازی از یک واحد تولیدی کوچک به نامی معتبر در راه‌حل‌های ارتوپدی تبدیل شده و ایمپلنت‌های دقیق خود را به بیمارستان‌ها، جراحان و توزیع‌کنندگان در سطح ملی و بین‌المللی عرضه می‌کند." data-ar="المهندس رضا عبدالهي، المؤسس المتطلع لشركة آذین طب سلامت رازی، أحد الشركات الرائدة في تصنيع غرسات تقويم العظام وأنظمة التثبيت الخارجي. بخبرة في الهندسة وإدارة الأعمال وتقنية تقويم العظام، وأكثر من ٢٥ عامًا من الخبرة في صناعة الأجهزة الطبية، لعب دورًا رئيسيًا في تطوير تصنيع تقويم العظام من حيث الجودة والابتكار.|||تحت إدارته، تحولت شركة آذین طب سلامت رازی من وحدة إنتاج صغيرة إلى اسم موثوق في حلول تقويم العظام، حيث تزوّد المستشفيات والجراحين والموزعين بغرسات دقيقة على المستويين الوطني والدولي."
         data-en="Reza Abdollahi is the visionary founder of AzinTeb Salamat Razi, a leading manufacturer of orthopedic implants and external fixation systems. With a background in engineering, business management, and orthopedic technology, and more than 25 years of experience in the medical device industry, he has played a key role in advancing orthopedic manufacturing in terms of quality and innovation.|||Under his leadership, AzinTeb Salamat Razi has grown from a small manufacturing unit into a trusted name in orthopedic solutions, supplying precision implants to hospitals, surgeons, and distributors both nationally and internationally.">
         مهندس رضا عبداللهی، بنیان‌گذار آینده‌نگر شرکت آذین طب سلامت رازی، یکی از تولیدکنندگان پیشرو ایمپلنت‌های ارتوپدی و سیستم‌های فیکساسیون خارجی است. با پیشینه‌ای در مهندسی، مدیریت کسب‌وکار و فناوری ارتوپدی، و بیش از ۲۵ سال تجربه در صنعت تجهیزات پزشکی، نقش کلیدی در ارتقای تولید ارتوپدی از نظر کیفیت و نوآوری داشته است.
         <br><br>
@@ -610,17 +627,17 @@
     </div>
   </div>
 
-  <div class="section-title"><span class="bar"></span><span data-fa="کارخانه و امکانات تولید" data-en="Factory and Production Facilities">کارخانه و امکانات تولید</span></div>
+  <div class="section-title"><span class="bar"></span><span data-fa="کارخانه و امکانات تولید" data-ar="المصنع ومرافق الإنتاج" data-en="Factory and Production Facilities">کارخانه و امکانات تولید</span></div>
   <div class="card facility-card">
     <img src="assets/about/facilities.jpg" alt="ساختمان‌ها و فازهای تولید شرکت">
-    <div class="facility-caption" data-fa="نمایی از پروژه‌های جدید و فازهای مختلف کارخانه‌ی آذین طب سلامت رازی." data-en="A view of the new projects and various phases of the AzinTeb Salamat Razi factory.">نمایی از پروژه‌های جدید و فازهای مختلف کارخانه‌ی آذین طب سلامت رازی.</div>
+    <div class="facility-caption" data-fa="نمایی از پروژه‌های جدید و فازهای مختلف کارخانه‌ی آذین طب سلامت رازی." data-ar="منظر للمشاريع الجديدة والمراحل المختلفة لمصنع آذین طب سلامت رازی." data-en="A view of the new projects and various phases of the AzinTeb Salamat Razi factory.">نمایی از پروژه‌های جدید و فازهای مختلف کارخانه‌ی آذین طب سلامت رازی.</div>
   </div>
 
-  <div class="section-title"><span class="bar"></span><span data-fa="شرکت آذین طب سلامت رازی" data-en="AzinTeb Salamat Razi Company">شرکت آذین طب سلامت رازی</span></div>
+  <div class="section-title"><span class="bar"></span><span data-fa="شرکت آذین طب سلامت رازی" data-ar="شركة آذین طب سلامت رازی" data-en="AzinTeb Salamat Razi Company">شرکت آذین طب سلامت رازی</span></div>
   <div class="card company-history-card">
     <img src="assets/about/team.jpg" alt="تیم شرکت آذین طب سلامت رازی">
     <div class="company-history-text" data-fa-html="1"
-      data-fa="شرکت آذین طب سلامت رازی با استعانت از پروردگار متعال فعالیت خود را در حوزه تولید تجهیزات پزشکی از تابستان سال ۱۳۹۵ شروع نموده است؛ این شرکت با بهره‌گیری از پرسنل متخصص و تجهیزات مدرن، با هدف تولید انواع ایمپلنت و اکسترنال‌های ارتوپدی، با ۲۰ نفر پرسنل و تعداد ۸ عدد دستگاه و ماشین‌آلات صنعتی در فضای ۱۰۰۰ متری شهرک صنعتی توس مشهد آغاز به کار نمود.|||از ویژگی‌های این مجموعه بهره‌گیری از نیروهای جوان، تحصیل‌کرده در سطوح تکنسین فنی، کارشناس، کارشناس ارشد در رشته‌های مکانیک، بیومکانیک، صنایع، برق می‌باشد. مواد اولیه از کارخانه‌های معتبر تهیه می‌گردد که جنس و کیفیت این مواد پیش از به‌کارگیری با دقت کنترل می‌گردد.|||از نظر طراحی باید عنوان نمود که طراحی محصولات تولیدی شرکت کاملاً منطبق بر برندهای معروف و شناخته‌شده می‌باشد؛ با این حال همواره از نظرات پزشکان متخصص استفاده می‌شود و در موارد لازم بهینه‌سازی انجام می‌گیرد. استفاده از دستگاه‌های اتوماتیک در ساخت قطعات، نتیجه‌ی آن دستیابی به افزایش سرعت در عین کیفیت و دقت ابعادی بالا در تمام قطعات تولیدی شرکت می‌باشد.|||از جمله این دستگاه‌ها در بخش تولید می‌توان به انواع CNC تراش و فرز، CNC هفت‌محور اشاره نمود. در بخش کنترل کیفیت از دستگاه‌های اندازه‌گیری دیجیتال با دقت بالا به‌منظور تضمین کیفیت استفاده می‌شود. از دیگر موارد مهمی که در بخش کنترل کیفیت محصولات می‌توان به آن اشاره نمود، کنترل ۱۰۰ درصدی محصولات با توجه به طرح کیفیت همان محصول می‌باشد. در حال حاضر از عمده تولیدات این شرکت اکسترنال فیکساتور می‌باشد.|||شرکت آذین طب سلامت رازی پس از گذشت مدت کوتاهی موفق به اخذ مجوزها و استانداردهایی از قبیل پروانه‌ی ساخت فیکساتورهای خارجی استخوان از اداره‌کل تجهیزات پزشکی، و استاندارد سیستم مدیریت کیفیت در تجهیزات پزشکی ISO 13485 از شرکت IGS کره گردید.|||افزایش سطح رضایت‌مندی مشتریان از طریق سرلوحه قراردادن کیفیت، مهم‌ترین اولویت این مجموعه می‌باشد. این شرکت امید دارد سهم خود را در ارتقای سلامت جامعه ایفا نماید."
+      data-fa="شرکت آذین طب سلامت رازی با استعانت از پروردگار متعال فعالیت خود را در حوزه تولید تجهیزات پزشکی از تابستان سال ۱۳۹۵ شروع نموده است؛ این شرکت با بهره‌گیری از پرسنل متخصص و تجهیزات مدرن، با هدف تولید انواع ایمپلنت و اکسترنال‌های ارتوپدی، با ۲۰ نفر پرسنل و تعداد ۸ عدد دستگاه و ماشین‌آلات صنعتی در فضای ۱۰۰۰ متری شهرک صنعتی توس مشهد آغاز به کار نمود.|||از ویژگی‌های این مجموعه بهره‌گیری از نیروهای جوان، تحصیل‌کرده در سطوح تکنسین فنی، کارشناس، کارشناس ارشد در رشته‌های مکانیک، بیومکانیک، صنایع، برق می‌باشد. مواد اولیه از کارخانه‌های معتبر تهیه می‌گردد که جنس و کیفیت این مواد پیش از به‌کارگیری با دقت کنترل می‌گردد.|||از نظر طراحی باید عنوان نمود که طراحی محصولات تولیدی شرکت کاملاً منطبق بر برندهای معروف و شناخته‌شده می‌باشد؛ با این حال همواره از نظرات پزشکان متخصص استفاده می‌شود و در موارد لازم بهینه‌سازی انجام می‌گیرد. استفاده از دستگاه‌های اتوماتیک در ساخت قطعات، نتیجه‌ی آن دستیابی به افزایش سرعت در عین کیفیت و دقت ابعادی بالا در تمام قطعات تولیدی شرکت می‌باشد.|||از جمله این دستگاه‌ها در بخش تولید می‌توان به انواع CNC تراش و فرز، CNC هفت‌محور اشاره نمود. در بخش کنترل کیفیت از دستگاه‌های اندازه‌گیری دیجیتال با دقت بالا به‌منظور تضمین کیفیت استفاده می‌شود. از دیگر موارد مهمی که در بخش کنترل کیفیت محصولات می‌توان به آن اشاره نمود، کنترل ۱۰۰ درصدی محصولات با توجه به طرح کیفیت همان محصول می‌باشد. در حال حاضر از عمده تولیدات این شرکت اکسترنال فیکساتور می‌باشد.|||شرکت آذین طب سلامت رازی پس از گذشت مدت کوتاهی موفق به اخذ مجوزها و استانداردهایی از قبیل پروانه‌ی ساخت فیکساتورهای خارجی استخوان از اداره‌کل تجهیزات پزشکی، و استاندارد سیستم مدیریت کیفیت در تجهیزات پزشکی ISO 13485 از شرکت IGS کره گردید.|||افزایش سطح رضایت‌مندی مشتریان از طریق سرلوحه قراردادن کیفیت، مهم‌ترین اولویت این مجموعه می‌باشد. این شرکت امید دارد سهم خود را در ارتقای سلامت جامعه ایفا نماید." data-ar="بدأت شركة آذین طب سلامت رازی نشاطها في مجال تصنيع الأجهزة الطبية منذ صيف عام ٢٠١٦، بالاستعانة بالله تعالى؛ حيث انطلقت الشركة، بالاعتماد على كوادر متخصصة ومعدات حديثة، بهدف تصنيع مختلف الغرسات والمثبتات الخارجية لتقويم العظام، بـ ٢٠ موظفًا و٨ أجهزة وآلات صناعية في مساحة ١٠٠٠ متر مربع بالمدينة الصناعية توس في مشهد.|||من سمات هذه المجموعة الاعتماد على الكوادر الشابة والمتعلمة على مستوى الفنيين والمهندسين وحملة الماجستير في تخصصات الميكانيكا والميكانيكا الحيوية والصناعات والكهرباء. تُستورد المواد الخام من مصانع موثوقة، ويتم التحكم بدقة في نوع وجودة هذه المواد قبل استخدامها.|||من الناحية التصميمية، تجدر الإشارة إلى أن تصميم منتجات الشركة يتوافق تمامًا مع العلامات التجارية المعروفة والمعتمدة؛ ومع ذلك، تُؤخذ آراء الأطباء المختصين دائمًا بعين الاعتبار، ويتم إجراء التحسينات عند الضرورة. أدى استخدام الآلات الأوتوماتيكية في تصنيع القطع إلى زيادة السرعة مع الحفاظ على جودة عالية ودقة أبعاد في جميع منتجات الشركة.|||من بين هذه الآلات في قسم الإنتاج، يمكن الإشارة إلى مختلف آلات الخراطة والتفريز CNC، وآلات CNC ذات السبعة محاور. في قسم مراقبة الجودة، تُستخدم أجهزة قياس رقمية عالية الدقة لضمان الجودة. ومن الأمور المهمة الأخرى في مراقبة جودة المنتجات هو الفحص الكامل بنسبة ١٠٠٪ للمنتجات وفقًا لخطة الجودة الخاصة بكل منتج. حاليًا، يُعد المثبت الخارجي المنتج الرئيسي لهذه الشركة.|||بعد فترة وجيزة من التأسيس، نجحت شركة آذین طب سلامت رازی في الحصول على تراخيص ومعايير مثل ترخيص تصنيع المثبتات الخارجية للعظام من الإدارة العامة للأجهزة الطبية، ومعيار نظام إدارة الجودة للأجهزة الطبية ISO 13485 من شركة IGS الكورية.|||تُعد زيادة مستوى رضا العملاء من خلال جعل الجودة أولوية قصوى، الأولوية الأهم لهذه المجموعة. وتأمل الشركة أن تؤدي دورها في تحسين صحة المجتمع."
       data-en="AzinTeb Salamat Razi Company, with reliance on the Almighty, began its activity in the field of medical equipment manufacturing in the summer of 2016. Using specialized personnel and modern equipment, with the goal of producing various orthopedic implants and external fixators, the company started with 20 staff and 8 industrial machines in a 1,000 square-meter facility in the Toos Industrial Town of Mashhad.|||One of the features of this group is employing young, educated personnel at the technician, bachelor's, and master's levels in mechanics, biomechanics, industrial engineering, and electrical engineering. Raw materials are sourced from reputable factories, and the material and quality of these inputs are carefully controlled before use.|||In terms of design, the company's products are fully aligned with well-known, recognized brands; nevertheless, the opinions of specialist physicians are always taken into account, and optimizations are made where necessary. The use of automated machines in manufacturing has resulted in increased speed while maintaining high quality and dimensional accuracy across all of the company's products.|||Among these machines in the production department are various types of CNC lathes and mills, and 7-axis CNC machines. In the quality control department, high-precision digital measuring devices are used to ensure quality. Another important aspect of quality control is 100% inspection of products according to each product's quality plan. Currently, the company's main product line is external fixators.|||Shortly after its establishment, AzinTeb Salamat Razi succeeded in obtaining licenses and standards such as the manufacturing license for external bone fixators from the General Directorate of Medical Equipment, and the ISO 13485 quality management system standard for medical devices from IGS Korea.|||Placing quality first to increase customer satisfaction is this group's top priority. The company hopes to play its part in improving the health of society.">
       شرکت آذین طب سلامت رازی با استعانت از پروردگار متعال فعالیت خود را در حوزه تولید تجهیزات پزشکی از تابستان سال ۱۳۹۵ شروع نموده است؛ این شرکت با بهره‌گیری از پرسنل متخصص و تجهیزات مدرن، با هدف تولید انواع ایمپلنت و اکسترنال‌های ارتوپدی، با ۲۰ نفر پرسنل و تعداد ۸ عدد دستگاه و ماشین‌آلات صنعتی در فضای ۱۰۰۰ متری شهرک صنعتی توس مشهد آغاز به کار نمود.
       <br><br>
@@ -637,33 +654,33 @@
   </div>
 
   <div class="cta-wrap">
-    <a class="cta-btn" href="catalog.html" data-fa="مشاهده‌ی کاتالوگ محصولات ←" data-en="View Product Catalog →">مشاهده‌ی کاتالوگ محصولات &larr;</a>
-    <div class="cta-sub" data-fa="۸۷ قطعه ارتوپدی، دسته‌بندی‌شده با نمایش سه‌بعدی تعاملی" data-en="87 orthopedic parts, categorized with interactive 3D display">۸۷ قطعه ارتوپدی، دسته‌بندی‌شده با نمایش سه‌بعدی تعاملی</div>
+    <a class="cta-btn" href="catalog.html" data-fa="مشاهده‌ی کاتالوگ محصولات ←" data-ar="عرض كتالوج المنتجات ←" data-en="View Product Catalog →">مشاهده‌ی کاتالوگ محصولات &larr;</a>
+    <div class="cta-sub" data-fa="۸۷ قطعه ارتوپدی، دسته‌بندی‌شده با نمایش سه‌بعدی تعاملی" data-ar="٨٧ قطعة تقويم عظام، مصنّفة مع عرض ثلاثي الأبعاد تفاعلي" data-en="87 orthopedic parts, categorized with interactive 3D display">۸۷ قطعه ارتوپدی، دسته‌بندی‌شده با نمایش سه‌بعدی تعاملی</div>
   </div>
 </main>
 
 <section class="categories-section">
-  <div class="cs-title" data-fa="دسته‌بندی محصولات" data-en="Product Categories">دسته‌بندی محصولات</div>
+  <div class="cs-title" data-fa="دسته‌بندی محصولات" data-ar="تصنيف المنتجات" data-en="Product Categories">دسته‌بندی محصولات</div>
   <div class="cs-grid">
     <a class="cs-card" href="catalog.html?cat=ilizarov">
       <img src="assets/categories/ilizarov_photo.png" alt="الیزاروف">
-      <div class="cs-name" data-fa="الیزاروف" data-en="Ilizarov">الیزاروف</div>
+      <div class="cs-name" data-fa="الیزاروف" data-ar="إليزاروف" data-en="Ilizarov">الیزاروف</div>
     </a>
     <a class="cs-card" href="catalog.html?cat=implants">
       <img src="assets/categories/implant_photo.png" alt="ایمپلنت">
-      <div class="cs-name" data-fa="ایمپلنت" data-en="Implant">ایمپلنت</div>
+      <div class="cs-name" data-fa="ایمپلنت" data-ar="غرسة" data-en="Implant">ایمپلنت</div>
     </a>
     <a class="cs-card" href="catalog.html?cat=fixators">
       <img src="assets/categories/external_fixator_photo.png" alt="اکسترنال فیکساتور">
-      <div class="cs-name" data-fa="اکسترنال فیکساتور" data-en="External Fixator">اکسترنال فیکساتور</div>
+      <div class="cs-name" data-fa="اکسترنال فیکساتور" data-ar="مثبت خارجي" data-en="External Fixator">اکسترنال فیکساتور</div>
     </a>
   </div>
 </section>
 
 <section class="products-showcase">
-  <div class="ps-title" data-fa="برخی از محصولات ما" data-en="Some of Our Products">برخی از محصولات ما</div>
+  <div class="ps-title" data-fa="برخی از محصولات ما" data-ar="بعض من منتجاتنا" data-en="Some of Our Products">برخی از محصولات ما</div>
   <div class="ps-underline"></div>
-  <div class="ps-sub" data-fa="تمرکز آذین طب سلامت رازی بر ارائه‌ی محصولات با کیفیت بالا، مقرون‌به‌صرفه، تدارکات سریع و پشتیبانی مداوم به پزشکان" data-en="AzinTeb Salamat Razi's focus is on delivering high-quality, affordable products with fast supply and continuous support for physicians">تمرکز آذین طب سلامت رازی بر ارائه‌ی محصولات با کیفیت بالا، مقرون‌به‌صرفه، تدارکات سریع و پشتیبانی مداوم به پزشکان</div>
+  <div class="ps-sub" data-fa="تمرکز آذین طب سلامت رازی بر ارائه‌ی محصولات با کیفیت بالا، مقرون‌به‌صرفه، تدارکات سریع و پشتیبانی مداوم به پزشکان" data-ar="تركيز آذین طب سلامت رازی على تقديم منتجات عالية الجودة وبأسعار معقولة، مع توريد سريع ودعم مستمر للأطباء" data-en="AzinTeb Salamat Razi's focus is on delivering high-quality, affordable products with fast supply and continuous support for physicians">تمرکز آذین طب سلامت رازی بر ارائه‌ی محصولات با کیفیت بالا، مقرون‌به‌صرفه، تدارکات سریع و پشتیبانی مداوم به پزشکان</div>
 
   <div class="ps-carousel">
     <button class="ps-arrow ps-prev" id="psPrev" aria-label="prev">&lsaquo;</button>
@@ -686,7 +703,7 @@
 </section>
 
 <section class="clients-section">
-  <div class="clients-title" data-fa="برخی از مشتریان ما" data-en="Some of Our Clients">برخی از مشتریان ما</div>
+  <div class="clients-title" data-fa="برخی از مشتریان ما" data-ar="بعض من عملائنا" data-en="Some of Our Clients">برخی از مشتریان ما</div>
   <div class="clients-grid">
     <div class="client-tile"><img src="assets/clients/ibn_sina.png" alt="بیمارستان ابن سینا"></div>
     <div class="client-tile"><img src="assets/clients/jam_hospital.png" alt="بیمارستان جم"></div>
@@ -700,6 +717,13 @@
     <div class="client-tile"><img src="assets/clients/hasheminejad.png" alt="مرکز آموزشی و درمانی شهید هاشمی‌نژاد"></div>
     <div class="client-tile"><img src="assets/clients/loghman_hakim.png" alt="مرکز آموزشی درمانی لقمان حکیم"></div>
     <div class="client-tile"><img src="assets/clients/tajrish_shohada.png" alt="مرکز آموزشی درمانی شهدای تجریش"></div>
+  </div>
+</section>
+
+<section class="anatomy-section">
+  <div class="anatomy-grid">
+    <img src="assets/about/external_fixators_photo.jpg" alt="راهنمای اکسترنال فیکساتورها">
+    <img src="assets/about/implants_photo.png" alt="راهنمای ایمپلنت‌ها">
   </div>
 </section>
 
@@ -719,17 +743,17 @@
     </div>
 
     <div class="rf-col">
-      <h4 data-fa="لینک‌ها" data-en="Links">لینک‌ها</h4>
-      <a class="rf-link" href="mailto:info@azintebsalamat.com?subject=درخواست لیست قیمت"><svg viewBox="0 0 24 24"><path d="M15 5 8 12l7 7"/></svg><span data-fa="دریافت لیست قیمت" data-en="Get Price List">دریافت لیست قیمت</span></a>
-      <a class="rf-link" href="index.html"><svg viewBox="0 0 24 24"><path d="M15 5 8 12l7 7"/></svg><span data-fa="درباره‌ما" data-en="About Us">درباره‌ما</span></a>
-      <a class="rf-link" href="mailto:info@azintebsalamat.com?subject=درخواست نمایندگی"><svg viewBox="0 0 24 24"><path d="M15 5 8 12l7 7"/></svg><span data-fa="درخواست نمایندگی" data-en="Request Representation">درخواست نمایندگی</span></a>
-      <a class="rf-link" href="catalog.html"><svg viewBox="0 0 24 24"><path d="M15 5 8 12l7 7"/></svg><span data-fa="محصولات" data-en="Products">محصولات</span></a>
-      <a class="rf-link" href="contact.html"><svg viewBox="0 0 24 24"><path d="M15 5 8 12l7 7"/></svg><span data-fa="تماس با ما" data-en="Contact Us">تماس با ما</span></a>
+      <h4 data-fa="لینک‌ها" data-ar="روابط" data-en="Links">لینک‌ها</h4>
+      <a class="rf-link" href="mailto:info@azintebsalamat.com?subject=درخواست لیست قیمت"><svg viewBox="0 0 24 24"><path d="M15 5 8 12l7 7"/></svg><span data-fa="دریافت لیست قیمت" data-ar="الحصول على قائمة الأسعار" data-en="Get Price List">دریافت لیست قیمت</span></a>
+      <a class="rf-link" href="index.html"><svg viewBox="0 0 24 24"><path d="M15 5 8 12l7 7"/></svg><span data-fa="درباره‌ما" data-ar="من نحن" data-en="About Us">درباره‌ما</span></a>
+      <a class="rf-link" href="mailto:info@azintebsalamat.com?subject=درخواست نمایندگی"><svg viewBox="0 0 24 24"><path d="M15 5 8 12l7 7"/></svg><span data-fa="درخواست نمایندگی" data-ar="طلب التمثيل التجاري" data-en="Request Representation">درخواست نمایندگی</span></a>
+      <a class="rf-link" href="catalog.html"><svg viewBox="0 0 24 24"><path d="M15 5 8 12l7 7"/></svg><span data-fa="محصولات" data-ar="المنتجات" data-en="Products">محصولات</span></a>
+      <a class="rf-link" href="contact.html"><svg viewBox="0 0 24 24"><path d="M15 5 8 12l7 7"/></svg><span data-fa="تماس با ما" data-ar="اتصل بنا" data-en="Contact Us">تماس با ما</span></a>
     </div>
 
     <div class="rf-col">
-      <h4 data-fa="تماس با ما" data-en="Contact Us">تماس با ما</h4>
-      <div class="rf-item"><svg viewBox="0 0 24 24"><path d="M12 21.5s7-6.6 7-12.2A7 7 0 0 0 5 9.3C5 14.9 12 21.5 12 21.5Z"/><circle cx="12" cy="9.2" r="2.4"/></svg><span data-fa="مشهد، شهرک صنعتی توس، فاز ۲، دانش ۶، قطعه ۶۲۷" data-en="Mashhad, Toos Industrial Town, Phase 2, Danesh 6, Unit 627">مشهد، شهرک صنعتی توس، فاز ۲، دانش ۶، قطعه ۶۲۷</span></div>
+      <h4 data-fa="تماس با ما" data-ar="اتصل بنا" data-en="Contact Us">تماس با ما</h4>
+      <div class="rf-item"><svg viewBox="0 0 24 24"><path d="M12 21.5s7-6.6 7-12.2A7 7 0 0 0 5 9.3C5 14.9 12 21.5 12 21.5Z"/><circle cx="12" cy="9.2" r="2.4"/></svg><span data-fa="مشهد، شهرک صنعتی توس، فاز ۲، دانش ۶، قطعه ۶۲۷" data-ar="مشهد، المدينة الصناعية توس، المرحلة ٢، دانش ٦، القطعة ٦٢٧" data-en="Mashhad, Toos Industrial Town, Phase 2, Danesh 6, Unit 627">مشهد، شهرک صنعتی توس، فاز ۲، دانش ۶، قطعه ۶۲۷</span></div>
       <div class="rf-item"><svg viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.2 6.6 6.6l2.2-2.2c.3-.3.7-.4 1.1-.3 1.2.4 2.5.6 3.8.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.6.6 3.8.1.4 0 .8-.3 1.1L6.6 10.8Z"/></svg>051-35410203</div>
       <div class="rf-item"><svg viewBox="0 0 24 24"><rect x="6.5" y="2.5" width="11" height="19" rx="2.2"/><line x1="6.5" y1="18" x2="17.5" y2="18"/></svg>0915-596-7125</div>
       <div class="rf-item"><svg viewBox="0 0 24 24"><rect x="2.5" y="4.5" width="19" height="15" rx="2.2"/><path d="M3.5 6.2 12 12.5l8.5-6.3"/></svg>info@azintebsalamat.com</div>
@@ -743,31 +767,31 @@
     </div>
     <div class="rf-bottom-msg">
       <span class="rf-badge"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.2"/><path d="M5 20c0-4 3-6 7-6s7 2 7 6"/></svg></span>
-      <span data-fa="هفت روز هفته و ۲۴ ساعته پاسخ‌گوی شما هستیم" data-en="We are here for you 24/7, every day of the week">هفت روز هفته و ۲۴ ساعته پاسخ‌گوی شما هستیم</span>
+      <span data-fa="هفت روز هفته و ۲۴ ساعته پاسخ‌گوی شما هستیم" data-ar="نحن في خدمتكم على مدار الساعة طوال أيام الأسبوع" data-en="We are here for you 24/7, every day of the week">هفت روز هفته و ۲۴ ساعته پاسخ‌گوی شما هستیم</span>
     </div>
     <div class="rf-bottom-phones">051-35410203<br>0915-596-7125</div>
   </div>
 
-  <div class="rf-copy" data-fa="© ۱۴۰۴ کلیه حقوق این وب‌سایت متعلق به شرکت دانش‌بنیان فن‌آور آذین طب سلامت رازی می‌باشد — مدیریت: مهندس رضا عبداللهی" data-en="© 2025 All rights reserved by AzinTeb Salamat Razi Knowledge-Based Technology Company — Management: Eng. Reza Abdollahi">© ۱۴۰۴ کلیه حقوق این وب‌سایت متعلق به شرکت دانش‌بنیان فن‌آور آذین طب سلامت رازی می‌باشد — مدیریت: مهندس رضا عبداللهی</div>
+  <div class="rf-copy" data-fa="© ۱۴۰۴ کلیه حقوق این وب‌سایت متعلق به شرکت دانش‌بنیان فن‌آور آذین طب سلامت رازی می‌باشد — مدیریت: مهندس رضا عبداللهی" data-ar="© 2025 جميع حقوق هذا الموقع محفوظة لشركة آذین طب سلامت رازی المعرفية التقنية — الإدارة: المهندس رضا عبدالهي" data-en="© 2025 All rights reserved by AzinTeb Salamat Razi Knowledge-Based Technology Company — Management: Eng. Reza Abdollahi">© ۱۴۰۴ کلیه حقوق این وب‌سایت متعلق به شرکت دانش‌بنیان فن‌آور آذین طب سلامت رازی می‌باشد — مدیریت: مهندس رضا عبداللهی</div>
 </footer>
 </div>
 
 <div class="pwa-ios-sheet" id="pwaIosSheet">
   <div class="pwa-ios-card">
-    <div class="pi-title" data-fa="افزودن به صفحه‌اصلی (iPhone)" data-en="Add to Home Screen (iPhone)">افزودن به صفحه‌اصلی (iPhone)</div>
+    <div class="pi-title" data-fa="افزودن به صفحه‌اصلی (iPhone)" data-ar="الإضافة إلى الشاشة الرئيسية (آيفون)" data-en="Add to Home Screen (iPhone)">افزودن به صفحه‌اصلی (iPhone)</div>
     <div class="pi-step">
       <svg viewBox="0 0 24 24"><path d="M12 3v12M8 7l4-4 4 4"/><rect x="5" y="13" width="14" height="8" rx="2"/></svg>
-      <span data-fa="۱. پایین صفحه‌ی سافاری، دکمه‌ی Share را بزنید" data-en="1. Tap the Share button at the bottom of Safari">۱. پایین صفحه‌ی سافاری، دکمه‌ی Share را بزنید</span>
+      <span data-fa="۱. پایین صفحه‌ی سافاری، دکمه‌ی Share را بزنید" data-ar="١. في أسفل صفحة سفاري، اضغط على زر المشاركة" data-en="1. Tap the Share button at the bottom of Safari">۱. پایین صفحه‌ی سافاری، دکمه‌ی Share را بزنید</span>
     </div>
     <div class="pi-step">
       <svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M12 8v8M8 12h8"/></svg>
-      <span data-fa="۲. گزینه‌ی «Add to Home Screen» را انتخاب کنید" data-en="2. Choose “Add to Home Screen”">۲. گزینه‌ی «Add to Home Screen» را انتخاب کنید</span>
+      <span data-fa="۲. گزینه‌ی «Add to Home Screen» را انتخاب کنید" data-ar="٢. اختر خيار «إضافة إلى الشاشة الرئيسية»" data-en="2. Choose “Add to Home Screen”">۲. گزینه‌ی «Add to Home Screen» را انتخاب کنید</span>
     </div>
     <div class="pi-step">
       <svg viewBox="0 0 24 24"><path d="m5 13 4 4L19 7"/></svg>
-      <span data-fa="۳. روی «Add» بزنید — تمام" data-en="3. Tap “Add” — done">۳. روی «Add» بزنید — تمام</span>
+      <span data-fa="۳. روی «Add» بزنید — تمام" data-ar="٣. اضغط على «إضافة» — تم" data-en="3. Tap “Add” — done">۳. روی «Add» بزنید — تمام</span>
     </div>
-    <button class="pi-close" id="pwaIosClose" data-fa="متوجه شدم" data-en="Got it">متوجه شدم</button>
+    <button class="pi-close" id="pwaIosClose" data-fa="متوجه شدم" data-ar="فهمت" data-en="Got it">متوجه شدم</button>
   </div>
 </div>
 
@@ -785,26 +809,27 @@
 
 <script>
 (function(){
-  const langBtn = document.getElementById('langToggle');
   function applyLang(lang){
-    document.documentElement.lang = lang === 'en' ? 'en' : 'fa';
+    document.documentElement.lang = lang;
     document.documentElement.dir = lang === 'en' ? 'ltr' : 'rtl';
-    langBtn.textContent = lang === 'en' ? 'EN' : 'FA';
+    document.querySelectorAll('.lang-flag').forEach(b=> b.classList.toggle('active', b.getAttribute('data-lang')===lang));
     document.querySelectorAll('[data-fa]').forEach(el=>{
+      const raw = el.getAttribute('data-'+lang) || el.getAttribute('data-fa');
       if(el.hasAttribute('data-fa-html')){
-        const parts = (lang==='en' ? el.getAttribute('data-en') : el.getAttribute('data-fa')).split('|||');
-        el.innerHTML = parts.join('<br><br>');
+        el.innerHTML = raw.split('|||').join('<br><br>');
       } else {
-        el.textContent = lang === 'en' ? el.getAttribute('data-en') : el.getAttribute('data-fa');
+        el.textContent = raw;
       }
     });
   }
   const saved = localStorage.getItem('medazinco_lang') || 'fa';
   applyLang(saved);
-  langBtn.addEventListener('click', ()=>{
-    const next = document.documentElement.lang === 'en' ? 'fa' : 'en';
-    localStorage.setItem('medazinco_lang', next);
-    applyLang(next);
+  document.querySelectorAll('.lang-flag').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const lang = btn.getAttribute('data-lang');
+      localStorage.setItem('medazinco_lang', lang);
+      applyLang(lang);
+    });
   });
 })();
 </script>
@@ -993,17 +1018,17 @@
 
 <div class="cert-overlay" id="certOverlay">
   <button class="cert-close" id="certClose">&times;</button>
-  <div class="cert-overlay-title" data-fa="گواهینامه‌ها و استانداردها" data-en="Certificates & Standards">گواهینامه‌ها و استانداردها</div>
-  <div class="cert-overlay-sub" data-fa="گواهی فروش آزاد صادرشده توسط اداره‌کل تجهیزات و ملزومات پزشکی وزارت بهداشت" data-en="Free Sales Certificates issued by the Iranian Ministry of Health's Medical Device Directorate (IMED)">گواهی فروش آزاد صادرشده توسط اداره‌کل تجهیزات و ملزومات پزشکی وزارت بهداشت</div>
+  <div class="cert-overlay-title" data-fa="گواهینامه‌ها و استانداردها" data-ar="الشهادات والمعايير" data-en="Certificates & Standards">گواهینامه‌ها و استانداردها</div>
+  <div class="cert-overlay-sub" data-fa="گواهی فروش آزاد صادرشده توسط اداره‌کل تجهیزات و ملزومات پزشکی وزارت بهداشت" data-ar="شهادة البيع الحر صادرة عن الإدارة العامة للأجهزة والمستلزمات الطبية بوزارة الصحة" data-en="Free Sales Certificates issued by the Iranian Ministry of Health's Medical Device Directorate (IMED)">گواهی فروش آزاد صادرشده توسط اداره‌کل تجهیزات و ملزومات پزشکی وزارت بهداشت</div>
 
   <div class="cert-grid">
     <div class="cert-card">
       <img src="assets/certificates/cert1.jpg" alt="گواهی فیکساتور خارجی اسلایدینگ">
       <div class="cert-card-body">
-        <div class="cert-card-name" data-fa="فیکساتور خارجی اسلایدینگ — IRI002127" data-en="External Fixture Sliding — IRI002127">فیکساتور خارجی اسلایدینگ — IRI002127</div>
+        <div class="cert-card-name" data-fa="فیکساتور خارجی اسلایدینگ — IRI002127" data-ar="مثبت خارجي منزلق — IRI002127" data-en="External Fixture Sliding — IRI002127">فیکساتور خارجی اسلایدینگ — IRI002127</div>
         <button class="cert-flag-btn" data-target="tr1">
           <span class="flag-icon"><span></span><span></span><span></span></span>
-          <span data-fa="ترجمه‌ی فارسی" data-en="Persian Translation">ترجمه‌ی فارسی</span>
+          <span data-fa="ترجمه‌ی فارسی" data-ar="الترجمة الفارسية" data-en="Persian Translation">ترجمه‌ی فارسی</span>
         </button>
         <div class="cert-translation" id="tr1">جمهوری اسلامی ایران
 وزارت بهداشت، درمان و آموزش پزشکی
@@ -1030,10 +1055,10 @@
     <div class="cert-card">
       <img src="assets/certificates/cert2.jpg" alt="گواهی راد لوله‌ای">
       <div class="cert-card-body">
-        <div class="cert-card-name" data-fa="فیکساتور خارجی – راد لوله‌ای — IRI004001" data-en="External Fixture – Tubular Rod — IRI004001">فیکساتور خارجی – راد لوله‌ای — IRI004001</div>
+        <div class="cert-card-name" data-fa="فیکساتور خارجی – راد لوله‌ای — IRI004001" data-ar="مثبت خارجي – قضيب أنبوبي — IRI004001" data-en="External Fixture – Tubular Rod — IRI004001">فیکساتور خارجی – راد لوله‌ای — IRI004001</div>
         <button class="cert-flag-btn" data-target="tr2">
           <span class="flag-icon"><span></span><span></span><span></span></span>
-          <span data-fa="ترجمه‌ی فارسی" data-en="Persian Translation">ترجمه‌ی فارسی</span>
+          <span data-fa="ترجمه‌ی فارسی" data-ar="الترجمة الفارسية" data-en="Persian Translation">ترجمه‌ی فارسی</span>
         </button>
         <div class="cert-translation" id="tr2">جمهوری اسلامی ایران
 وزارت بهداشت، درمان و آموزش پزشکی
@@ -1060,10 +1085,10 @@
     <div class="cert-card">
       <img src="assets/certificates/cert3.jpg" alt="گواهی هالف رینگ">
       <div class="cert-card-body">
-        <div class="cert-card-name" data-fa="فیکساتور خارجی – هالف رینگ (۵/۸) — IRI003728" data-en="External Fixture – Half Ring (5/8) — IRI003728">فیکساتور خارجی – هالف رینگ (۵/۸) — IRI003728</div>
+        <div class="cert-card-name" data-fa="فیکساتور خارجی – هالف رینگ (۵/۸) — IRI003728" data-ar="مثبت خارجي – نصف حلقة (٥/٨) — IRI003728" data-en="External Fixture – Half Ring (5/8) — IRI003728">فیکساتور خارجی – هالف رینگ (۵/۸) — IRI003728</div>
         <button class="cert-flag-btn" data-target="tr3">
           <span class="flag-icon"><span></span><span></span><span></span></span>
-          <span data-fa="ترجمه‌ی فارسی" data-en="Persian Translation">ترجمه‌ی فارسی</span>
+          <span data-fa="ترجمه‌ی فارسی" data-ar="الترجمة الفارسية" data-en="Persian Translation">ترجمه‌ی فارسی</span>
         </button>
         <div class="cert-translation" id="tr3">جمهوری اسلامی ایران
 وزارت بهداشت، درمان و آموزش پزشکی
@@ -1090,10 +1115,10 @@
     <div class="cert-card">
       <img src="assets/certificates/cert4.jpg" alt="گواهی آرک رینگ">
       <div class="cert-card-body">
-        <div class="cert-card-name" data-fa="فیکساتور خارجی – آرک رینگ سوراخ‌دار — IRI009834" data-en="External Fixture – Arc Ring With Hole — IRI009834">فیکساتور خارجی – آرک رینگ سوراخ‌دار — IRI009834</div>
+        <div class="cert-card-name" data-fa="فیکساتور خارجی – آرک رینگ سوراخ‌دار — IRI009834" data-ar="مثبت خارجي – حلقة قوسية مثقوبة — IRI009834" data-en="External Fixture – Arc Ring With Hole — IRI009834">فیکساتور خارجی – آرک رینگ سوراخ‌دار — IRI009834</div>
         <button class="cert-flag-btn" data-target="tr4">
           <span class="flag-icon"><span></span><span></span><span></span></span>
-          <span data-fa="ترجمه‌ی فارسی" data-en="Persian Translation">ترجمه‌ی فارسی</span>
+          <span data-fa="ترجمه‌ی فارسی" data-ar="الترجمة الفارسية" data-en="Persian Translation">ترجمه‌ی فارسی</span>
         </button>
         <div class="cert-translation" id="tr4">جمهوری اسلامی ایران
 وزارت بهداشت، درمان و آموزش پزشکی
@@ -1120,10 +1145,10 @@
     <div class="cert-card">
       <img src="assets/certificates/cert5.jpg" alt="گواهی فیکساتور مچ دست">
       <div class="cert-card-body">
-        <div class="cert-card-name" data-fa="فیکساتور خارجی (زند زبرین، زند زیرین، مچ دست) — IRI009604" data-en="External Fixator (Ulnar, Radius, Wrist) — IRI009604">فیکساتور خارجی (زند زبرین، زند زیرین، مچ دست) — IRI009604</div>
+        <div class="cert-card-name" data-fa="فیکساتور خارجی (زند زبرین، زند زیرین، مچ دست) — IRI009604" data-ar="مثبت خارجي (الزند، الكعبرة، الرسغ) — IRI009604" data-en="External Fixator (Ulnar, Radius, Wrist) — IRI009604">فیکساتور خارجی (زند زبرین، زند زیرین، مچ دست) — IRI009604</div>
         <button class="cert-flag-btn" data-target="tr5">
           <span class="flag-icon"><span></span><span></span><span></span></span>
-          <span data-fa="ترجمه‌ی فارسی" data-en="Persian Translation">ترجمه‌ی فارسی</span>
+          <span data-fa="ترجمه‌ی فارسی" data-ar="الترجمة الفارسية" data-en="Persian Translation">ترجمه‌ی فارسی</span>
         </button>
         <div class="cert-translation" id="tr5">جمهوری اسلامی ایران
 وزارت بهداشت، درمان و آموزش پزشکی
@@ -1169,7 +1194,7 @@
     </div>
     <div class="azin-head-txt">
       <div class="azin-name">آذین</div>
-      <div class="azin-sub" data-fa="دستیار هوشمند مدازینکو" data-en="MEDAZINCO Smart Assistant">دستیار هوشمند مدازینکو</div>
+      <div class="azin-sub" data-fa="دستیار هوشمند مدازینکو" data-ar="مساعد ميدازينكو الذكي" data-en="MEDAZINCO Smart Assistant">دستیار هوشمند مدازینکو</div>
     </div>
     <button class="azin-close" id="azinClose">&times;</button>
   </div>

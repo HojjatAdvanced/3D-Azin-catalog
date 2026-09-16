@@ -96,13 +96,18 @@
   }
   .pill.active .cnt{ color:rgba(4,20,12,0.75); }
 
-  .lang-toggle{
-    width:40px; height:32px; border-radius:10px; border:1px solid var(--border);
-    background:rgba(23,224,138,0.08); color:var(--green); cursor:pointer;
-    font-family:'Vazirmatn',Tahoma,sans-serif; font-size:12px; font-weight:800; flex:none;
-    transition:all .2s;
+  .lang-flags{
+    position:fixed; top:20px; left:20px; z-index:60;
+    display:flex; flex-direction:column; gap:6px;
   }
-  .lang-toggle:hover{ background:rgba(23,224,138,0.18); border-color:var(--green); }
+  .lang-flag{
+    width:34px; height:34px; border-radius:9px; border:1px solid var(--border);
+    background:rgba(23,224,138,0.08); cursor:pointer; font-size:17px; line-height:1;
+    display:flex; align-items:center; justify-content:center; padding:0;
+    transition:all .2s; filter:grayscale(0.4) opacity(0.7);
+  }
+  .lang-flag:hover{ border-color:var(--green); filter:none; }
+  .lang-flag.active{ border-color:var(--green); box-shadow:0 0 0 2px rgba(23,224,138,0.28); filter:none; }
 
   .theme-toggle{
     width:58px; height:32px; border-radius:16px; border:1px solid var(--border);
@@ -531,12 +536,16 @@
   </div>
   <div class="header-spacer"></div>
   <div class="visitor">
-    <a href="index.html" id="navAbout" style="color:#dfe4f7;text-decoration:none;font-size:14px;font-weight:600;padding:10px 20px;border-radius:11px;border:1px solid var(--border);" data-fa="درباره‌ما" data-en="About Us">درباره‌ما</a>
-    <a href="contact.html" id="navContact" style="color:#dfe4f7;text-decoration:none;font-size:14px;font-weight:600;padding:10px 20px;border-radius:11px;border:1px solid var(--border);" data-fa="تماس با ما" data-en="Contact Us">تماس با ما</a>
+    <a href="index.html" id="navAbout" style="color:#dfe4f7;text-decoration:none;font-size:14px;font-weight:600;padding:10px 20px;border-radius:11px;border:1px solid var(--border);" data-fa="درباره‌ما" data-ar="من نحن" data-en="About Us">درباره‌ما</a>
+    <a href="contact.html" id="navContact" style="color:#dfe4f7;text-decoration:none;font-size:14px;font-weight:600;padding:10px 20px;border-radius:11px;border:1px solid var(--border);" data-fa="تماس با ما" data-ar="اتصل بنا" data-en="Contact Us">تماس با ما</a>
     <button class="azin-header-btn" id="azinHeaderBtn" title="آذین - دستیار هوشمند">
       <svg viewBox="0 0 24 24"><path d="M12 3a5 5 0 0 1 5 5v2a5 5 0 0 1-10 0V8a5 5 0 0 1 5-5Z"/><path d="M8 21v-1a4 4 0 0 1 4-4v0a4 4 0 0 1 4 4v1"/></svg>
     </button>
-    <button class="lang-toggle" id="langToggle" title="Switch language">FA</button>
+    <div class="lang-flags" id="langFlags">
+      <button class="lang-flag" data-lang="fa" title="فارسی">🇮🇷</button>
+      <button class="lang-flag" data-lang="ar" title="العربية">🇸🇦</button>
+      <button class="lang-flag" data-lang="en" title="English">🇬🇧</button>
+    </div>
     <button class="pwa-header-btn" id="pwaHeaderBtn" title="افزودن به صفحه‌اصلی گوشی">
       <svg viewBox="0 0 24 24"><rect x="6" y="2.5" width="12" height="19" rx="2.2"/><line x1="12" y1="17.3" x2="12" y2="17.32"/><path d="M12 8v4.5M9.8 10.2 12 12.5l2.2-2.3"/></svg>
     </button>
@@ -562,7 +571,7 @@
 </main>
 
 <section class="clients-section">
-  <div class="clients-title" data-fa="برخی از مشتریان ما" data-en="Some of Our Clients">برخی از مشتریان ما</div>
+  <div class="clients-title" data-fa="برخی از مشتریان ما" data-ar="بعض من عملائنا" data-en="Some of Our Clients">برخی از مشتریان ما</div>
   <div class="clients-grid">
     <div class="client-tile"><img src="assets/clients/ibn_sina.png" alt="بیمارستان ابن سینا"></div>
     <div class="client-tile"><img src="assets/clients/jam_hospital.png" alt="بیمارستان جم"></div>
@@ -630,20 +639,20 @@
 
 <div class="pwa-ios-sheet" id="pwaIosSheet">
   <div class="pwa-ios-card">
-    <div class="pi-title" data-fa="افزودن به صفحه‌اصلی (iPhone)" data-en="Add to Home Screen (iPhone)">افزودن به صفحه‌اصلی (iPhone)</div>
+    <div class="pi-title" data-fa="افزودن به صفحه‌اصلی (iPhone)" data-ar="الإضافة إلى الشاشة الرئيسية (آيفون)" data-en="Add to Home Screen (iPhone)">افزودن به صفحه‌اصلی (iPhone)</div>
     <div class="pi-step">
       <svg viewBox="0 0 24 24"><path d="M12 3v12M8 7l4-4 4 4"/><rect x="5" y="13" width="14" height="8" rx="2"/></svg>
-      <span data-fa="۱. پایین صفحه‌ی سافاری، دکمه‌ی Share را بزنید" data-en="1. Tap the Share button at the bottom of Safari">۱. پایین صفحه‌ی سافاری، دکمه‌ی Share را بزنید</span>
+      <span data-fa="۱. پایین صفحه‌ی سافاری، دکمه‌ی Share را بزنید" data-ar="١. في أسفل صفحة سفاري، اضغط على زر المشاركة" data-en="1. Tap the Share button at the bottom of Safari">۱. پایین صفحه‌ی سافاری، دکمه‌ی Share را بزنید</span>
     </div>
     <div class="pi-step">
       <svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M12 8v8M8 12h8"/></svg>
-      <span data-fa="۲. گزینه‌ی «Add to Home Screen» را انتخاب کنید" data-en="2. Choose “Add to Home Screen”">۲. گزینه‌ی «Add to Home Screen» را انتخاب کنید</span>
+      <span data-fa="۲. گزینه‌ی «Add to Home Screen» را انتخاب کنید" data-ar="٢. اختر خيار «إضافة إلى الشاشة الرئيسية»" data-en="2. Choose “Add to Home Screen”">۲. گزینه‌ی «Add to Home Screen» را انتخاب کنید</span>
     </div>
     <div class="pi-step">
       <svg viewBox="0 0 24 24"><path d="m5 13 4 4L19 7"/></svg>
-      <span data-fa="۳. روی «Add» بزنید — تمام" data-en="3. Tap “Add” — done">۳. روی «Add» بزنید — تمام</span>
+      <span data-fa="۳. روی «Add» بزنید — تمام" data-ar="٣. اضغط على «إضافة» — تم" data-en="3. Tap “Add” — done">۳. روی «Add» بزنید — تمام</span>
     </div>
-    <button class="pi-close" id="pwaIosClose" data-fa="متوجه شدم" data-en="Got it">متوجه شدم</button>
+    <button class="pi-close" id="pwaIosClose" data-fa="متوجه شدم" data-ar="فهمت" data-en="Got it">متوجه شدم</button>
   </div>
 </div>
 
@@ -672,7 +681,7 @@
     </div>
     <div class="azin-head-txt">
       <div class="azin-name">آذین</div>
-      <div class="azin-sub" data-fa="دستیار هوشمند مدازینکو" data-en="MEDAZINCO Smart Assistant">دستیار هوشمند مدازینکو</div>
+      <div class="azin-sub" data-fa="دستیار هوشمند مدازینکو" data-ar="مساعد ميدازينكو الذكي" data-en="MEDAZINCO Smart Assistant">دستیار هوشمند مدازینکو</div>
     </div>
     <button class="azin-close" id="azinClose">&times;</button>
   </div>
@@ -794,7 +803,7 @@
       const sections = CATEGORIES.slice(1).map(c=>`
         <div class="empty-cat">
           <div class="empty-cat-title">${catLabel(c)}</div>
-          <div class="empty-cat-sub" data-fa="قطعات این بخش به‌زودی با عکس واقعی اضافه می‌شوند" data-en="Parts in this section will be added soon with real photos">${currentLang==='en' ? 'Parts in this section will be added soon with real photos' : 'قطعات این بخش به‌زودی با عکس واقعی اضافه می‌شوند'}</div>
+          <div class="empty-cat-sub" data-fa="قطعات این بخش به‌زودی با عکس واقعی اضافه می‌شوند" data-ar="ستُضاف قطع هذا القسم قريبًا مع صور حقيقية" data-en="Parts in this section will be added soon with real photos">${currentLang==='en' ? 'Parts in this section will be added soon with real photos' : 'قطعات این بخش به‌زودی با عکس واقعی اضافه می‌شوند'}</div>
         </div>`).join('');
       wrap.innerHTML = `<div class="empty-hero">
         <div class="empty-hero-title">${currentLang==='en' ? 'Catalog under construction' : 'کاتالوگ در حال تکمیل است'}</div>
@@ -1038,18 +1047,18 @@
 
 <script>
 (function(){
-  const langBtn = document.getElementById('langToggle');
   const searchInput = document.getElementById('searchInput');
   function applyLang(lang){
     window.__mzSetLang(lang);
-    document.documentElement.lang = lang === 'en' ? 'en' : 'fa';
+    document.documentElement.lang = lang;
     document.documentElement.dir = lang === 'en' ? 'ltr' : 'rtl';
-    langBtn.textContent = lang === 'en' ? 'EN' : 'FA';
+    document.querySelectorAll('.lang-flag').forEach(b=> b.classList.toggle('active', b.getAttribute('data-lang')===lang));
     document.querySelectorAll('[data-fa]').forEach(el=>{
-      el.textContent = lang === 'en' ? el.getAttribute('data-en') : el.getAttribute('data-fa');
+      el.textContent = el.getAttribute('data-'+lang) || el.getAttribute('data-fa');
     });
     searchInput.placeholder = lang === 'en'
       ? 'Search part name… (e.g. Femur, Screw, Ring)'
+      : lang === 'ar' ? 'ابحث عن اسم القطعة… (مثال: Femur، Screw، Ring)'
       : 'جستجوی نام قطعه… (مثلاً: Femur، Screw، Ring)';
     window.__mzRender();
     if(window.__mzIsLightboxOpen() && window.__mzGetLbProduct()){
@@ -1058,10 +1067,12 @@
   }
   const saved = localStorage.getItem('medazinco_lang') || 'fa';
   applyLang(saved);
-  langBtn.addEventListener('click', ()=>{
-    const next = document.documentElement.lang === 'en' ? 'fa' : 'en';
-    localStorage.setItem('medazinco_lang', next);
-    applyLang(next);
+  document.querySelectorAll('.lang-flag').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const lang = btn.getAttribute('data-lang');
+      localStorage.setItem('medazinco_lang', lang);
+      applyLang(lang);
+    });
   });
 })();
 </script>

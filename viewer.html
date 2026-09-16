@@ -123,13 +123,18 @@
   .install-fab svg{ width:22px; height:22px; stroke:var(--green); fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
   .install-fab:hover{ background:rgba(23,224,138,0.15); }
 
-  .lang-toggle{
-    width:40px; height:32px; border-radius:10px; border:1px solid rgba(15,169,104,0.35);
-    background:rgba(23,224,138,0.08); color:var(--green); cursor:pointer;
-    font-family:'Vazirmatn',Tahoma,sans-serif; font-size:12px; font-weight:800;
-    transition:all .2s; margin-inline-end:10px;
+  .lang-flags{
+    position:fixed; top:20px; left:20px; z-index:60;
+    display:flex; flex-direction:column; gap:6px; pointer-events:auto;
   }
-  .lang-toggle:hover{ background:rgba(23,224,138,0.18); border-color:var(--green); }
+  .lang-flag{
+    width:34px; height:34px; border-radius:9px; border:1px solid rgba(15,169,104,0.35);
+    background:rgba(23,224,138,0.08); cursor:pointer; font-size:17px; line-height:1;
+    display:flex; align-items:center; justify-content:center; padding:0;
+    transition:all .2s; filter:grayscale(0.4) opacity(0.7);
+  }
+  .lang-flag:hover{ border-color:var(--green); filter:none; }
+  .lang-flag.active{ border-color:var(--green); box-shadow:0 0 0 2px rgba(23,224,138,0.28); filter:none; }
 
   .is-actions{ display:flex; gap:10px; margin-top:24px; flex-wrap:wrap; justify-content:flex-end; }
   .is-btn-price, .is-btn-qr{
@@ -434,7 +439,7 @@
         <svg viewBox="0 0 24 24"><path d="M10 3h4v7h7v4h-7v7h-4v-7H3v-4h7V3Z"/></svg>
       </div>
     </div>
-    <div class="vl-text" data-fa="در حال بارگذاری مدل سه‌بعدی…" data-en="Loading 3D model…">در حال بارگذاری مدل سه‌بعدی…</div>
+    <div class="vl-text" data-fa="در حال بارگذاری مدل سه‌بعدی…" data-ar="جارٍ تحميل النموذج ثلاثي الأبعاد…" data-en="Loading 3D model…">در حال بارگذاری مدل سه‌بعدی…</div>
     <div class="vl-pct" id="vlPct"></div>
     <div class="vl-brand">MEDAZINCO · <b>آذین طب سلامت رازی</b></div>
   </div>
@@ -454,8 +459,12 @@
     <button class="azin-header-btn" id="azinHeaderBtn" title="آذین - دستیار هوشمند" style="pointer-events:auto;">
       <svg viewBox="0 0 24 24"><path d="M12 3a5 5 0 0 1 5 5v2a5 5 0 0 1-10 0V8a5 5 0 0 1 5-5Z"/><path d="M8 21v-1a4 4 0 0 1 4-4v0a4 4 0 0 1 4 4v1"/></svg>
     </button>
-    <button class="lang-toggle" id="langToggle" title="Switch language" style="pointer-events:auto;">FA</button>
-    <button class="backBtn" id="backBtn" data-fa="&rsaquo; بازگشت به کاتالوگ" data-en="&rsaquo; Back to Catalog">&rsaquo; بازگشت به کاتالوگ</button>
+    <div class="lang-flags" id="langFlags" style="pointer-events:auto;">
+      <button class="lang-flag" data-lang="fa" title="فارسی">🇮🇷</button>
+      <button class="lang-flag" data-lang="ar" title="العربية">🇸🇦</button>
+      <button class="lang-flag" data-lang="en" title="English">🇬🇧</button>
+    </div>
+    <button class="backBtn" id="backBtn" data-fa="&rsaquo; بازگشت به کاتالوگ" data-ar="&rsaquo; العودة إلى الكتالوج" data-en="&rsaquo; Back to Catalog">&rsaquo; بازگشت به کاتالوگ</button>
   </div>
 
   <div class="info-block">
@@ -474,11 +483,11 @@
   </button>
 
   <div id="gesturePanel">
-    <div class="gp-head"><span data-fa="سنسور دست" data-en="Hand Sensor">سنسور دست</span><b id="gpHandState" data-fa="خاموش" data-en="Off">خاموش</b></div>
+    <div class="gp-head"><span data-fa="سنسور دست" data-ar="مستشعر اليد" data-en="Hand Sensor">سنسور دست</span><b id="gpHandState" data-fa="خاموش" data-ar="متوقف" data-en="Off">خاموش</b></div>
     <canvas id="gestureCanvas" width="200" height="120"></canvas>
-    <div id="gestureStatus" data-fa="آماده به کار" data-en="Ready">آماده به کار</div>
-    <button id="gestureToggle" data-fa="فعال‌سازی کنترل با دست" data-en="Enable Hand Control">فعال‌سازی کنترل با دست</button>
-    <div id="gestureNote" data-fa="دوربین در دسترس نیست. این فایل را مستقیم در مرورگر (نه با دبل‌کلیک ساده) باز کنید." data-en="Camera unavailable. Open this file directly in a browser tab (not by double-clicking it).">دوربین در دسترس نیست. این فایل را مستقیم در مرورگر (نه با دبل‌کلیک ساده) باز کنید.</div>
+    <div id="gestureStatus" data-fa="آماده به کار" data-ar="جاهز للعمل" data-en="Ready">آماده به کار</div>
+    <button id="gestureToggle" data-fa="فعال‌سازی کنترل با دست" data-ar="تفعيل التحكم باليد" data-en="Enable Hand Control">فعال‌سازی کنترل با دست</button>
+    <div id="gestureNote" data-fa="دوربین در دسترس نیست. این فایل را مستقیم در مرورگر (نه با دبل‌کلیک ساده) باز کنید." data-ar="الكاميرا غير متاحة. افتح هذا الملف مباشرة في المتصفح (وليس بنقر مزدوج)." data-en="Camera unavailable. Open this file directly in a browser tab (not by double-clicking it).">دوربین در دسترس نیست. این فایل را مستقیم در مرورگر (نه با دبل‌کلیک ساده) باز کنید.</div>
   </div>
 
   <button class="hand-toggle-mobile" id="handToggleMobile" title="کنترل با دست">
@@ -493,19 +502,19 @@
   <div class="joystick joy-rotate" id="joyRotate">
     <div class="joy-ring"></div>
     <div class="joy-knob" id="joyRotateKnob"></div>
-    <div class="joy-label" data-fa="چرخش" data-en="Rotate">چرخش</div>
+    <div class="joy-label" data-fa="چرخش" data-ar="دوران" data-en="Rotate">چرخش</div>
   </div>
   <div class="joystick joy-zoom" id="joyZoom">
     <div class="joy-ring"></div>
     <div class="joy-knob" id="joyZoomKnob"></div>
-    <div class="joy-label" data-fa="زوم" data-en="Zoom">زوم</div>
+    <div class="joy-label" data-fa="زوم" data-ar="تكبير" data-en="Zoom">زوم</div>
   </div>
 </div>
 
 <div id="infoScreen">
   <canvas id="infoBgCanvas"></canvas>
   <div class="info-screen-inner">
-    <button class="is-close" id="isClose" data-fa="&times; بازگشت به نمایش سه‌بعدی" data-en="&times; Back to 3D View">&times; بازگشت به نمایش سه‌بعدی</button>
+    <button class="is-close" id="isClose" data-fa="&times; بازگشت به نمایش سه‌بعدی" data-ar="&times; العودة إلى العرض ثلاثي الأبعاد" data-en="&times; Back to 3D View">&times; بازگشت به نمایش سه‌بعدی</button>
     <div class="is-cat" id="isCat"></div>
     <div class="is-title" id="isTitle"></div>
     <div class="is-material" id="isMaterial"></div>
@@ -521,8 +530,8 @@
 <div id="installScreen">
   <canvas id="installBgCanvas"></canvas>
   <div class="info-screen-inner">
-    <button class="is-close" id="installClose" data-fa="&times; بازگشت به نمایش سه‌بعدی" data-en="&times; Back to 3D View">&times; بازگشت به نمایش سه‌بعدی</button>
-    <div class="is-cat" data-fa="طریقه نصب و کاربرد بالینی" data-en="Installation & Clinical Use">طریقه نصب و کاربرد بالینی</div>
+    <button class="is-close" id="installClose" data-fa="&times; بازگشت به نمایش سه‌بعدی" data-ar="&times; العودة إلى العرض ثلاثي الأبعاد" data-en="&times; Back to 3D View">&times; بازگشت به نمایش سه‌بعدی</button>
+    <div class="is-cat" data-fa="طریقه نصب و کاربرد بالینی" data-ar="طريقة التركيب والاستخدام السريري" data-en="Installation & Clinical Use">طریقه نصب و کاربرد بالینی</div>
     <div class="is-title" id="installTitle"></div>
     <div class="is-desc" id="installDesc"></div>
   </div>
@@ -609,22 +618,23 @@
 
   /* language toggle */
   (function(){
-    const langBtn = document.getElementById('langToggle');
     function applyLang(lang){
       currentLang = lang;
-      document.documentElement.lang = lang === 'en' ? 'en' : 'fa';
+      document.documentElement.lang = lang;
       document.documentElement.dir = lang === 'en' ? 'ltr' : 'rtl';
-      langBtn.textContent = lang === 'en' ? 'EN' : 'FA';
+      document.querySelectorAll('.lang-flag').forEach(b=> b.classList.toggle('active', b.getAttribute('data-lang')===lang));
       document.querySelectorAll('[data-fa]').forEach(el=>{
-        el.innerHTML = lang === 'en' ? el.getAttribute('data-en') : el.getAttribute('data-fa');
+        el.innerHTML = el.getAttribute('data-'+lang) || el.getAttribute('data-fa');
       });
       paintHud();
     }
     applyLang(currentLang);
-    langBtn.addEventListener('click', ()=>{
-      const next = currentLang === 'en' ? 'fa' : 'en';
-      localStorage.setItem('medazinco_lang', next);
-      applyLang(next);
+    document.querySelectorAll('.lang-flag').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        const lang = btn.getAttribute('data-lang');
+        localStorage.setItem('medazinco_lang', lang);
+        applyLang(lang);
+      });
     });
   })();
 
@@ -1884,7 +1894,7 @@
     </div>
     <div class="azin-head-txt">
       <div class="azin-name">آذین</div>
-      <div class="azin-sub" data-fa="دستیار هوشمند مدازینکو" data-en="MEDAZINCO Smart Assistant">دستیار هوشمند مدازینکو</div>
+      <div class="azin-sub" data-fa="دستیار هوشمند مدازینکو" data-ar="مساعد ميدازينكو الذكي" data-en="MEDAZINCO Smart Assistant">دستیار هوشمند مدازینکو</div>
     </div>
     <button class="azin-close" id="azinClose">&times;</button>
   </div>
