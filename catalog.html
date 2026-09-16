@@ -473,10 +473,15 @@
   .azin-send svg{ width:16px; height:16px; fill:#04140c; }
 
   @media (max-width:900px){
-    .azin-character{ display:none !important; }
+    .azin-character{
+      display:block; position:fixed; left:50%; top:14px; bottom:auto; z-index:72;
+      width:120px; transform:translateX(-50%) translateY(-14px);
+      opacity:0; transition:opacity .35s ease, transform .35s ease;
+    }
+    .azin-character.show{ transform:translateX(-50%) translateY(0); opacity:1; }
   }
   @media (max-width:480px){
-    .azin-panel{ left:12px; bottom:12px; width:calc(100vw - 24px); height:calc(100vh - 90px); }
+    .azin-panel{ left:12px; top:130px; bottom:12px; width:calc(100vw - 24px); height:auto; }
     .azin-fab{ left:16px; bottom:16px; }
   }
   .rf-top{
@@ -1404,9 +1409,10 @@
     audioEl.src = src;
     audioEl.currentTime = 0;
     wrapEl.classList.add('talking');
-    audioEl.play().catch(()=>{ wrapEl.classList.remove('talking'); });
-    audioEl.onended = ()=> wrapEl.classList.remove('talking');
-    audioEl.onpause = ()=> wrapEl.classList.remove('talking');
+    if(characterEl) characterEl.classList.add('show');
+    audioEl.play().catch(()=>{ wrapEl.classList.remove('talking'); if(characterEl) characterEl.classList.remove('show'); });
+    audioEl.onended = ()=>{ wrapEl.classList.remove('talking'); if(characterEl) characterEl.classList.remove('show'); };
+    audioEl.onpause = ()=>{ wrapEl.classList.remove('talking'); if(characterEl) characterEl.classList.remove('show'); };
   }
   function playIntroAudio(){ playCharacterAudio('assets/azin/intro.mp3'); }
 
@@ -1414,7 +1420,6 @@
     panel.classList.add('open');
     fab.classList.add('open');
     badge.classList.add('hide');
-    characterEl.classList.add('show');
     playIntroAudio();
     if(!messagesEl.children.length){
       const lang = AZ_LANG();
