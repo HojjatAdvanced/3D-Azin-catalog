@@ -683,7 +683,7 @@
 
 <div class="azin-character" id="azinCharacter">
   <div class="azin-char-imgwrap" id="azinCharImgwrap">
-    <img src="assets/azin/mascot_anim2.webp" alt="آذین">
+    <img src="assets/azin/mascot_intro.webp" alt="آذین" id="azinCharImg">
     <div class="azin-talk-glow" id="azinTalkGlow"></div>
     <div class="azin-talk-wave" id="azinTalkWave">
       <span></span><span></span><span></span><span></span>
@@ -1357,6 +1357,8 @@
     setTimeout(()=>{
       hideTyping();
       addMessage('bot', lang==='en' ? ABOUT_US_EN : ABOUT_US_FA);
+      const charImg = document.getElementById('azinCharImg');
+      if(charImg) charImg.src = 'assets/azin/mascot_about.webp';
       playCharacterAudio('assets/azin/about.mp3');
     }, 500 + Math.random()*400);
   }
@@ -1416,6 +1418,8 @@
     characterEl.classList.remove('show');
     const audioEl = document.getElementById('azinIntroAudio');
     if(audioEl) audioEl.pause();
+    const charImg = document.getElementById('azinCharImg');
+    if(charImg) charImg.src = 'assets/azin/mascot_intro.webp';
   }
 
   fab.addEventListener('click', openPanel);
