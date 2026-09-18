@@ -110,7 +110,7 @@
 
   .hero{ position:relative; overflow:hidden; }
   .hero-img-wrap{ position:relative; }
-  .hero img.hero-photo{ width:100%; height:auto; display:block; opacity:0.32; mix-blend-mode:luminosity; }
+  .hero .hero-photo{ width:100%; height:auto; display:block; opacity:0.32; mix-blend-mode:luminosity; object-fit:cover; }
   .hero .overlay{
     position:absolute; inset:0;
     background:linear-gradient(180deg, rgba(5,11,24,0.25) 0%, rgba(5,11,24,0.75) 55%, var(--bg) 100%);
@@ -578,7 +578,7 @@
 
 <div class="hero">
   <div class="hero-img-wrap">
-    <img class="hero-photo" src="assets/about/hero_building.jpg" alt="ساختمان شرکت آذین طب سلامت رازی">
+    <video class="hero-photo" src="assets/about/hero_bg.mp4" autoplay loop muted playsinline></video>
     <div class="overlay">
       <img class="logo" src="assets/logo.jpg" alt="MEDAZINCO">
       <div class="eyebrow">Advanced Orthopedic Technology</div>
