@@ -43,11 +43,13 @@
     border-bottom:1px solid var(--border);
     color:#fff; padding:16px 26px;
     display:flex; align-items:center; gap:12px; flex-wrap:wrap;
+    justify-content:center;
   }
+  .topbar > *{ flex:none; }
   .topbar img{ width:36px; height:36px; border-radius:9px; background:#fff; padding:3px; }
   .topbar .txt b{ display:block; font-size:14.5px; letter-spacing:.4px; }
   .topbar .txt small{ display:block; font-size:10px; color:var(--muted); margin-top:1px; }
-  .topbar .spacer{ flex:1; }
+  .topbar .spacer{ display:none; }
   .topbar nav{ display:flex; gap:10px; }
   .topbar nav a{
     color:#cfd8f5; text-decoration:none; font-size:14px; font-weight:600; padding:11px 20px;
@@ -55,6 +57,12 @@
   }
   .topbar nav a:hover{ background:rgba(23,224,138,0.1); border-color:var(--green); color:#fff; }
   .topbar nav a.active{ background:linear-gradient(135deg, var(--green-2), var(--green)); border-color:transparent; color:#04140c; font-weight:800; }
+
+  @media (max-width:520px){
+    .topbar{ padding:12px 14px; gap:8px; }
+    .topbar .txt small{ display:none; }
+    .topbar nav a{ padding:9px 14px; font-size:12.5px; }
+  }
 
   .theme-toggle{
     width:58px; height:32px; border-radius:16px; border:1px solid var(--border);

@@ -46,6 +46,9 @@
     color:#fff; padding:16px 26px; position:sticky; top:0; z-index:20;
     display:flex; align-items:center; gap:12px; flex-wrap:wrap;
   }
+  .topbar{ justify-content:center; }
+  .topbar > *{ flex:none; }
+  .topbar .spacer{ display:none; }
   .topbar img{ width:36px; height:36px; border-radius:9px; background:#fff; padding:3px; }
   .topbar .txt b{ display:block; font-size:14.5px; letter-spacing:.4px; }
   .topbar .txt small{ display:block; font-size:10px; color:var(--muted); margin-top:1px; letter-spacing:.3px; }
@@ -339,6 +342,11 @@
   .ps-dots .dot.active{ background:var(--green); width:20px; border-radius:4px; }
   @media (max-width:900px){ .ps-slide{ flex:0 0 33.33%; } }
   @media (max-width:600px){ .ps-slide{ flex:0 0 50%; } }
+  @media (max-width:520px){
+    .topbar{ padding:12px 14px; gap:8px; }
+    .topbar .txt small{ display:none; }
+    .topbar nav a{ padding:9px 14px; font-size:12.5px; }
+  }
 
   .clients-section{ position:relative; z-index:1; max-width:1100px; margin:0 auto; padding:10px 22px 46px; }
 
