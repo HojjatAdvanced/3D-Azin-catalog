@@ -503,6 +503,11 @@
     box-shadow:0 6px 18px rgba(0,0,0,0.15);
   }
   .clients-grid .client-tile img{ max-width:100%; max-height:56px; object-fit:contain; }
+  .clients-grid .client-tile a{
+    display:flex; align-items:center; justify-content:center; width:100%; height:100%;
+    text-decoration:none; transition:transform .2s;
+  }
+  .clients-grid .client-tile a:hover{ transform:scale(1.06); }
   @media (max-width:760px){
     .clients-grid{ grid-template-columns:repeat(3, 1fr); }
   }
@@ -564,18 +569,18 @@
 <section class="clients-section">
   <div class="clients-title" data-fa="برخی از مشتریان ما" data-ar="بعض من عملائنا" data-en="Some of Our Clients">برخی از مشتریان ما</div>
   <div class="clients-grid">
-    <div class="client-tile"><img src="assets/clients/ibn_sina.png" alt="بیمارستان ابن سینا"></div>
-    <div class="client-tile"><img src="assets/clients/jam_hospital.png" alt="بیمارستان جم"></div>
-    <div class="client-tile"><img src="assets/clients/kerman_medsci.png" alt="دانشگاه علوم پزشکی کرمان"></div>
-    <div class="client-tile"><img src="assets/clients/imam_reza.png" alt="بیمارستان امام رضا (ع)"></div>
-    <div class="client-tile"><img src="assets/clients/shariati.png" alt="بیمارستان شریعتی"></div>
-    <div class="client-tile"><img src="assets/clients/mohtame_towanbakhshi.png" alt="مجتمع توان‌بخشی و مراقبتی رعد و کرم"></div>
-    <div class="client-tile"><img src="assets/clients/akhtar.png" alt="مرکز آموزشی درمانی و تحقیقاتی اختر"></div>
-    <div class="client-tile"><img src="assets/clients/baharloo_gold.png" alt="بیمارستان بهارلو"></div>
-    <div class="client-tile"><img src="assets/clients/tehran_medsci.png" alt="دانشگاه علوم پزشکی تهران"></div>
-    <div class="client-tile"><img src="assets/clients/hasheminejad.png" alt="مرکز آموزشی و درمانی شهید هاشمی‌نژاد"></div>
-    <div class="client-tile"><img src="assets/clients/loghman_hakim.png" alt="مرکز آموزشی درمانی لقمان حکیم"></div>
-    <div class="client-tile"><img src="assets/clients/tajrish_shohada.png" alt="مرکز آموزشی درمانی شهدای تجریش"></div>
+    <div class="client-tile"><a href="https://ebnesinahospital.ir/" target="_blank" rel="noopener noreferrer" title="بیمارستان ابن سینا"><img src="assets/clients/ibn_sina.png" alt="بیمارستان ابن سینا"></a></div>
+    <div class="client-tile"><a href="https://jamhospital.ir/Crm/login" target="_blank" rel="noopener noreferrer" title="بیمارستان جم"><img src="assets/clients/jam_hospital.png" alt="بیمارستان جم"></a></div>
+    <div class="client-tile"><a href="https://kmu.ac.ir/fa" target="_blank" rel="noopener noreferrer" title="دانشگاه علوم پزشکی کرمان"><img src="assets/clients/kerman_medsci.png" alt="دانشگاه علوم پزشکی کرمان"></a></div>
+    <div class="client-tile"><a href="https://irh.nkums.ac.ir/" target="_blank" rel="noopener noreferrer" title="بیمارستان امام رضا (ع)"><img src="assets/clients/imam_reza.png" alt="بیمارستان امام رضا (ع)"></a></div>
+    <div class="client-tile"><a href="https://shariati.tums.ac.ir/" target="_blank" rel="noopener noreferrer" title="بیمارستان شریعتی"><img src="assets/clients/shariati.png" alt="بیمارستان شریعتی"></a></div>
+    <div class="client-tile"><a href="https://hrmc.iums.ac.ir/" target="_blank" rel="noopener noreferrer" title="مجتمع توان‌بخشی و مراقبتی رعد و کرم"><img src="assets/clients/mohtame_towanbakhshi.png" alt="مجتمع توان‌بخشی و مراقبتی رعد و کرم"></a></div>
+    <div class="client-tile"><a href="https://haal.ir/medical-center/amc.sbmu.ac.ir" target="_blank" rel="noopener noreferrer" title="مرکز آموزشی درمانی و تحقیقاتی اختر"><img src="assets/clients/akhtar.png" alt="مرکز آموزشی درمانی و تحقیقاتی اختر"></a></div>
+    <div class="client-tile"><a href="https://baharloo.tums.ac.ir/" target="_blank" rel="noopener noreferrer" title="بیمارستان بهارلو"><img src="assets/clients/baharloo_gold.png" alt="بیمارستان بهارلو"></a></div>
+    <div class="client-tile"><a href="https://tums.ac.ir/" target="_blank" rel="noopener noreferrer" title="دانشگاه علوم پزشکی تهران"><img src="assets/clients/tehran_medsci.png" alt="دانشگاه علوم پزشکی تهران"></a></div>
+    <div class="client-tile"><a href="https://hkc.iums.ac.ir/" target="_blank" rel="noopener noreferrer" title="مرکز آموزشی و درمانی شهید هاشمی‌نژاد"><img src="assets/clients/hasheminejad.png" alt="مرکز آموزشی و درمانی شهید هاشمی‌نژاد"></a></div>
+    <div class="client-tile"><a href="https://lhmc.sbmu.ac.ir/" target="_blank" rel="noopener noreferrer" title="مرکز آموزشی درمانی لقمان حکیم"><img src="assets/clients/loghman_hakim.png" alt="مرکز آموزشی درمانی لقمان حکیم"></a></div>
+    <div class="client-tile"><a href="https://shmc.sbmu.ac.ir/" target="_blank" rel="noopener noreferrer" title="مرکز آموزشی درمانی شهدای تجریش"><img src="assets/clients/tajrish_shohada.png" alt="مرکز آموزشی درمانی شهدای تجریش"></a></div>
   </div>
 </section>
 
