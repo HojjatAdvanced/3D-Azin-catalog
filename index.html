@@ -113,20 +113,12 @@
 
   .hero{ position:relative; overflow:hidden; }
   .hero-img-wrap{ position:relative; }
-  .hero .hero-photo{ width:100%; height:auto; display:block; opacity:0.32; mix-blend-mode:luminosity; object-fit:cover; }
+  .hero .hero-photo{ width:100%; height:auto; display:block; object-fit:cover; }
   .hero .overlay{
     position:absolute; inset:0;
-    background:linear-gradient(180deg, rgba(5,11,24,0.25) 0%, rgba(5,11,24,0.75) 55%, var(--bg) 100%);
-    display:flex; flex-direction:column; align-items:center; justify-content:flex-end;
-    text-align:center; padding:30px 22px 44px;
+    background:linear-gradient(180deg, rgba(5,11,24,0.05) 0%, rgba(5,11,24,0.15) 60%, var(--bg) 100%);
+    pointer-events:none;
   }
-  .hero .logo{ width:130px; margin-bottom:18px; border-radius:16px; box-shadow:0 0 40px rgba(23,224,138,0.25); }
-  .hero .eyebrow{
-    font-size:10.5px; letter-spacing:3px; color:var(--green); font-weight:700; margin-bottom:10px;
-    text-transform:uppercase;
-  }
-  .hero h1{ color:#fff; font-size:21px; font-weight:800; line-height:1.7; text-shadow:0 2px 20px rgba(0,0,0,0.5); }
-  .hero p{ color:var(--muted); font-size:12.5px; margin-top:10px; letter-spacing:.3px; }
 
   main{ max-width:920px; margin:0 auto; padding:40px 22px 10px; }
 
@@ -277,10 +269,6 @@
   }
 
 
-  @media (min-width:720px){
-    .hero .overlay{ padding:46px 22px 56px; }
-    .hero h1{ font-size:26px; }
-  }
   /* ---------- clients section ---------- */
   /* ---------- product categories ---------- */
   .categories-section{ position:relative; z-index:1; max-width:1100px; margin:0 auto; padding:20px 22px 10px; }
@@ -587,12 +575,7 @@
 <div class="hero">
   <div class="hero-img-wrap">
     <video class="hero-photo" src="assets/about/hero_bg.mp4" autoplay loop muted playsinline></video>
-    <div class="overlay">
-      <img class="logo" src="assets/logo.jpg" alt="MEDAZINCO">
-      <div class="eyebrow">Advanced Orthopedic Technology</div>
-      <h1 data-fa="تولیدکننده‌ی ایمپلنت و فیکساتور خارجی ارتوپدی" data-ar="الشركة المصنعة لغرسات وتثبيتات العظام الخارجية لجراحة العظام" data-en="Manufacturer of Orthopedic Implants and External Fixators">تولیدکننده‌ی ایمپلنت و فیکساتور خارجی ارتوپدی</h1>
-      <p>Production of Orthopedic External Fixators and Implants</p>
-    </div>
+    <div class="overlay"></div>
   </div>
 </div>
 
