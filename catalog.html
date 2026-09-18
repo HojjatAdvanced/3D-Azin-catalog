@@ -1124,26 +1124,46 @@
 
   /* ---------- knowledge: map everyday words to categories / body parts ---------- */
   const BODY_MAP = [
-    { keys:['فمور','ران','استخوان ران'], cats:['nailing','plates_anatomical'] },
-    { keys:['تیبیا','ساق','درشت نی','درشت‌نی'], cats:['nailing','plates_anatomical'] },
-    { keys:['هیومروس','بازو'], cats:['nailing','plates_general'] },
-    { keys:['مچ دست','ساعد','رادیوس'], cats:['plates_anatomical','screws'] },
-    { keys:['ترقوه'], cats:['plates_anatomical'] },
+    { keys:['فمور','ران','استخوان ران','استخوان\u200cران'], cats:['nailing','plates_anatomical'] },
+    { keys:['تیبیا','ساق','درشت نی','درشت‌نی','ساق پا'], cats:['nailing','plates_anatomical'] },
+    { keys:['فیبولا','نازک نی','نازک‌نی'], cats:['plates_anatomical'] },
+    { keys:['هیومروس','بازو','استخوان بازو'], cats:['nailing','plates_general'] },
+    { keys:['اولنا','زند زیرین','زند‌زیرین'], cats:['plates_general','screws'] },
+    { keys:['رادیوس','زند زبرین','زند‌زبرین','ساعد'], cats:['plates_anatomical','screws'] },
+    { keys:['مچ دست'], cats:['plates_anatomical','screws'] },
+    { keys:['ترقوه','کلاویکل'], cats:['plates_anatomical'] },
     { keys:['پاشنه','کالکانئوس'], cats:['plates_anatomical'] },
-    { keys:['مچ پا','فیبولا','قوزک'], cats:['plates_anatomical','nailing'] },
-    { keys:['زانو'], cats:['plates_anatomical'] },
-    { keys:['لگن','هیپ'], cats:['nailing','plates_anatomical'] },
-    { keys:['شکستگی باز','عفونت','بافت نرم'], cats:['fixators'] },
-    { keys:['افزایش قد','دفورمیتی','اصلاح زاویه','بدشکلی'], cats:['ilizarov'] },
+    { keys:['مچ پا','قوزک'], cats:['plates_anatomical','nailing'] },
+    { keys:['کف پا','انگشت پا','متاتارس'], cats:['screws','ilizarov'] },
+    { keys:['زانو','کشکک','پاتلا'], cats:['plates_anatomical'] },
+    { keys:['لگن','هیپ','مفصل ران'], cats:['nailing','plates_anatomical'] },
+    { keys:['گردن','ستون فقرات گردنی','مهره گردن'], cats:['plates_general'] },
+    { keys:['آرنج','اولکرانون'], cats:['plates_general','screws'] },
+    { keys:['شانه'], cats:['plates_anatomical'] },
+    { keys:['انگشت دست','فالانکس'], cats:['screws'] },
+    { keys:['شکستگی باز','عفونت','بافت نرم','استخوان عفونی'], cats:['fixators'] },
+    { keys:['افزایش قد','کوتاهی قد','دفورمیتی','اصلاح زاویه','بدشکلی','پای پرانتزی','پای ضربدری'], cats:['ilizarov'] },
+    { keys:['جوش نخوردن','جوش‌نخوردن','نان یونیون','non union','عدم جوش خوردگی'], cats:['ilizarov','fixators'] },
+    { keys:['شکستگی خرد شده','کمینیوت','چندتکه','چند تکه'], cats:['ilizarov','fixators'] },
+    { keys:['شکستگی خط مو','ترک استخوان'], cats:['screws','plates_general'] },
   ];
+  const CATEGORY_SYNONYMS = {
+    nailing: ['میخ','نیل','intramedullary','گاما نیل','gamma'],
+    plates_general: ['پلیت عمومی','پلیت ساده'],
+    plates_anatomical: ['پلیت آناتومیک','پلیت تشریحی'],
+    screws: ['پیچ','پیچ ارتوپدی','screw'],
+    fixators: ['فیکساتور','اکسترنال','external fixator'],
+    rods: ['راد','میله اتصال'],
+    ilizarov: ['الیزاروف','ایلیزاروف','حلقه','رینگ']
+  };
   const CAT_EXPLAIN_FA = {
-    nailing: 'میخ‌های داخل‌استخوانی برای شکستگی‌های تنه‌ی استخوان‌های بلند (فمور، تیبیا، هیومروس) به‌کار می‌روند و از داخل کانال استخوان عبور می‌کنند.',
-    plates_general: 'پلیت‌های عمومی روی سطح استخوان با پیچ ثابت می‌شوند، برای شکستگی‌های مختلف استخوان‌های بلند و کوچک.',
-    plates_anatomical: 'پلیت‌های آناتومیک از قبل متناسب با شکل یک ناحیه‌ی خاص بدن (زانو، مچ، ترقوه و...) طراحی شده‌اند.',
-    screws: 'پیچ‌های ارتوپدی برای تثبیت مستقیم استخوان یا همراه با پلیت استفاده می‌شوند.',
-    fixators: 'فیکساتورهای خارجی از بیرون بدن، بدون تماس مستقیم با محل شکستگی، استخوان رو تثبیت می‌کنند — مناسب شکستگی‌های باز یا عفونی.',
-    rods: 'رادها اجزای اتصال‌دهنده در سیستم‌های فیکساتور خارجی هستند.',
-    ilizarov: 'سیستم الیزاروف یک فیکساتور خارجی حلقوی برای اصلاح تدریجی دفورمیتی، افزایش طول استخوان و شکستگی‌های پیچیده است.'
+    nailing: 'میخ‌های داخل‌استخوانی (Intramedullary Nail) از داخل کانال مغز استخوان عبور می‌کنند و برای شکستگی‌های تنه‌ی استخوان‌های بلند مثل فمور، تیبیا و هیومروس به‌کار می‌روند. چون از داخل استخوان تثبیت می‌کنند، پایداری مکانیکی بالایی دارند و امکان تحمل وزن زودهنگام رو می‌دن.',
+    plates_general: 'پلیت‌های عمومی (مثل DCP، LC-DCP و Reconstruction Plate) صاف یا با انحنای ساده هستند و روی سطح استخوان با پیچ ثابت می‌شوند؛ برای شکستگی‌های مختلف استخوان‌های بلند و کوچک در نواحی گوناگون بدن کاربرد دارند.',
+    plates_anatomical: 'پلیت‌های آناتومیک (Anatomical/Locking Plate) از قبل دقیقاً متناسب با شکل یک ناحیه‌ی خاص بدن (مثل انتهای تحتانی فمور، پروگزیمال تیبیا، مچ، ترقوه) طراحی و خم شده‌اند تا نیاز به خم‌کاری حین جراحی رو کم کنن.',
+    screws: 'پیچ‌های ارتوپدی (Cortical، Cancellous، Locking Screw) یا به‌تنهایی برای تثبیت مستقیم قطعات استخوانی کوچک به‌کار می‌روند، یا همراه با پلیت‌ها برای محکم‌کردن آن‌ها به استخوان استفاده می‌شوند.',
+    fixators: 'فیکساتورهای خارجی (External Fixator) از بیرون بدن، بدون تماس مستقیم پیچ/پین با محل شکستگی، استخوان رو با پین‌های عبوری و میله‌های اتصال تثبیت می‌کنند — مناسب شکستگی‌های باز، عفونی، یا مواردی که موقتاً نمی‌شه از ایمپلنت داخلی استفاده کرد.',
+    rods: 'رادها و راد‌های اتصال، اجزای ساختاری در سیستم‌های فیکساتور خارجی و الیزاروف هستند که حلقه‌ها یا میله‌ها رو به هم وصل می‌کنند.',
+    ilizarov: 'سیستم الیزاروف یک فیکساتور خارجی حلقوی (Circular External Fixator) با رینگ‌ها، میله‌های اتصال و سیم‌های کرشنر/پین‌هاست که برای اصلاح تدریجی دفورمیتی، افزایش طول استخوان (Limb Lengthening)، و درمان شکستگی‌های پیچیده یا جوش‌نخورده به‌کار می‌ره.'
   };
   const CAT_EXPLAIN_EN = {
     nailing: 'Intramedullary nails are used for diaphyseal fractures of long bones (femur, tibia, humerus) and pass through the bone canal.',
@@ -1179,9 +1199,30 @@
       if(c.key==='all') continue;
       if(nq.includes(norm(c.label)) || nq.includes(norm(c.label_en))) return c.key;
     }
-    if(nq.includes('الیزاروف') || nq.includes('ilizarov')) return 'ilizarov';
+    for(const key in CATEGORY_SYNONYMS){
+      if(CATEGORY_SYNONYMS[key].some(s=>nq.includes(norm(s)))) return key;
+    }
     if(nq.includes('فیکساتور') || nq.includes('fixator')) return 'fixators';
     return null;
+  }
+
+  const MATERIAL_SYNONYMS = [
+    { keys:['تیتانیوم','titanium'], test:m=>/titanium|تیتانیوم/i.test(m) },
+    { keys:['استیل','ضدزنگ','stainless'], test:m=>/stainless|استیل/i.test(m) },
+    { keys:['آلومینیوم','aluminium','aluminum'], test:m=>/alumin/i.test(m) },
+  ];
+  function findProductsByMaterial(q){
+    const nq = norm(q);
+    for(const row of MATERIAL_SYNONYMS){
+      if(row.keys.some(k=>nq.includes(k))){
+        return PRODUCTS.filter(p=>row.test(p.material||''));
+      }
+    }
+    return null;
+  }
+
+  function categoryProductCards(catKey, limit){
+    return PRODUCTS.filter(p=>p.cat===catKey).slice(0, limit||4).map(productCardHtml).join('');
   }
 
   /* ---------- voice COMMAND parsing: navigation / "bring me X" ---------- */
@@ -1235,6 +1276,40 @@
       return lang==='en' ? "I'm Azin — the smart assistant of the MEDAZINCO catalog by AzinTeb Salamat Razi." : 'من آذین هستم — دستیار هوشمند کاتالوگ مدازینکو، محصول شرکت آذین طب سلامت رازی.';
     }
 
+    // how many products / catalog size
+    if(/چند\s*تا\s*(محصول|قطعه)|چندتا\s*(محصول|قطعه)|how\s*many\s*(products|parts)/.test(nq)){
+      const catCounts = CATEGORIES.filter(c=>c.key!=='all').map(c=>{
+        const n = PRODUCTS.filter(p=>p.cat===c.key).length;
+        const label = lang==='en' ? c.label_en : c.label;
+        return `${label} (${n.toLocaleString(lang==='en'?'en':'fa-IR')})`;
+      }).join('، ');
+      return lang==='en'
+        ? `We currently have ${PRODUCTS.length} parts across 7 categories: ${catCounts}.`
+        : `در حال حاضر ${PRODUCTS.length.toLocaleString('fa-IR')} قطعه در ۷ دسته داریم: ${catCounts}.`;
+    }
+
+    // material-wide question ("چه موادی استفاده می‌کنید؟")
+    if(/چه\s*(مواد|جنس)ی?\s*(استفاده|به\s*کار)|what\s*materials/.test(nq) && !findProductsByMaterial(q)){
+      return lang==='en'
+        ? 'Our parts are made from medical-grade Titanium, Stainless Steel, and Aluminum — the material for each part is chosen based on its clinical use and load requirements.'
+        : 'قطعات ما از تیتانیوم، استیل ضدزنگ و آلومینیوم درجه‌ی پزشکی ساخته می‌شن — جنس هر قطعه بر اساس کاربرد بالینی و بار مکانیکی موردنیازش انتخاب می‌شه.';
+    }
+
+    // material-specific product listing
+    const matMatches = findProductsByMaterial(q);
+    if(matMatches && matMatches.length){
+      const cards = matMatches.slice(0,5).map(productCardHtml).join('');
+      const more = matMatches.length>5 ? (lang==='en' ? ` and ${matMatches.length-5} more` : ` و ${matMatches.length-5} قطعه‌ی دیگه`) : '';
+      return (lang==='en' ? `We have ${matMatches.length} parts in this material:` : `${matMatches.length} قطعه با این جنس داریم:`) + cards + more;
+    }
+
+    // certificates / standards
+    if(nq.includes('گواهی') || nq.includes('استاندارد') || nq.includes('iso') || nq.includes('certificate')){
+      return lang==='en'
+        ? 'We hold ISO 13485 medical device quality certification and Free Sales Certificates from Iran\'s Medical Device Directorate (IMED) for several products. Check the "Certificates" button at the top of the About Us page.'
+        : 'ما گواهی سیستم مدیریت کیفیت ISO 13485 و گواهی‌های فروش آزاد از اداره‌کل تجهیزات پزشکی (IMED) برای چندین محصول داریم. دکمه‌ی «گواهینامه‌ها» بالای صفحه‌ی درباره‌ما رو ببین.';
+    }
+
     // contact / price / representation
     if(nq.includes('قیمت') || nq.includes('price')){
       return (lang==='en'
@@ -1260,7 +1335,10 @@
     const directCat = findCategoryDirect(q);
     if(directCat){
       const explain = (lang==='en'?CAT_EXPLAIN_EN:CAT_EXPLAIN_FA)[directCat] || '';
-      return `${explain} <a href="catalog.html?cat=${directCat}">${lang==='en'?'View parts →':'مشاهده‌ی قطعات ←'}</a>`;
+      const cards = categoryProductCards(directCat, 4);
+      const total = PRODUCTS.filter(p=>p.cat===directCat).length;
+      const seeMore = `<a href="catalog.html?cat=${directCat}">${lang==='en'?`View all ${total} →`:`مشاهده‌ی هر ${total.toLocaleString('fa-IR')} قطعه ←`}</a>`;
+      return `${explain}${cards}${seeMore}`;
     }
 
     // body-part / clinical keyword mapping
@@ -1268,9 +1346,11 @@
     if(catsFromBody && catsFromBody.length){
       const c = catsFromBody[0];
       const explain = (lang==='en'?CAT_EXPLAIN_EN:CAT_EXPLAIN_FA)[c] || '';
+      const cards = categoryProductCards(c, 4);
       const links = catsFromBody.map(k=>`<a href="catalog.html?cat=${k}">${(lang==='en'?CATEGORIES.find(x=>x.key===k)?.label_en:CATEGORIES.find(x=>x.key===k)?.label)||k}</a>`).join(' · ');
-      return `${explain}\n${lang==='en'?'Related categories: ':'دسته‌های مرتبط: '}${links}`;
+      return `${explain}${cards}\n${lang==='en'?'Related categories: ':'دسته‌های مرتبط: '}${links}`;
     }
+
 
     return lang==='en'
       ? "I'm not fully sure — try asking by body part (e.g. \"tibia\"), category name (e.g. \"Ilizarov\"), or a part name (e.g. \"Full Ring\")."
@@ -1334,8 +1414,8 @@
   function renderSuggestions(){
     const lang = AZ_LANG();
     const items = lang==='en'
-      ? ['What do you have for a femur fracture?','What is Ilizarov?','Contact sales']
-      : ['برای شکستگی فمور چی دارید؟','الیزاروف چیه؟','ارتباط با فروش'];
+      ? ['What do you have for a femur fracture?','What titanium parts do you have?','How many products do you have?']
+      : ['برای شکستگی فمور چی دارید؟','چی از تیتانیوم دارید؟','چند تا محصول دارید؟'];
     suggestionsEl.innerHTML = '';
 
     const aboutBtn = document.createElement('button');
